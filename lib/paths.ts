@@ -15,7 +15,7 @@ export function dataDir(env: Record<string, string | undefined> = process.env): 
 }
 
 /**
- * Resolve a concrete DB file path. A file-specific override (FOUNDER_OS_DB /
+ * Resolve a concrete DB file path. A file-specific override (COMMAND_CENTER_DB /
  * LEDGER_DB / BANK_DB, or ':memory:' in tests) always wins; otherwise the file
  * lives under the resolved {@link dataDir}.
  */

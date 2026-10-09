@@ -25,7 +25,7 @@ const healthyExec: ExecFn = async (_cmd, args) => {
       code: 0,
     };
   }
-  return { stdout: 'projects/founder-os -- FOUNDER OS build notes\n', stderr: '', code: 0 };
+  return { stdout: 'projects/command-center -- COMMAND CENTER build notes\n', stderr: '', code: 0 };
 };
 
 const downExec: ExecFn = async () => ({
@@ -38,8 +38,8 @@ function makeStore(): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'brain-store-'));
   mkdirSync(path.join(dir, 'projects'));
   writeFileSync(
-    path.join(dir, 'projects', 'founder-os.md'),
-    '# FOUNDER OS\nThe personal OS rebuild uses a revenue split model for Launchpad Cohort.\n',
+    path.join(dir, 'projects', 'command-center.md'),
+    '# COMMAND CENTER\nThe personal OS rebuild uses a revenue split model for Launchpad Cohort.\n',
   );
   writeFileSync(path.join(dir, 'README.md'), '# Brain Store\nNothing relevant here.\n');
   return dir;
@@ -66,7 +66,7 @@ describe('GBrain provider', () => {
     const results = await brain.search('revenue split');
     expect(results.length).toBeGreaterThanOrEqual(1);
     expect(results[0].source).toBe('brain-store');
-    expect(results[0].title).toContain('founder-os');
+    expect(results[0].title).toContain('command-center');
     expect(results[0].snippet.toLowerCase()).toContain('revenue split');
   });
 
@@ -276,9 +276,9 @@ describe('parseQueryOutput — one record per [score] marker, not per line', () 
   });
 
   test('the scoreless legacy form still parses', () => {
-    const [r] = parseQueryOutput('projects/founder-os -- FOUNDER OS build notes\n');
-    expect(r.title).toBe('projects/founder-os');
-    expect(r.snippet).toContain('FOUNDER OS build notes');
+    const [r] = parseQueryOutput('projects/command-center -- COMMAND CENTER build notes\n');
+    expect(r.title).toBe('projects/command-center');
+    expect(r.snippet).toContain('COMMAND CENTER build notes');
     expect(r.score).toBeUndefined();
   });
 

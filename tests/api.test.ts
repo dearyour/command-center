@@ -3,11 +3,11 @@ import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-// Route handlers read the DB path from FOUNDER_OS_DB at first access, so the
+// Route handlers read the DB path from COMMAND_CENTER_DB at first access, so the
 // env var must be set before any handler module is imported. FUNNEL_PROVIDER
 // pins /api/funnel to the seeded set — tests never hit the live Attio API.
 beforeAll(() => {
-  process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-test-')), 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-test-')), 'test.db');
   process.env.FUNNEL_PROVIDER = 'seed';
 });
 

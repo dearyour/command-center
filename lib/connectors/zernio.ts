@@ -8,7 +8,7 @@ import type { ConnectorStatus } from '@/lib/connectors/types';
 /** Optional local account map. Generic and env-overridable: nothing here may
  *  depend on a path that exists only on one person's machine. */
 function configPath(): string {
-  return process.env.ZERNIO_CONFIG_PATH ?? path.join(os.homedir(), '.founder-os', 'social.json');
+  return process.env.ZERNIO_CONFIG_PATH ?? path.join(os.homedir(), '.command-center', 'social.json');
 }
 
 type ZernioConfig = {

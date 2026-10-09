@@ -12,7 +12,7 @@ describe('parseInboxConfigs', () => {
   test('parses up to four complete inbox slots', () => {
     const env = {
       INBOX_1_HOST: 'imap.gmail.com',
-      INBOX_1_USER: 'admin@founderos.example.com',
+      INBOX_1_USER: 'admin@commandcenter.example.com',
       INBOX_1_PASS: 'app-pass-1',
       INBOX_2_HOST: 'imap.gmail.com',
       INBOX_2_USER: 'alex@launchpadcohort.example.com',
@@ -30,10 +30,10 @@ describe('parseInboxConfigs', () => {
     expect(inboxes).toHaveLength(4);
     expect(inboxes[0]).toEqual({
       id: 'inbox-1',
-      name: 'admin@founderos.example.com',
+      name: 'admin@commandcenter.example.com',
       host: 'imap.gmail.com',
       port: 993,
-      user: 'admin@founderos.example.com',
+      user: 'admin@commandcenter.example.com',
       pass: 'app-pass-1',
       smtpHost: 'smtp.gmail.com', // imap. → smtp. default
       smtpPort: 465,

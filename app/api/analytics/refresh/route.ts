@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 /**
  * The analytics heartbeat. POST-only on purpose: the launchd cron
- * (ai.founderos.analytics-refresh, every 15 min — scripts/
+ * (ai.commandcenter.analytics-refresh, every 15 min — scripts/
  * install-analytics-cron.sh) curls this so metric + social history keeps
  * accruing even when nobody opens the app. Pulls every live connector,
  * snapshots the values that exist, skips honest-pending nulls.

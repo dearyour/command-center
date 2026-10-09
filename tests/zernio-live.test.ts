@@ -8,7 +8,7 @@ const ACCOUNTS_FIXTURE = {
     { platform: 'instagram', username: 'vantage.os', metadata: { profileData: { followersCount: 20000 } } },
     { platform: 'tiktok', username: 'vantage.os', metadata: { profileData: { followersCount: 5000 } } },
     { platform: 'youtube', username: 'vantageos', metadata: { profileData: { followersCount: 900 } } },
-    { platform: 'twitter', username: 'founderos', metadata: { profileData: { followersCount: 3000 } } },
+    { platform: 'twitter', username: 'commandcenter', metadata: { profileData: { followersCount: 3000 } } },
     { platform: 'linkedin', username: 'Alex', metadata: { profileData: { followersCount: 1200 } } },
     // facebook count via page fan_count fallback
     { platform: 'facebook', username: 'Alex', metadata: { availablePages: [{ fan_count: 42 }] } },
@@ -92,7 +92,7 @@ const HISTORY_FIXTURE = [
     platforms: ['twitter'],
     status: 'success',
     created: '2026-06-15T10:00:00.000Z',
-    postIds: [{ status: 'success', platform: 'twitter', postUrl: 'https://x.com/founderos/status/1' }],
+    postIds: [{ status: 'success', platform: 'twitter', postUrl: 'https://x.com/commandcenter/status/1' }],
   },
 ];
 

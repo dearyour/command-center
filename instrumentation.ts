@@ -14,7 +14,7 @@
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME !== 'nodejs') return;
-  if (process.env.FOUNDER_OS_SKIP_WARMUP === '1') return;
+  if (process.env.COMMAND_CENTER_SKIP_WARMUP === '1') return;
 
   const port = process.env.PORT ?? '4100';
   // Fire and forget, after a beat so the server is actually listening.
@@ -45,8 +45,8 @@ export async function register() {
  * too, so it must not import the connectors.
  */
 function startFailoverTick(port: string) {
-  if (process.env.FOUNDER_OS_DISABLE_FAILOVER === '1') return;
-  const everyMs = Number(process.env.FOUNDER_OS_FAILOVER_INTERVAL_MS ?? 5 * 60_000);
+  if (process.env.COMMAND_CENTER_DISABLE_FAILOVER === '1') return;
+  const everyMs = Number(process.env.COMMAND_CENTER_FAILOVER_INTERVAL_MS ?? 5 * 60_000);
   if (!Number.isFinite(everyMs) || everyMs < 30_000) return;
 
   const tick = async () => {
@@ -85,8 +85,8 @@ function startFailoverTick(port: string) {
  * better-sqlite3 or the connectors.
  */
 function startCronTick(port: string) {
-  if (process.env.FOUNDER_OS_DISABLE_CRON === '1') return;
-  const everyMs = Number(process.env.FOUNDER_OS_CRON_INTERVAL_MS ?? 60_000);
+  if (process.env.COMMAND_CENTER_DISABLE_CRON === '1') return;
+  const everyMs = Number(process.env.COMMAND_CENTER_CRON_INTERVAL_MS ?? 60_000);
   if (!Number.isFinite(everyMs) || everyMs < 15_000) return;
 
   const tick = async () => {

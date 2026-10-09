@@ -16,7 +16,7 @@ export const runtime = 'nodejs'; // better-sqlite3 is native — keep off the ed
  *   POST /api/memory  {text,title?}     write what the worker learned back to G-Brain
  *
  * From a Hermes container on the private network:
- *   curl -s "$FOUNDER_OS_URL/api/memory?format=md&q=$TASK" \
+ *   curl -s "$COMMAND_CENTER_URL/api/memory?format=md&q=$TASK" \
  *        -H "Authorization: Bearer $MEMORY_API_TOKEN"
  *
  * Most routes in this OS rely on the app's own access gate over the private

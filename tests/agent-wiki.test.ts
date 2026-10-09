@@ -22,7 +22,7 @@ const INDEX = buildWikiIndex([
   {
     path: 'agents/data-agent.md',
     content: [
-      '---', 'title: Data Agent', 'kind: agent', 'generated: founder-os', '---', '',
+      '---', 'title: Data Agent', 'kind: agent', 'generated: command-center', '---', '',
       '# Data Agent', '', 'G-Brain Analyst in [[pillar-tech]].', '',
       '## Harness', '', '- Tier: lead', '- Status: active', '',
       '## Tools', '', '- [[gbrain]]', '',

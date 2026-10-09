@@ -120,11 +120,11 @@ describe('PATCH /api/roadmap', () => {
 
   beforeAll(() => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'roadmap-5h-'));
-    process.env.FOUNDER_OS_DB = path.join(dir, 'test.db');
+    process.env.COMMAND_CENTER_DB = path.join(dir, 'test.db');
   });
 
   afterAll(() => {
-    delete process.env.FOUNDER_OS_DB;
+    delete process.env.COMMAND_CENTER_DB;
     fs.rmSync(dir, { recursive: true, force: true });
   });
 

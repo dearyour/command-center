@@ -1,6 +1,6 @@
-# FOUNDER OS
+# COMMAND CENTER
 
-Founder OS is a personal operating system for a one-person business: a web
+Command Center is a personal operating system for a one-person business: a web
 command center that runs a company as a set of AI-assisted departments. This
 file is the contributor guide for anyone (human or agent) working in the repo.
 
@@ -13,7 +13,7 @@ npm install
 npm run dev        # dev server → http://localhost:4100
 npm test           # vitest suite (must stay green)
 npm run typecheck  # tsc --noEmit
-npm run seed       # re-seed data/founder-os.db (idempotent)
+npm run seed       # re-seed data/command-center.db (idempotent)
 npm run build && npm start
 ```
 
@@ -22,7 +22,7 @@ Node 22 is the supported runtime.
 ## Stack
 
 Next.js 14 App Router (server components) + TypeScript + Tailwind +
-better-sqlite3 (`data/founder-os.db`, WAL, auto-seeded on first touch) +
+better-sqlite3 (`data/command-center.db`, WAL, auto-seeded on first touch) +
 Zod + Vitest.
 
 ## Architecture: demo-first, real-ready
@@ -89,7 +89,7 @@ provider status.
 ## Conventions
 
 - TDD: failing test first, then implementation. Tests live in `tests/`,
-  one file per module; use the `FOUNDER_OS_DB=:memory:` pattern (see
+  one file per module; use the `COMMAND_CENTER_DB=:memory:` pattern (see
   `tests/db.test.ts`).
 - Zod-validate anything that crosses the DB or API boundary.
 - Never commit secrets. Credentials belong in `.env.local`, which is
@@ -115,7 +115,7 @@ provider status.
   #2fd36f`/`warn #ffb000`/`err #ff2d3f`). Shared primitives in
   `components/terminal.tsx` (`Dot`, `Badge`, `Label`, `SectionHead`, `Kbd`,
   `Spark`). `/org` inherits the tokens through Tailwind classes only.
-- Env vars: `FOUNDER_OS_DB`, `BRAIN_PROVIDER`, `GBRAIN_BIN`, `GBRAIN_STORE`,
+- Env vars: `COMMAND_CENTER_DB`, `BRAIN_PROVIDER`, `GBRAIN_BIN`, `GBRAIN_STORE`,
   plus connector credentials in `.env.local`.
 - Heavy interaction-driven visualizations load via `next/dynamic`
   (`ssr: false`) behind dimension-matched skeletons (see

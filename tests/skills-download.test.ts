@@ -8,24 +8,24 @@ import { readUserSkills, readSkillMarkdown } from '@/lib/skills-catalog';
 /**
  * The /skills reader must offer the raw SKILL.md as a download
  * (GET /api/skills/[slug]?download=1) and the catalog must honor
- * FOUNDER_OS_SKILLS_DIR so all of this is testable off-machine.
+ * COMMAND_CENTER_SKILLS_DIR so all of this is testable off-machine.
  */
 
-const FIXTURE = fs.mkdtempSync(path.join(os.tmpdir(), 'founder-os-skills-'));
+const FIXTURE = fs.mkdtempSync(path.join(os.tmpdir(), 'command-center-skills-'));
 const MD = `---\nname: demo-skill\ndescription: A demo skill for tests.\n---\n\n# Demo skill\n\nBody text.\n`;
 
 beforeAll(() => {
   fs.mkdirSync(path.join(FIXTURE, 'demo-skill'), { recursive: true });
   fs.writeFileSync(path.join(FIXTURE, 'demo-skill', 'SKILL.md'), MD);
-  process.env.FOUNDER_OS_SKILLS_DIR = FIXTURE;
+  process.env.COMMAND_CENTER_SKILLS_DIR = FIXTURE;
 });
 
 afterAll(() => {
-  delete process.env.FOUNDER_OS_SKILLS_DIR;
+  delete process.env.COMMAND_CENTER_SKILLS_DIR;
   fs.rmSync(FIXTURE, { recursive: true, force: true });
 });
 
-describe('FOUNDER_OS_SKILLS_DIR override', () => {
+describe('COMMAND_CENTER_SKILLS_DIR override', () => {
   it('readUserSkills lists the fixture skill', () => {
     const skills = readUserSkills();
     expect(skills.map((s) => s.slug)).toContain('demo-skill');

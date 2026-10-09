@@ -95,6 +95,6 @@ describe('parseOpenedMap - storage is untrusted', () => {
   test('it does not share a key with the tab badge store', () => {
     // Sharing would put us right back where we started: acknowledging the tab
     // would clear every row dot.
-    expect(DELIVERABLES_OPENED_KEY).not.toBe('founder-os:deliverables-seen');
+    expect(DELIVERABLES_OPENED_KEY).not.toBe('command-center:deliverables-seen');
   });
 });

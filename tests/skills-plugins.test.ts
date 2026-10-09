@@ -13,7 +13,7 @@ import { readPluginSkills, readSkillMarkdown } from '@/lib/skills-catalog';
  * same names the CLI uses.
  */
 
-const FIXTURE = fs.mkdtempSync(path.join(os.tmpdir(), 'founder-os-plugins-'));
+const FIXTURE = fs.mkdtempSync(path.join(os.tmpdir(), 'command-center-plugins-'));
 const LIVE = path.join(FIXTURE, 'cache', 'official', 'myplugin', '1.0.0');
 const STALE = path.join(FIXTURE, 'cache', 'official', 'myplugin', '0.9.0');
 const BARE = path.join(FIXTURE, 'cache', 'official', 'no-skills-plugin', '1.0.0');
@@ -41,11 +41,11 @@ beforeAll(() => {
       },
     }),
   );
-  process.env.FOUNDER_OS_PLUGINS_DIR = FIXTURE;
+  process.env.COMMAND_CENTER_PLUGINS_DIR = FIXTURE;
 });
 
 afterAll(() => {
-  delete process.env.FOUNDER_OS_PLUGINS_DIR;
+  delete process.env.COMMAND_CENTER_PLUGINS_DIR;
   fs.rmSync(FIXTURE, { recursive: true, force: true });
 });
 

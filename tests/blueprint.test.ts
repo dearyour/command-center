@@ -1,4 +1,4 @@
-process.env.FOUNDER_OS_DB = ':memory:';
+process.env.COMMAND_CENTER_DB = ':memory:';
 process.env.LLM_PROVIDER = 'stub';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { openDb, type FounderDb } from '@/lib/db';

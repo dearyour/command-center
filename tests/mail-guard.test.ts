@@ -15,7 +15,7 @@ function blocked(result: { ok: boolean; error?: string }): string {
 
 const INBOX_ENV = {
   INBOX_1_HOST: 'imap.gmail.com',
-  INBOX_1_USER: 'founder@founderos.example.com',
+  INBOX_1_USER: 'founder@commandcenter.example.com',
   INBOX_1_PASS: 'p',
 };
 
@@ -38,12 +38,12 @@ describe('mail-guard', () => {
     expect(blocked(r)).toContain('alejandro@agency.example.com');
   });
 
-  it('blocks sending as founder@founderos.example.com per the send-as rule', () => {
-    const r = checkOutboundMail({ from: 'founder@founderos.example.com', to: 'alex@vantage.example.com' }, {});
+  it('blocks sending as founder@commandcenter.example.com per the send-as rule', () => {
+    const r = checkOutboundMail({ from: 'founder@commandcenter.example.com', to: 'alex@vantage.example.com' }, {});
   });
 
   it('allows internal mail to the operator so alerting keeps working', () => {
-    const r = checkOutboundMail({ from: 'alex@vantage.example.com', to: 'founder@founderos.example.com' }, {});
+    const r = checkOutboundMail({ from: 'alex@vantage.example.com', to: 'founder@commandcenter.example.com' }, {});
     expect(r.ok).toBe(true);
   });
 
@@ -54,7 +54,7 @@ describe('mail-guard', () => {
 
   it('does not let a display name smuggle a recipient past the check', () => {
     expect(parseAddresses('Alejandro <alejandro@agency.example.com>')).toEqual(['alejandro@agency.example.com']);
-    expect(isInternal('FOUNDER@founderos.example.com')).toBe(true);
+    expect(isInternal('FOUNDER@commandcenter.example.com')).toBe(true);
   });
 
   it('refuses an empty recipient list', () => {

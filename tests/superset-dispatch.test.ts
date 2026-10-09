@@ -63,7 +63,7 @@ describe('dispatchCodingTask', () => {
   test('resolves the project by name, then creates the workspace with agent + prompt', async () => {
     const { calls, exec } = execStub((args) =>
       args[0] === 'projects'
-        ? { stdout: JSON.stringify([{ id: 'proj-1', name: 'founder-os' }]) }
+        ? { stdout: JSON.stringify([{ id: 'proj-1', name: 'command-center' }]) }
         : { stdout: JSON.stringify({ id: 'ws-1' }) },
     );
     const res = await dispatchCodingTask({ request: 'Make the sidebar blue' }, { exec, now: FIXED });
@@ -130,7 +130,7 @@ describe('POST /api/conductor/dispatch', () => {
     const bin = path.join(dir, 'superset');
     fs.writeFileSync(
       bin,
-      '#!/bin/sh\nif [ "$1" = "projects" ]; then echo \'[{"id":"proj-9","name":"founder-os"}]\'; else echo \'{"id":"ws-9"}\'; fi\n',
+      '#!/bin/sh\nif [ "$1" = "projects" ]; then echo \'[{"id":"proj-9","name":"command-center"}]\'; else echo \'{"id":"ws-9"}\'; fi\n',
       { mode: 0o755 },
     );
     vi.stubEnv('SUPERSET_BIN', bin);

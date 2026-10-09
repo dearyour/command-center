@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 beforeAll(() => {
-  process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-apismoke-')), 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-apismoke-')), 'test.db');
   process.env.FUNNEL_PROVIDER = 'seed'; // keep /api/funnel off the live Attio API in tests
   process.env.MEMORY_API_TOKEN = 'smoke-memory-token';
   process.env.MANYCHAT_WEBHOOK_SECRET = 'smoke-manychat-token';
@@ -13,13 +13,13 @@ beforeAll(() => {
   // ~/.claude/skills/codex exists, on a CI runner nothing does, so the smoke
   // case 404'd there and passed here. Point the catalog at a fixture so the
   // route's 200 path is exercised identically on every machine.
-  const skills = mkdtempSync(path.join(tmpdir(), 'founder-os-skills-'));
+  const skills = mkdtempSync(path.join(tmpdir(), 'command-center-skills-'));
   mkdirSync(path.join(skills, 'codex'), { recursive: true });
   writeFileSync(
     path.join(skills, 'codex', 'SKILL.md'),
     '---\nname: codex\ndescription: Fixture skill for the API smoke test.\n---\n\n# Codex\n',
   );
-  process.env.FOUNDER_OS_SKILLS_DIR = skills;
+  process.env.COMMAND_CENTER_SKILLS_DIR = skills;
 });
 
 type RouteEntry = {

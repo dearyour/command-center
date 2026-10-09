@@ -27,7 +27,7 @@ describe('writeBrainDump', () => {
     expect(content).toContain('# Sarah first client');
     expect(content).toContain('Student Sarah closed her first client');
     expect(content).toMatch(/tags: \[launchpad-cohort\]/);
-    expect(content).toContain('source: founder-os-brain-dump');
+    expect(content).toContain('source: command-center-brain-dump');
   });
 
   test('derives a title from the first words when none given', () => {

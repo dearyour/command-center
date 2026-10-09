@@ -88,7 +88,7 @@ describe('boot warm-up', () => {
 
   test('only runs on the node runtime, and can be switched off', () => {
     expect(inst).toMatch(/NEXT_RUNTIME !== 'nodejs'/);
-    expect(inst).toMatch(/FOUNDER_OS_SKIP_WARMUP/);
+    expect(inst).toMatch(/COMMAND_CENTER_SKIP_WARMUP/);
   });
 
   test('the hook is actually enabled, or the file never runs', () => {

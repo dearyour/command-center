@@ -17,7 +17,7 @@ const root =
   process.env.GBRAIN_STORE ??
   path.join(os.homedir(), 'knowledge', 'brain-store');
 
-const dbPath = process.env.FOUNDER_OS_DB ?? path.join(process.cwd(), 'data', 'founder-os.db');
+const dbPath = process.env.COMMAND_CENTER_DB ?? path.join(process.cwd(), 'data', 'command-center.db');
 const db = openDb(dbPath);
 seedDatabase(db);
 

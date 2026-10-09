@@ -52,7 +52,7 @@ export function writeBrainDump(input: BrainDumpInput, storePath: string = DEFAUL
   const body = [
     '---',
     `created: ${new Date().toISOString()}`,
-    'source: founder-os-brain-dump',
+    'source: command-center-brain-dump',
     `tags: [${tags.join(', ')}]`,
     '---',
     '',

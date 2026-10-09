@@ -12,11 +12,11 @@ let dir: string;
 
 beforeAll(() => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lm-route-'));
-  process.env.FOUNDER_OS_DB = path.join(dir, 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(dir, 'test.db');
 });
 
 afterAll(() => {
-  delete process.env.FOUNDER_OS_DB;
+  delete process.env.COMMAND_CENTER_DB;
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
@@ -27,7 +27,7 @@ describe('POST /api/lead-magnets', () => {
   it('creates one, slugs the id, stamps origin os and today', async () => {
     const res = await post({
       name: 'The Claude Trading Setup',
-      url: 'https://founderos-trading-demo.example.com',
+      url: 'https://commandcenter-trading-demo.example.com',
       offer: 'The Robinhood MCP setup and the agent prompt',
       source: 'IG reel (comment TRADE)',
     });

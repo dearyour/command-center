@@ -8,7 +8,7 @@ import path from 'node:path';
 // brain provider carries no page count, which is exactly the "source cannot
 // answer" case these tests want to see reported honestly.
 beforeAll(() => {
-  process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-metrics-')), 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-metrics-')), 'test.db');
   process.env.BRAIN_PROVIDER = 'stub';
 });
 

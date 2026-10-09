@@ -7,7 +7,7 @@ import path from 'node:path';
 // before any page module is imported. FUNNEL_PROVIDER keeps /funnel off the
 // live Attio API in tests.
 beforeAll(() => {
-  process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-smoke-')), 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-smoke-')), 'test.db');
   process.env.FUNNEL_PROVIDER = 'seed';
 });
 

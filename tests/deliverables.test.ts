@@ -11,7 +11,7 @@ import { beforeAll, describe, expect, test } from 'vitest';
 let dir: string;
 
 beforeAll(() => {
-  dir = mkdtempSync(path.join(tmpdir(), 'founder-os-deliverables-'));
+  dir = mkdtempSync(path.join(tmpdir(), 'command-center-deliverables-'));
   mkdirSync(path.join(dir, 'ws-1', 'deliverables'), { recursive: true });
   writeFileSync(path.join(dir, 'ws-1', 'deliverables', 'plan.pdf'), 'pdf-bytes');
   writeFileSync(path.join(dir, 'ws-1', 'secret.env'), 'KEY=nope'); // NOT in deliverables/

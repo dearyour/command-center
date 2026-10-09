@@ -1,14 +1,14 @@
 /**
  * Production access gate, pure logic (middleware.ts is the thin edge wrapper).
  *
- * Deployed FounderOS instances live on public URLs (Railway hands out
- * *.up.railway.app). Set FOUNDER_OS_ACCESS_TOKEN and every request must
+ * Deployed Command Center instances live on public URLs (Railway hands out
+ * *.up.railway.app). Set COMMAND_CENTER_ACCESS_TOKEN and every request must
  * present the token once (?token=… or the challenge form); a cookie remembers
  * the browser after that. Leave it unset and the gate stays open — local dev
  * and the read-only demo deployment are unaffected.
  */
 
-export const GATE_COOKIE = 'founder_os_access';
+export const GATE_COOKIE = 'command_center_access';
 
 export type GateDecision =
   | { kind: 'open' } // no token configured — gate disabled
@@ -37,7 +37,7 @@ export function challengePage(): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>FounderOS · Private</title>
+<title>Command Center · Private</title>
 <style>
   body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
          background:#0a0a0a; color:#f5f5f5; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }

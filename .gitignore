@@ -2,7 +2,7 @@ node_modules/
 .next/
 .next-*/
 # The whole data dir, not just *.db / *.db-*. Those two patterns missed the
-# point-in-time snapshots (founder-os.db.bak-<sha> contains ".db.bak-", never
+# point-in-time snapshots (command-center.db.bak-<sha> contains ".db.bak-", never
 # the literal ".db-"), so all 11 of them read as plain untracked files and
 # `git clean -fd` — the SAFE variant — deleted every backup of the database.
 # See OS-330. This still does nothing against `git clean -fdx`: -x means "also

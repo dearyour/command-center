@@ -60,7 +60,7 @@ describe('conversationSummaries', () => {
 describe('GET /api/agents/[id]/chat returns the stored history', () => {
   let db: FounderDb;
   beforeAll(() => {
-    process.env.FOUNDER_OS_DB = ':memory:';
+    process.env.COMMAND_CENTER_DB = ':memory:';
     db = openDb(':memory:');
     seedDatabase(db);
   });

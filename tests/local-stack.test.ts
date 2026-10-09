@@ -38,7 +38,7 @@ describe('local stack checks the real stack', () => {
       expect(src, dead).not.toContain(`name: '${dead}'`);
     }
     // no self-check: it reported DOWN on the host while serving the page
-    expect(src).not.toContain("name: 'founder-os'");
+    expect(src).not.toContain("name: 'command-center'");
     for (const real of ['paperclip', 'hermes', 'gbrain', 'ffmpeg', 'pdftotext', 'gh']) {
       expect(src, real).toContain(`name: '${real}'`);
     }

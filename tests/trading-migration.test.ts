@@ -16,7 +16,7 @@ import { openDb, type FounderDb } from '@/lib/db';
 let db: FounderDb;
 afterEach(() => db?.close());
 
-const tmpFile = () => path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-migrate-')), 'legacy.db');
+const tmpFile = () => path.join(mkdtempSync(path.join(tmpdir(), 'command-center-migrate-')), 'legacy.db');
 
 /** The exact pre-migration schema, with a row shaped like the live push. */
 function writeLegacyDb(file: string): void {

@@ -7,7 +7,7 @@ import { dataDir, resolveDbPath } from '@/lib/paths';
  *  - DATA_DIR wins  (Railway mounts a persistent Volume there)
  *  - else /tmp on Vercel (its serverless FS is read-only elsewhere)
  *  - else the repo's data/ dir (local dev)
- * A file-specific override (FOUNDER_OS_DB / LEDGER_DB / BANK_DB) still wins over all.
+ * A file-specific override (COMMAND_CENTER_DB / LEDGER_DB / BANK_DB) still wins over all.
  */
 describe('dataDir', () => {
   test('uses DATA_DIR when set (the Railway volume mount)', () => {
@@ -29,7 +29,7 @@ describe('dataDir', () => {
 
 describe('resolveDbPath', () => {
   test('a file-specific override wins over everything', () => {
-    expect(resolveDbPath('founder-os.db', ':memory:', { DATA_DIR: '/data' })).toBe(':memory:');
+    expect(resolveDbPath('command-center.db', ':memory:', { DATA_DIR: '/data' })).toBe(':memory:');
   });
 
   test('no override joins the resolved data dir with the filename', () => {

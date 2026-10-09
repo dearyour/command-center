@@ -18,7 +18,7 @@
  * this lives in the browser, and anything unreadable reads as never-looked,
  * which can only ever suppress a dot rather than invent one.
  */
-export const DELIVERABLES_OPENED_KEY = 'founder-os:deliverables-opened';
+export const DELIVERABLES_OPENED_KEY = 'command-center:deliverables-opened';
 
 /** id → the revision he had open. */
 export type OpenedMap = Record<string, string>;

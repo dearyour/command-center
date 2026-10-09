@@ -33,8 +33,8 @@ const workspaces = {
   tenant_id: 'default',
   workspaces: [
     { id: 'default', slug: 'default', name: 'Default workspace', organization_id: 'default', status: 'active' },
-    { id: 'default:vantage', slug: 'vantage', name: 'Vantage', organization_id: 'founderos', status: 'active' },
-    { id: 'default:founderos', slug: 'founderos', name: 'FounderOS', organization_id: 'founderos', status: 'active' },
+    { id: 'default:vantage', slug: 'vantage', name: 'Vantage', organization_id: 'commandcenter', status: 'active' },
+    { id: 'default:commandcenter', slug: 'commandcenter', name: 'Command Center', organization_id: 'commandcenter', status: 'active' },
   ],
   pagination: { total: 3, offset: 0, limit: 50 },
 };
@@ -112,7 +112,7 @@ describe('OptimalEngine brain provider', () => {
         const ws = url.searchParams.get('workspace');
         if (ws === 'default:vantage')
           return { body: grepBody([hit('sales', '# Vantage pricing\n\nTier three has no payment link yet', 0.42)]) };
-        if (ws === 'default:founderos')
+        if (ws === 'default:commandcenter')
           return {
             body: grepBody([
               hit('knowledge-base', 'title: Cohort pricing\ndescription: $1,200 per seat', 0.91),
@@ -130,12 +130,12 @@ describe('OptimalEngine brain provider', () => {
     expect(results[0]).toEqual({
       title: 'Cohort pricing',
       snippet: 'title: Cohort pricing description: $1,200 per seat',
-      source: 'optimal://default:founderos/knowledge-base',
+      source: 'optimal://default:commandcenter/knowledge-base',
       score: 0.91,
     });
 
     const greps = fetch.calls.filter((c) => c.url.pathname === '/api/grep');
-    expect(greps.map((c) => c.url.searchParams.get('workspace')).sort()).toEqual(['default:founderos', 'default:vantage']);
+    expect(greps.map((c) => c.url.searchParams.get('workspace')).sort()).toEqual(['default:commandcenter', 'default:vantage']);
     for (const c of greps) expect(c.url.searchParams.get('q')).toBe('pricing');
   });
 

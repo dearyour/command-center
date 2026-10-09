@@ -9,7 +9,7 @@ import path from 'node:path';
  * throwing, because this route runs unattended on a timer.
  */
 beforeAll(() => {
-  process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-failover-')), 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-failover-')), 'test.db');
   // No board creds: the connector must return empty rather than reach the private network.
   delete process.env.PAPERCLIP_API_URL;
   delete process.env.PAPERCLIP_BOARD_KEY;

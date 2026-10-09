@@ -14,7 +14,7 @@
  * failure mode is a parked row coming back, never a row that still needs
  * attention silently disappearing.
  */
-export const DELIVERABLES_SNOOZE_KEY = 'founder-os:deliverables-snoozed';
+export const DELIVERABLES_SNOOZE_KEY = 'command-center:deliverables-snoozed';
 
 /** Long enough to finish the task at hand, short enough to still be today. */
 export const SNOOZE_MS = 2 * 60 * 60 * 1000;

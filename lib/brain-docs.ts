@@ -11,7 +11,7 @@ import type { Agent, Department, Person, SopTask, Tool } from '@/lib/schemas';
  * regenerate (hand-edited files without the marker are never touched).
  */
 
-export const GENERATED_MARKER = 'generated: founder-os';
+export const GENERATED_MARKER = 'generated: command-center';
 
 export type BrainDoc = { path: string; content: string };
 

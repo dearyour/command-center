@@ -35,7 +35,7 @@ const HOSTS: BlueprintNode[] = [
 ];
 
 const STORES: BlueprintNode[] = [
-  { id: 'store-db', kind: 'store', name: 'OS database', layer: 4, status: 'live', blurb: 'Agents, runs, departments, workflows, crons, metrics (SQLite).', facts: { path: 'data/founder-os.db' }, icon: 'database' },
+  { id: 'store-db', kind: 'store', name: 'OS database', layer: 4, status: 'live', blurb: 'Agents, runs, departments, workflows, crons, metrics (SQLite).', facts: { path: 'data/command-center.db' }, icon: 'database' },
   { id: 'store-ledger', kind: 'store', name: 'Ledger', layer: 4, status: 'live', blurb: 'Statement events and income by business (SQLite).', facts: { path: 'data/ledger.db' }, icon: 'database' },
   { id: 'store-bank', kind: 'store', name: 'Bank', layer: 4, status: 'live', blurb: 'Uploaded statements and the bank line items (SQLite).', facts: { path: 'data/bank.db' }, icon: 'database' },
   { id: 'store-candles', kind: 'store', name: 'Candles', layer: 4, status: 'live', blurb: 'Crypto and ETF candles the trading backtests read.', facts: { path: 'data/candles/' }, icon: 'list' },

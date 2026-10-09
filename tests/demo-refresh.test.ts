@@ -16,4 +16,9 @@ describe('public demo refresh', () => {
     expect(layout).toMatch(/\{children\}\s*<\/div>/);
     expect(layout).not.toMatch(/Modal/);
   });
+  test('the app is branded Command Center', () => {
+    expect(read('app/layout.tsx')).toContain("title: 'COMMAND CENTER'");
+    expect(read('components/Sidebar.tsx')).toContain('COMMAND CENTER');
+    expect(JSON.parse(read('package.json')).name).toBe('command-center');
+  });
 });

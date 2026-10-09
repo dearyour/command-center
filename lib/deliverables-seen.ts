@@ -11,8 +11,8 @@ import { revisionOf } from '@/lib/deliverable-revision';
  * things the operator already opened, or stays silent when a proposal lands) is
  * worse than no badge at all.
  */
-export const DELIVERABLES_SEEN_KEY = 'founder-os:deliverables-seen';
-export const DELIVERABLES_COLLAPSED_KEY = 'founder-os:deliverables-collapsed';
+export const DELIVERABLES_SEEN_KEY = 'command-center:deliverables-seen';
+export const DELIVERABLES_COLLAPSED_KEY = 'command-center:deliverables-collapsed';
 
 /** Every row id currently on the board, in display order. */
 export function deliverableIds(groups: DeliverableGroup[]): string[] {

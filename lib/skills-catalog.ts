@@ -23,14 +23,14 @@ const SLUG_RE = /^[a-zA-Z0-9._-]+$/;
 
 const validHalf = (s: string) => SLUG_RE.test(s) && s !== '.' && s !== '..';
 
-/** Resolved per call so tests (and deploys) can point FOUNDER_OS_SKILLS_DIR elsewhere. */
+/** Resolved per call so tests (and deploys) can point COMMAND_CENTER_SKILLS_DIR elsewhere. */
 function skillsDir(): string {
-  return process.env.FOUNDER_OS_SKILLS_DIR || path.join(os.homedir(), '.claude', 'skills');
+  return process.env.COMMAND_CENTER_SKILLS_DIR || path.join(os.homedir(), '.claude', 'skills');
 }
 
 /** ~/.claude/plugins (installed_plugins.json + version cache). Same override pattern. */
 function pluginsDir(): string {
-  return process.env.FOUNDER_OS_PLUGINS_DIR || path.join(os.homedir(), '.claude', 'plugins');
+  return process.env.COMMAND_CENTER_PLUGINS_DIR || path.join(os.homedir(), '.claude', 'plugins');
 }
 
 /** plugin name → live installPath, resolved through installed_plugins.json so

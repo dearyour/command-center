@@ -40,13 +40,13 @@ describe('parseEnvFile', () => {
 
 describe('the credential fallback file', () => {
   test('is a single generic path, overridable by env', () => {
-    const prev = process.env.FOUNDER_OS_CRED_FILE;
-    delete process.env.FOUNDER_OS_CRED_FILE;
-    expect(credFilePath()).toBe(path.join(os.homedir(), '.founder-os', '.env'));
-    process.env.FOUNDER_OS_CRED_FILE = '/tmp/somewhere/.env';
+    const prev = process.env.COMMAND_CENTER_CRED_FILE;
+    delete process.env.COMMAND_CENTER_CRED_FILE;
+    expect(credFilePath()).toBe(path.join(os.homedir(), '.command-center', '.env'));
+    process.env.COMMAND_CENTER_CRED_FILE = '/tmp/somewhere/.env';
     expect(credFilePath()).toBe('/tmp/somewhere/.env');
-    if (prev === undefined) delete process.env.FOUNDER_OS_CRED_FILE;
-    else process.env.FOUNDER_OS_CRED_FILE = prev;
+    if (prev === undefined) delete process.env.COMMAND_CENTER_CRED_FILE;
+    else process.env.COMMAND_CENTER_CRED_FILE = prev;
   });
 
   test('every CRED_FILES entry is that same one file', () => {
@@ -56,15 +56,15 @@ describe('the credential fallback file', () => {
 
 describe('env.local as a live credential store (connect flow)', () => {
   let tmp: string;
-  const prevOverride = process.env.FOUNDER_OS_ENV_LOCAL;
+  const prevOverride = process.env.COMMAND_CENTER_ENV_LOCAL;
 
   beforeEach(() => {
     tmp = path.join(os.tmpdir(), `founder-env-local-${process.pid}-${Math.random().toString(36).slice(2)}`);
-    process.env.FOUNDER_OS_ENV_LOCAL = tmp;
+    process.env.COMMAND_CENTER_ENV_LOCAL = tmp;
   });
   afterEach(() => {
-    if (prevOverride === undefined) delete process.env.FOUNDER_OS_ENV_LOCAL;
-    else process.env.FOUNDER_OS_ENV_LOCAL = prevOverride;
+    if (prevOverride === undefined) delete process.env.COMMAND_CENTER_ENV_LOCAL;
+    else process.env.COMMAND_CENTER_ENV_LOCAL = prevOverride;
     try { fs.unlinkSync(tmp); } catch {}
   });
 

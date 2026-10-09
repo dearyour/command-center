@@ -19,7 +19,7 @@ import path from 'node:path';
 // getDb() is an app singleton, so the database is per FILE, not per test.
 // Each case therefore uses its own ids and asserts only on those.
 beforeAll(() => {
-  process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'bulk-')), 'test.db');
+  process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'bulk-')), 'test.db');
 });
 
 async function decisionsFor(prefix: string) {

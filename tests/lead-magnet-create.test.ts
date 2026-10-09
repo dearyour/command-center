@@ -32,7 +32,7 @@ const made = (over: Partial<Parameters<FounderDb['leadMagnets']['insert']>[0]> =
   id: 'claude-trading',
   name: 'The Claude Trading Setup',
   offer: 'The Robinhood MCP setup, the agent prompt, and the guardrails',
-  url: 'https://founderos-trading-demo.example.com',
+  url: 'https://commandcenter-trading-demo.example.com',
   status: 'live' as const,
   captures: 'email' as const,
   destination: 'Beehiiv · newsletter',
@@ -48,7 +48,7 @@ describe('lead magnets created in the OS', () => {
     db.leadMagnets.insert(made());
     const [row] = db.leadMagnets.all().filter((r) => r.id === 'claude-trading');
     expect(row.name).toBe('The Claude Trading Setup');
-    expect(row.url).toBe('https://founderos-trading-demo.example.com');
+    expect(row.url).toBe('https://commandcenter-trading-demo.example.com');
     expect(row.origin).toBe('os');
   });
 

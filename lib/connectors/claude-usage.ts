@@ -61,11 +61,11 @@ export function defaultProjectsDir(): string {
 
 export function seatId(): string {
   const host = os.hostname().replace(/\.local$/i, '');
-  return process.env.FOUNDER_OS_SEAT_ID || `claude-${host.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+  return process.env.COMMAND_CENTER_SEAT_ID || `claude-${host.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 }
 
 export function seatLabel(): string {
-  return process.env.FOUNDER_OS_SEAT_LABEL || `Claude · ${os.hostname().replace(/\.local$/, '')}`;
+  return process.env.COMMAND_CENTER_SEAT_LABEL || `Claude · ${os.hostname().replace(/\.local$/, '')}`;
 }
 
 function listJsonl(dir: string, newerThanMs: number): string[] {

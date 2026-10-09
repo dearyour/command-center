@@ -80,9 +80,9 @@ export function Sidebar() {
   // Restore the previous shape before first paint of the nav, so the OS opens
   // the way it was left rather than snapping after hydration.
   useEffect(() => {
-    const savedW = Number(localStorage.getItem('founderos.sidebar.w'));
+    const savedW = Number(localStorage.getItem('commandcenter.sidebar.w'));
     if (Number.isFinite(savedW) && savedW >= MIN_W && savedW <= MAX_W) setWidth(savedW);
-    setCollapsed(localStorage.getItem('founderos.sidebar.collapsed') === '1');
+    setCollapsed(localStorage.getItem('commandcenter.sidebar.collapsed') === '1');
   }, []);
 
   // Where this instance actually is (localhost in dev, the deployed host
@@ -104,7 +104,7 @@ export function Sidebar() {
   }, [collapsed, width]);
 
   useEffect(() => {
-    localStorage.setItem('founderos.sidebar.collapsed', collapsed ? '1' : '0');
+    localStorage.setItem('commandcenter.sidebar.collapsed', collapsed ? '1' : '0');
   }, [collapsed]);
 
   const onDragStart = useCallback(
@@ -128,7 +128,7 @@ export function Sidebar() {
         window.removeEventListener('mousemove', onMove);
         window.removeEventListener('mouseup', onUp);
         setWidth((w) => {
-          localStorage.setItem('founderos.sidebar.w', String(w));
+          localStorage.setItem('commandcenter.sidebar.w', String(w));
           return w;
         });
       };
@@ -174,7 +174,7 @@ export function Sidebar() {
           <div className="flex items-center gap-[11px]">
             <OsMark size={34} className="shrink-0" />
             <div>
-              <div className="text-[13px] font-bold tracking-[0.14em]">FOUNDER OS</div>
+              <div className="text-[13px] font-bold tracking-[0.14em]">COMMAND CENTER</div>
               <div className="mt-[3px] whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">
                 v3 · Operator Mode
               </div>

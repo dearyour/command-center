@@ -28,7 +28,7 @@ beforeEach(() => {
   // ~/.plaud/tokens.json and .env.local never leak into a test.
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'plaud-'));
   tmpDirs.push(dir);
-  process.env.FOUNDER_OS_ENV_LOCAL = path.join(dir, '.env.local');
+  process.env.COMMAND_CENTER_ENV_LOCAL = path.join(dir, '.env.local');
   process.env.PLAUD_TOKEN_FILE = path.join(dir, 'tokens-mcp.json');
   delete process.env.PLAUD_REFRESH_TOKEN;
   delete process.env.PLAUD_ACCESS_TOKEN;
@@ -115,7 +115,7 @@ describe('resolvePlaudAccessToken', () => {
   });
 
   test('PLAUD_REFRESH_TOKEN in .env.local mints an access token, then caches it', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
     const { fetchFn, calls } = fakePlaud();
     expect(await resolvePlaudAccessToken(fetchFn)).toBe('at_minted');
     expect(await resolvePlaudAccessToken(fetchFn)).toBe('at_minted');
@@ -125,10 +125,10 @@ describe('resolvePlaudAccessToken', () => {
   });
 
   test('a rotated refresh token is written back to .env.local so the next boot still works', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'OTHER=1\nPLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'OTHER=1\nPLAUD_REFRESH_TOKEN=rt_good\n');
     const { fetchFn } = fakePlaud({ rotateTo: 'rt_next' });
     await resolvePlaudAccessToken(fetchFn);
-    const saved = fs.readFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'utf8');
+    const saved = fs.readFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'utf8');
     expect(saved).toContain('PLAUD_REFRESH_TOKEN=rt_next');
     expect(saved).toContain('OTHER=1');
   });
@@ -157,7 +157,7 @@ describe('resolvePlaudAccessToken', () => {
   });
 
   test('.env.local outranks the MCP token file', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
     fs.writeFileSync(
       process.env.PLAUD_TOKEN_FILE!,
       JSON.stringify({ access_token: 'at_file', refresh_token: 'rt_other', expires_at: Date.now() + 3_600_000 }),
@@ -177,7 +177,7 @@ describe('plaudStatus', () => {
   });
 
   test('connected with a working refresh token, and reports how many recordings it can see', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
     const s = await plaudStatus(fakePlaud().fetchFn);
     expect(s.state).toBe('connected');
     expect(s.detail).toContain('2');
@@ -185,14 +185,14 @@ describe('plaudStatus', () => {
   });
 
   test('error (never a fake connected) when the refresh token is rejected', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_revoked\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_revoked\n');
     const s = await plaudStatus(fakePlaud().fetchFn);
     expect(s.state).toBe('error');
     expect(s.detail).toContain('401');
   });
 
   test('error when the network is down', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
     const boom = (async () => {
       throw new Error('ECONNREFUSED');
     }) as unknown as typeof fetch;
@@ -208,14 +208,14 @@ describe('recentPlaudRecordings', () => {
   });
 
   test('returns parsed recordings with a credential, honouring the limit', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
     const rows = await recentPlaudRecordings(1, fakePlaud().fetchFn);
     expect(rows).toHaveLength(1);
     expect(rows[0].title).toBe('Acme Parking on-site walkthrough');
   });
 
   test('returns [] (never throws) when the API fails', async () => {
-    fs.writeFileSync(process.env.FOUNDER_OS_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
+    fs.writeFileSync(process.env.COMMAND_CENTER_ENV_LOCAL!, 'PLAUD_REFRESH_TOKEN=rt_good\n');
     expect(await recentPlaudRecordings(5, fakePlaud({ filesStatus: 500 }).fetchFn)).toEqual([]);
   });
 });

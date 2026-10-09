@@ -29,10 +29,10 @@ describe('seedDatabase seeds the trading account', () => {
 
 describe('trading ingest + read routes', () => {
   beforeAll(() => {
-    process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-trading-')), 'test.db');
+    process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-trading-')), 'test.db');
   });
   afterAll(() => {
-    delete process.env.FOUNDER_OS_DB;
+    delete process.env.COMMAND_CENTER_DB;
   });
 
   const push = async (body: unknown) => {
@@ -142,10 +142,10 @@ describe('trading ingest + read routes', () => {
 
 describe('trading limits route', () => {
   beforeAll(() => {
-    process.env.FOUNDER_OS_DB = path.join(mkdtempSync(path.join(tmpdir(), 'founder-os-limits-')), 'test.db');
+    process.env.COMMAND_CENTER_DB = path.join(mkdtempSync(path.join(tmpdir(), 'command-center-limits-')), 'test.db');
   });
   afterAll(() => {
-    delete process.env.FOUNDER_OS_DB;
+    delete process.env.COMMAND_CENTER_DB;
   });
 
   const VALID = {

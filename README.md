@@ -1,9 +1,9 @@
-# Founder OS
+# Command Center
 
 **A personal operating system for a one-person business: a live web command
 center that runs your company as a set of AI-assisted "departments."**
 
-Founder OS turns the tabs, tools, and mental overhead of running a solo business
+Command Center turns the tabs, tools, and mental overhead of running a solo business
 into one screen: unified comms, a client funnel, social growth, finances, a
 knowledge graph, and a roster of named AI agents that each own a real job.
 

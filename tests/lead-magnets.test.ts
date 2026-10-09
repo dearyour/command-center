@@ -54,7 +54,7 @@ describe('lead magnet rows', () => {
 
 describe('GET /api/lead-magnets', () => {
   test('answers 200 with the rows', async () => {
-    process.env.FOUNDER_OS_DB = ':memory:';
+    process.env.COMMAND_CENTER_DB = ':memory:';
     const mod = await import('@/app/api/lead-magnets/route');
     const res = (await mod.GET()) as Response;
     expect(res.status).toBe(200);

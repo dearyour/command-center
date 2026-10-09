@@ -50,8 +50,8 @@ describe('sidebar collapse and resize', () => {
   });
 
   test('the shape survives a reload', () => {
-    expect(sidebar).toMatch(/localStorage\.getItem\('founderos\.sidebar\.collapsed'\)/);
-    expect(sidebar).toMatch(/localStorage\.setItem\('founderos\.sidebar\.w'/);
+    expect(sidebar).toMatch(/localStorage\.getItem\('commandcenter\.sidebar\.collapsed'\)/);
+    expect(sidebar).toMatch(/localStorage\.setItem\('commandcenter\.sidebar\.w'/);
   });
 
   test('the toggle is reachable without a mouse', () => {

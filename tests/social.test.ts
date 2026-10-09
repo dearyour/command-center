@@ -25,7 +25,7 @@ describe('social schemas', () => {
       SocialAccountSchema.parse({ platform: 'myspace', handle: '@x', url: null, order: 1 }),
     ).toThrow();
     expect(() =>
-      SocialAccountSchema.parse({ platform: 'instagram', handle: '@founderos.ai', url: null, order: 1 }),
+      SocialAccountSchema.parse({ platform: 'instagram', handle: '@commandcenter.demo', url: null, order: 1 }),
     ).not.toThrow();
   });
 
@@ -38,17 +38,17 @@ describe('social schemas', () => {
 describe('social repo', () => {
   test('round-trips accounts ordered by their order column', () => {
     db = openDb(':memory:');
-    db.social.upsertAccount({ platform: 'tiktok', handle: '@founderos.ai', url: null, order: 2 });
-    db.social.upsertAccount({ platform: 'instagram', handle: '@founderos.ai', url: null, order: 1 });
+    db.social.upsertAccount({ platform: 'tiktok', handle: '@commandcenter.demo', url: null, order: 2 });
+    db.social.upsertAccount({ platform: 'instagram', handle: '@commandcenter.demo', url: null, order: 1 });
     expect(db.social.accounts().map((a) => a.platform)).toEqual(['instagram', 'tiktok']);
   });
 
   test('upserting the same platform replaces instead of duplicating', () => {
     db = openDb(':memory:');
     db.social.upsertAccount({ platform: 'twitter', handle: '@old', url: null, order: 1 });
-    db.social.upsertAccount({ platform: 'twitter', handle: '@Founderosai', url: null, order: 1 });
+    db.social.upsertAccount({ platform: 'twitter', handle: '@commandcenterdemo', url: null, order: 1 });
     expect(db.social.accounts()).toHaveLength(1);
-    expect(db.social.accounts()[0].handle).toBe('@Founderosai');
+    expect(db.social.accounts()[0].handle).toBe('@commandcenterdemo');
   });
 
   test('returns snapshots for a platform in chronological order', () => {
@@ -123,8 +123,8 @@ describe('syncSocialSnapshots', () => {
     const recorded = syncSocialSnapshots(
       db,
       {
-        instagram: { handle: '@founderos.ai', followers: 42000 },
-        tiktok: { handle: '@founderos.ai', followers: 12000 },
+        instagram: { handle: '@commandcenter.demo', followers: 42000 },
+        tiktok: { handle: '@commandcenter.demo', followers: 12000 },
         facebook: { handle: 'Alex', followers: 100 }, // untracked platform
         linkedin: { handle: 'Alex' }, // no follower count yet
       },
@@ -190,7 +190,7 @@ describe('platformDetail', () => {
     db = openDb(':memory:');
     seedDatabase(db);
     const detail = platformDetail(db, 'instagram');
-    expect(detail?.account.handle).toBe('@founderos.ai');
+    expect(detail?.account.handle).toBe('@commandcenter.demo');
     expect(detail?.snapshots.length).toBeGreaterThanOrEqual(1);
     expect(detail?.growth).toHaveProperty('d7');
     expect(detail?.growth).toHaveProperty('d30');
@@ -209,8 +209,8 @@ describe('seeded social data', () => {
     db = openDb(':memory:');
     seedDatabase(db);
     const byPlatform = new Map(db.social.accounts().map((a) => [a.platform, a]));
-    expect(byPlatform.get('instagram')?.handle).toBe('@founderos.ai');
-    expect(byPlatform.get('twitter')?.handle).toBe('@Founderosai');
+    expect(byPlatform.get('instagram')?.handle).toBe('@commandcenter.demo');
+    expect(byPlatform.get('twitter')?.handle).toBe('@commandcenterdemo');
     expect(byPlatform.get('linkedin')?.handle).toBe('Alex');
   });
 

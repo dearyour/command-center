@@ -98,7 +98,7 @@ const STOP = new Set([
   'the', 'and', 'com', 'net', 'org', 'call', 'with', 'meeting', 'sync', 'chat', 'zoom', 'meet',
   're', 'fwd', 'gmail', 'group', 'inc', 'llc', 'ltd', 'team', 'founder', 'rivera',
   // brands, ventures and role words, not names
-  'vantage', 'founderos', 'founder', 'launchpad cohort', 'launchpad cohorts', 'agency', 'cohort', 'core',
+  'vantage', 'commandcenter', 'founder', 'launchpad cohort', 'launchpad cohorts', 'agency', 'cohort', 'core',
   'sales', 'demo', 'ops', 'support', 'admin', 'invited', 'you', 'new', 'via', 'linkedin',
 ]);
 
@@ -146,7 +146,7 @@ export function isGroupChat(item: CommsItem): boolean {
   return /\b(group|chat|crew|team|family|squad|community)\b/i.test(s) && item.source !== 'email';
 }
 
-const COHORT_RE = /\b(cohort|founderos|founder os|deploy day|railway|gbrain|g-brain|module|lesson|homework|onboarding|sop|workspace)\b/i;
+const COHORT_RE = /\b(cohort|commandcenter|command center|deploy day|railway|gbrain|g-brain|module|lesson|homework|onboarding|sop|workspace)\b/i;
 const BRAND_RE = /\b(sponsor|sponsorship|partnership|collab|collaboration|brand deal|ambassador|paid promo|ugc|affiliate)\b/i;
 const REPLY_RE = /\b(re:|following up|circling back|as discussed|per our call|proposal|quote|invoice attached|contract|next steps?|kick ?off)\b/i;
 

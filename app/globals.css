@@ -389,7 +389,7 @@ body {
   background: var(--text-3);
 }
 
-/* ── Interaction layer (Founder OS Interaction Rebrand, 2026-09-07) ──
+/* ── Interaction layer (Command Center Interaction Rebrand, 2026-09-07) ──
    The look stays Monolith Signal; the surface now answers the mouse: hover
    lens (magnify + magnetic pull via useLens), press sink, spotlight, radius
    on controls only. Colors route through theme vars so every colorway keeps

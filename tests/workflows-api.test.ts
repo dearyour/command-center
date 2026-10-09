@@ -1,4 +1,4 @@
-process.env.FOUNDER_OS_DB = ':memory:';
+process.env.COMMAND_CENTER_DB = ':memory:';
 
 import { describe, expect, test } from 'vitest';
 import { GET, POST } from '@/app/api/workflows/route';

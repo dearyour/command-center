@@ -20,7 +20,7 @@ export default defineConfig({
     // time (lib/creds.ts), so tests must never see the operator's real file. Tests
     // that exercise the store point this at their own tmp path.
     env: {
-      FOUNDER_OS_ENV_LOCAL: path.resolve(__dirname, 'tests', '.env.local.does-not-exist'),
+      COMMAND_CENTER_ENV_LOCAL: path.resolve(__dirname, 'tests', '.env.local.does-not-exist'),
     },
   },
 });

@@ -54,6 +54,6 @@ describe('snoozing a queue row', () => {
   });
 
   test('it has its own key, separate from seen and opened', () => {
-    expect(DELIVERABLES_SNOOZE_KEY).toBe('founder-os:deliverables-snoozed');
+    expect(DELIVERABLES_SNOOZE_KEY).toBe('command-center:deliverables-snoozed');
   });
 });

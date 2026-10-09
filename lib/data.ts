@@ -15,8 +15,8 @@ export function getDb(): FounderDb {
   if (instance) return instance;
   // Resolved per platform: Railway volume (DATA_DIR) > Vercel /tmp > repo data/.
   // On Railway the volume persists, so the DB is durable, not per-cold-start.
-  // FOUNDER_OS_DB still overrides everything. See lib/paths.ts.
-  const dbPath = resolveDbPath('founder-os.db', process.env.FOUNDER_OS_DB);
+  // COMMAND_CENTER_DB still overrides everything. See lib/paths.ts.
+  const dbPath = resolveDbPath('command-center.db', process.env.COMMAND_CENTER_DB);
   if (dbPath !== ':memory:') fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   instance = openDb(dbPath);
   // Seed on first touch so a fresh clone boots looking alive. Each clause
