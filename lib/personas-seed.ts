@@ -10,16 +10,16 @@ export const PERSONAS: Persona[] = [
   {
     "id": "persona-marketing-agency",
     "order": 1,
-    "name": "Agency Owner",
-    "archetype": "Agency Operator",
-    "tagline": "Runs 14 client retainers on a 4-person team without dropping a ball",
-    "summary": "A marketing/creative agency owner who lives in client delivery, new-business pipeline, and reporting. This OS variant turns a small team's chaos into a watched factory line: every retainer's scope, deadlines, deliverables, and monthly report run on rails so nothing slips and no client churns silently.",
+    "name": "에이전시 오너",
+    "archetype": "에이전시 운영자",
+    "tagline": "4명 팀으로 고객 리테이너 14개를 공 하나도 떨어뜨리지 않고 운영합니다",
+    "summary": "고객 납품, 신규 사업 파이프라인, 보고를 떠안고 사는 마케팅·크리에이티브 에이전시 오너입니다. 이 OS 변형은 작은 팀의 혼돈을 감시되는 생산 라인으로 바꿉니다. 모든 리테이너의 범위, 마감, 산출물, 월간 보고가 궤도 위에서 돌아가므로 아무것도 미끄러지지 않고 고객이 조용히 떠나지 않습니다.",
     "accent": "#3df08c",
-    "northStar": "Net retainer MRR retained (revenue kept, not just won)",
+    "northStar": "유지된 순 리테이너 MRR (따낸 매출이 아니라 지켜 낸 매출)",
     "pillars": [
       {
-        "name": "New Business",
-        "focus": "Lead-to-signed-retainer pipeline and proposals",
+        "name": "신규 사업",
+        "focus": "리드에서 서명된 리테이너까지의 파이프라인과 제안서",
         "agents": [
           "Pipeline Bot",
           "Proposal Drafter",
@@ -28,8 +28,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Client Delivery",
-        "focus": "Retainer scope, deadlines, and deliverables across every account",
+        "name": "고객 납품",
+        "focus": "모든 계정의 리테이너 범위, 마감, 산출물",
         "agents": [
           "Account Pilot",
           "Deadline Sentinel",
@@ -38,8 +38,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Creative Studio",
-        "focus": "Asset production, brand consistency, and approvals",
+        "name": "크리에이티브 스튜디오",
+        "focus": "소재 제작, 브랜드 일관성, 승인",
         "agents": [
           "Brief Builder",
           "Asset Wrangler",
@@ -48,8 +48,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Reporting & Retention",
-        "focus": "Monthly client reports, health scores, and churn defense",
+        "name": "보고와 리텐션",
+        "focus": "월간 고객 보고, 건강 점수, 이탈 방어",
         "agents": [
           "Report Compiler",
           "Health Scorer",
@@ -58,8 +58,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Agency Ops",
-        "focus": "Team utilization, billing, and margin per account",
+        "name": "에이전시 운영",
+        "focus": "팀 가동률, 청구, 계정별 마진",
         "agents": [
           "Capacity Planner",
           "Invoice Runner",
@@ -79,28 +79,28 @@ export const PERSONAS: Persona[] = [
       "QuickBooks Online"
     ],
     "metrics": [
-      "Net retainer MRR",
-      "Client health score",
-      "On-time delivery rate",
-      "Team utilization %",
-      "Gross margin per account"
+      "순 리테이너 MRR",
+      "고객 건강 점수",
+      "정시 납품률",
+      "팀 가동률 %",
+      "계정별 매출총이익률"
     ],
-    "brainUse": "Every agent reads the shared G-Brain for each client's brand guidelines, scope-of-work, past approvals, and account history, so proposals, creative, and reports all speak in the right voice without re-briefing.",
-    "signaturePlay": "On the 1st of each month, Report Compiler pulls GA4, Meta, and Google Ads numbers for all active retainers, drafts a branded report per client in their voice, and Health Scorer flags any account trending toward churn so the owner walks into every QBR already knowing who's at risk and who to upsell."
+    "brainUse": "모든 에이전트가 공유 G-Brain에서 고객별 브랜드 가이드, 작업 범위, 과거 승인, 계정 이력을 읽습니다. 그래서 제안서, 크리에이티브, 보고서가 다시 브리핑하지 않아도 올바른 목소리로 나옵니다.",
+    "signaturePlay": "매월 1일, Report Compiler가 활성 리테이너 전체의 GA4, Meta, Google Ads 수치를 가져와 고객마다 그 고객의 목소리로 브랜드 보고서 초안을 씁니다. Health Scorer는 이탈 쪽으로 기울고 있는 계정을 표시합니다. 그러면 오너는 모든 QBR에 들어설 때 누가 위험하고 누구에게 추가 판매할지 이미 알고 있습니다."
   },
   {
     "id": "persona-brick-and-mortar",
     "order": 2,
-    "name": "Multi-Location Operator",
-    "archetype": "Brick-and-Mortar Founder",
-    "tagline": "6 locations, one floor view — labor, inventory, reviews, traffic.",
-    "summary": "A multi-unit restaurant + retail founder running six rooftops from one console. The OS turns POS, labor, inventory, and local-reputation feeds into a single floor view so every store runs to target whether or not the owner is on-site.",
+    "name": "다점포 운영자",
+    "archetype": "오프라인 매장 창업자",
+    "tagline": "매장 6곳, 하나의 현장 화면: 인건비, 재고, 리뷰, 방문객.",
+    "summary": "하나의 콘솔에서 매장 6곳을 운영하는 다점포 음식점·소매 창업자입니다. 이 OS는 POS, 인건비, 재고, 지역 평판 데이터를 하나의 현장 화면으로 묶어, 오너가 현장에 없어도 모든 매장이 목표대로 돌아가게 합니다.",
     "accent": "#5ec9f8",
-    "northStar": "Same-store sales per labor hour, blended across all locations",
+    "northStar": "전 매장 통합 노동시간당 기존점 매출",
     "pillars": [
       {
-        "name": "Floor Ops",
-        "focus": "Staffing, shifts, and labor cost per location",
+        "name": "홀 운영",
+        "focus": "매장별 인력 배치, 교대 근무, 인건비",
         "agents": [
           "Dispatch Bot",
           "Shift Filler",
@@ -108,8 +108,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Inventory & Cost",
-        "focus": "Stock, COGS, vendor invoices, waste",
+        "name": "재고와 원가",
+        "focus": "재고, 매출원가, 납품업체 청구서, 폐기",
         "agents": [
           "Count Keeper",
           "Invoice Reconciler",
@@ -118,8 +118,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Local Reputation",
-        "focus": "Reviews, local search, and listings across units",
+        "name": "지역 평판",
+        "focus": "리뷰, 지역 검색, 매장 등록 정보 전체",
         "agents": [
           "Review Harvester",
           "Reply Bot",
@@ -127,8 +127,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Foot Traffic & Sales",
-        "focus": "Door count, throughput, daypart sales, loyalty",
+        "name": "유동 인구와 매출",
+        "focus": "방문객 수, 처리량, 시간대별 매출, 로열티",
         "agents": [
           "Traffic Counter",
           "Daypart Analyst",
@@ -136,8 +136,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Back Office",
-        "focus": "Payments, payroll, cash, multi-entity P&L",
+        "name": "백오피스",
+        "focus": "결제, 급여, 현금, 다법인 손익",
         "agents": [
           "Settlement Bot",
           "Payroll Runner",
@@ -156,28 +156,28 @@ export const PERSONAS: Persona[] = [
       "G-Brain"
     ],
     "metrics": [
-      "Same-store sales (YoY)",
-      "Labor cost % of sales",
-      "Food cost % (COGS)",
-      "Avg Google rating + review velocity",
-      "Door count vs conversion to ticket"
+      "기존점 매출 (전년 대비)",
+      "매출 대비 인건비 %",
+      "식자재 원가 % (매출원가)",
+      "구글 평균 평점 + 리뷰 속도",
+      "방문객 수 대비 결제 전환율"
     ],
-    "brainUse": "Every agent reads the shared G-Brain — par levels, vendor terms, recipe costs, opening checklists, and per-store playbooks — so a fix at one location becomes the standard at all six.",
-    "signaturePlay": "Before open, the OS pulls last night's Toast sales and today's 7shifts roster, forecasts each store's covers by daypart, flags any location running over labor target, auto-pings Shift Filler to cover call-outs, and drops a one-line per-store readiness brief — staffed, stocked, and reviews replied — on the owner's phone by 7am."
+    "brainUse": "모든 에이전트가 공유 G-Brain을 읽습니다. 적정 재고 기준, 납품 조건, 레시피 원가, 오픈 체크리스트, 매장별 플레이북이 들어 있어서, 한 매장에서 고친 것이 여섯 매장 모두의 기준이 됩니다.",
+    "signaturePlay": "개점 전에 OS가 어젯밤 Toast 매출과 오늘 7shifts 근무표를 가져오고, 매장마다 시간대별 손님 수를 예측합니다. 인건비 목표를 넘을 매장을 표시하고, Shift Filler에 자동으로 알려 결근을 메우게 합니다. 그리고 매장별 한 줄 준비 상황(인원 배치, 재고, 리뷰 답변 완료)을 오전 7시까지 오너의 휴대폰에 보냅니다."
   },
   {
     "id": "persona-ecommerce-dtc",
     "order": 3,
-    "name": "DTC Brand Operator",
-    "archetype": "DTC Operator",
-    "tagline": "One operator running a Shopify brand on margin, not vibes.",
-    "summary": "A solo ecommerce/DTC brand owner running a Shopify storefront, paid acquisition, 3PL fulfillment, and email/SMS retention from one deck. This OS variant watches contribution margin per order in real time and lets agents kill losing ad sets, chase abandoned carts, and flag stockouts before they cost a launch.",
+    "name": "DTC 브랜드 운영자",
+    "archetype": "DTC 운영자",
+    "tagline": "감이 아니라 마진으로 Shopify 브랜드를 운영하는 한 명의 운영자.",
+    "summary": "Shopify 스토어, 유료 광고 유입, 3PL 물류, 이메일·SMS 리텐션을 혼자 한 화면에서 운영하는 이커머스·DTC 브랜드 오너입니다. 이 OS 변형은 주문마다 공헌이익을 실시간으로 보고, 에이전트가 손해 보는 광고 세트를 끄고, 버려진 장바구니를 쫓고, 출시를 망치기 전에 재고 소진을 표시하게 합니다.",
     "accent": "#e1306c",
-    "northStar": "Contribution margin after ad spend (per order, blended)",
+    "northStar": "광고비를 뺀 공헌이익 (주문당, 통합)",
     "pillars": [
       {
-        "name": "Acquisition",
-        "focus": "Paid ads + traffic — spend that buys profitable orders",
+        "name": "유입",
+        "focus": "유료 광고와 트래픽 · 수익이 되는 주문을 사는 지출",
         "agents": [
           "Spend Sentinel",
           "Creative Tester",
@@ -185,8 +185,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Storefront & CRO",
-        "focus": "Shopify catalog, PDP, checkout, conversion rate",
+        "name": "스토어와 전환율 최적화",
+        "focus": "Shopify 상품 목록, 상품 상세, 결제, 전환율",
         "agents": [
           "Catalog Bot",
           "CRO Tester",
@@ -194,8 +194,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Retention",
-        "focus": "Email/SMS flows, LTV, repeat-purchase engine",
+        "name": "리텐션",
+        "focus": "이메일·SMS 흐름, LTV, 재구매 엔진",
         "agents": [
           "Flow Builder",
           "Winback Bot",
@@ -203,8 +203,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Fulfillment & Ops",
-        "focus": "Inventory, 3PL, shipping SLAs, stockout defense",
+        "name": "물류와 운영",
+        "focus": "재고, 3PL, 배송 SLA, 품절 방어",
         "agents": [
           "Stockout Sentinel",
           "Dispatch Bot",
@@ -212,8 +212,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Margin & Finance",
-        "focus": "Unit economics, COGS, blended CAC, cash",
+        "name": "마진과 재무",
+        "focus": "단위 경제성, 매출원가, 통합 CAC, 현금",
         "agents": [
           "Margin Watch",
           "CAC Auditor",
@@ -232,28 +232,28 @@ export const PERSONAS: Persona[] = [
       "Stripe"
     ],
     "metrics": [
-      "Contribution margin / order",
-      "Blended ROAS",
-      "CAC vs 60-day LTV",
-      "Repeat-purchase rate",
-      "Days of inventory on hand"
+      "주문당 공헌이익",
+      "통합 ROAS",
+      "CAC 대 60일 LTV",
+      "재구매율",
+      "재고 보유 일수"
     ],
-    "brainUse": "Every agent reads from one shared G-Brain holding SKU economics, brand voice, hero-creative learnings, and customer segments — so a winning ad angle instantly informs Klaviyo flows and PDP copy.",
-    "signaturePlay": "Spend Sentinel cross-checks each ad set's spend against real contribution margin from Shopify+COGS overnight, auto-pauses anything underwater, reallocates budget to the profitable hero creative, and fires a Klaviyo/Postscript winback to yesterday's abandoned carts — so the operator wakes up to a brand that already cut its losers and chased its money."
+    "brainUse": "모든 에이전트가 하나의 공유 G-Brain에서 읽습니다. SKU 경제성, 브랜드 목소리, 핵심 크리에이티브에서 얻은 교훈, 고객 세그먼트가 들어 있어서, 잘 먹힌 광고 각도가 Klaviyo 흐름과 상품 상세 문구에 바로 반영됩니다.",
+    "signaturePlay": "Spend Sentinel이 밤사이 광고 세트별 지출을 Shopify와 매출원가 데이터로 계산한 실제 공헌이익과 대조합니다. 적자인 것은 자동으로 멈추고, 예산을 수익이 나는 핵심 크리에이티브로 옮기며, 어제 버려진 장바구니 고객에게 Klaviyo·Postscript 윈백 메시지를 보냅니다. 그래서 운영자는 이미 손해 본 것을 잘라 내고 돈을 쫓아 둔 브랜드를 보며 깨어납니다."
   },
   {
     "id": "persona-online-coach",
     "order": 4,
-    "name": "Personal Online Coach",
-    "archetype": "Transformation Coach",
-    "tagline": "Clients win, stay, and refer — the practice runs itself.",
-    "summary": "A 1:1 and group transformation coach (fitness/health/mindset) running a hybrid book of premium private clients plus cohort programs. This OS variant turns coaching into an operating system: every lead nurtured, every client onboarded, every check-in answered, every at-risk client caught, and every win turned into a referral or testimonial.",
+    "name": "개인 온라인 코치",
+    "archetype": "변화 코치",
+    "tagline": "고객이 성과를 내고, 남고, 추천합니다. 사업은 스스로 돌아갑니다.",
+    "summary": "1:1과 그룹으로 변화를 돕는 코치(피트니스·건강·마인드셋)입니다. 프리미엄 개인 고객과 기수제 프로그램을 함께 운영합니다. 이 OS 변형은 코칭을 운영 체계로 바꿉니다. 모든 리드를 키우고, 모든 고객을 온보딩하고, 모든 체크인에 답하고, 위험한 고객을 잡아내고, 모든 성과를 추천이나 후기로 바꿉니다.",
     "accent": "#ffc53d",
-    "northStar": "Active retained clients × 90-day transformation rate",
+    "northStar": "활성 유지 고객 수 × 90일 변화 달성률",
     "pillars": [
       {
-        "name": "Acquisition",
-        "focus": "Turn leads and discovery calls into signed clients",
+        "name": "유입",
+        "focus": "리드와 상담 통화를 계약된 고객으로 바꿉니다",
         "agents": [
           "Lead Catcher",
           "Booking Bot",
@@ -261,8 +261,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Onboarding & Delivery",
-        "focus": "Intake, program build, and getting clients moving day one",
+        "name": "온보딩과 제공",
+        "focus": "접수, 프로그램 구성, 첫날부터 고객이 움직이게 하기",
         "agents": [
           "Intake Bot",
           "Program Builder",
@@ -270,8 +270,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Accountability & Results",
-        "focus": "Check-ins, habit streaks, and tracking transformation data",
+        "name": "책임과 성과",
+        "focus": "체크인, 습관 연속 기록, 변화 데이터 추적",
         "agents": [
           "Check-in Bot",
           "Streak Sentinel",
@@ -279,8 +279,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Retention & Renewals",
-        "focus": "Catch churn risk, drive renewals, harvest wins",
+        "name": "리텐션과 재계약",
+        "focus": "이탈 위험 포착, 재계약 유도, 성과 수확",
         "agents": [
           "Churn Sentinel",
           "Renewal Closer",
@@ -288,8 +288,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Brand & Lead-Gen",
-        "focus": "Content, community, and referral engine that fills the pipeline",
+        "name": "브랜드와 리드 생성",
+        "focus": "파이프라인을 채우는 콘텐츠, 커뮤니티, 추천 엔진",
         "agents": [
           "Content Bot",
           "Community Bot",
@@ -308,28 +308,28 @@ export const PERSONAS: Persona[] = [
       "Circle"
     ],
     "metrics": [
-      "Active retained clients",
-      "90-day transformation rate",
-      "Check-in response rate",
-      "Renewal rate",
-      "Referral / testimonial count"
+      "활성 유지 고객 수",
+      "90일 변화 달성률",
+      "체크인 응답률",
+      "재계약률",
+      "추천 및 후기 수"
     ],
-    "brainUse": "Every agent reads one shared client brain — goals, injuries, macros, milestones, and last-conversation context — so check-ins, recaps, and renewals all sound like the coach who actually knows them.",
-    "signaturePlay": "Every client check-in is auto-pulled, scored against their goals, and either gets a personalized voice/text reply drafted or fires a churn flag — so nobody goes silent, no win goes uncaptured, and every transformation becomes a testimonial and a referral ask."
+    "brainUse": "모든 에이전트가 하나의 공유 고객 기억을 읽습니다. 목표, 부상, 영양 목표치, 마일스톤, 마지막 대화 맥락이 들어 있어서, 체크인과 요약과 재계약 메시지가 모두 고객을 실제로 아는 코치의 목소리로 나옵니다.",
+    "signaturePlay": "모든 고객 체크인을 자동으로 가져와 목표에 비추어 점수를 매기고, 맞춤형 음성·문자 답장 초안을 쓰거나 이탈 알림을 보냅니다. 그래서 아무도 연락이 끊기지 않고, 어떤 성과도 기록되지 않은 채 지나가지 않으며, 모든 변화가 후기와 추천 요청으로 이어집니다."
   },
   {
     "id": "persona-saas-founder",
     "order": 5,
-    "name": "SaaS Command Center",
-    "archetype": "SaaS Founder",
-    "tagline": "Solo indie SaaS founder running product, growth, and MRR on autopilot",
-    "summary": "A bootstrapped indie software founder running a self-serve SaaS solo. This OS variant turns the whole funnel — signup to expansion to churn-save — into a closed loop of named agents so one person operates like a Series A growth team.",
+    "name": "SaaS 커맨드 센터",
+    "archetype": "SaaS 창업자",
+    "tagline": "제품, 성장, MRR을 자동 조종으로 돌리는 1인 인디 SaaS 창업자",
+    "summary": "외부 투자 없이 셀프 서비스 SaaS를 혼자 운영하는 인디 소프트웨어 창업자입니다. 이 OS 변형은 가입부터 확장, 이탈 방어까지 퍼널 전체를 이름 붙은 에이전트들의 닫힌 루프로 바꿉니다. 그래서 한 사람이 시리즈 A 성장팀처럼 움직입니다.",
     "accent": "#a855f7",
-    "northStar": "Net MRR growth (new + expansion − churn)",
+    "northStar": "순 MRR 성장 (신규 + 확장 − 이탈)",
     "pillars": [
       {
-        "name": "Acquisition",
-        "focus": "Top-of-funnel growth loops, SEO, and trial signups",
+        "name": "유입",
+        "focus": "퍼널 상단 성장 루프, SEO, 체험판 가입",
         "agents": [
           "Loop Engine",
           "SEO Crawler",
@@ -337,8 +337,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Activation",
-        "focus": "Onboarding new signups to first value (aha moment)",
+        "name": "활성화",
+        "focus": "신규 가입자를 첫 가치(아하 모먼트)까지 온보딩",
         "agents": [
           "Onboarding Bot",
           "Aha Tracker",
@@ -346,8 +346,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Retention",
-        "focus": "Churn prediction and win-back before cancellation",
+        "name": "리텐션",
+        "focus": "해지 전 이탈 예측과 윈백",
         "agents": [
           "Churn Sentinel",
           "Win-Back Agent",
@@ -355,8 +355,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Support",
-        "focus": "Inbox triage, ticket deflection, and docs from real tickets",
+        "name": "지원",
+        "focus": "문의함 분류, 티켓 전환 차단, 실제 티켓에서 만든 문서",
         "agents": [
           "Ticket Triage",
           "Deflection Bot",
@@ -364,8 +364,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Revenue Ops",
-        "focus": "MRR, dunning, and every billing event in one view",
+        "name": "매출 운영",
+        "focus": "MRR, 미납 독촉, 모든 청구 이벤트를 한 화면에서",
         "agents": [
           "MRR Pulse",
           "Dunning Agent",
@@ -384,28 +384,28 @@ export const PERSONAS: Persona[] = [
       "G-Brain"
     ],
     "metrics": [
-      "Net MRR",
-      "Trial-to-paid conversion %",
-      "Net revenue retention",
-      "Logo + revenue churn %",
-      "Activation rate (time-to-aha)"
+      "순 MRR",
+      "체험판 대 유료 전환율 %",
+      "순 매출 유지율",
+      "고객사 + 매출 이탈률 %",
+      "활성화율 (아하까지 걸린 시간)"
     ],
-    "brainUse": "Every agent reads and writes the same G-Brain core — feature decisions, churn reasons, support answers, and onboarding playbooks — so a support reply, a docs page, and a win-back email all speak with one product memory.",
-    "signaturePlay": "Churn Sentinel watches PostHog usage decay + Stripe billing signals, scores at-risk accounts nightly, then fires Win-Back Agent to send a personalized Customer.io save offer and opens a Linear issue on the feature gap that caused the churn — a full detect-save-fix loop with no founder in the seat."
+    "brainUse": "모든 에이전트가 같은 G-Brain 코어를 읽고 씁니다. 기능 결정, 이탈 사유, 지원 답변, 온보딩 플레이북이 들어 있어서, 지원 답장, 문서 페이지, 윈백 이메일이 모두 같은 제품 기억을 바탕으로 말합니다.",
+    "signaturePlay": "Churn Sentinel이 PostHog 사용량 감소와 Stripe 청구 신호를 지켜보고, 위험 계정을 매일 밤 점수화합니다. 그다음 Win-Back Agent가 맞춤형 Customer.io 유지 제안을 보내고, 이탈을 일으킨 기능 공백에 대해 Linear 이슈를 엽니다. 창업자가 자리에 없어도 감지, 유지, 수정이 한 바퀴 도는 루프입니다."
   },
   {
     "id": "persona-real-estate",
     "order": 6,
-    "name": "Real Estate Team Lead",
-    "archetype": "Broker-Operator",
-    "tagline": "Runs a producing team: leads in, listings up, deals closed.",
-    "summary": "A team lead / managing broker running a high-volume residential team. This OS variant turns a leaky lead-to-close pipeline into a machine: leads get worked in 60 seconds, listings get launched and syndicated, showings stay booked, and every transaction crosses the finish line with nothing falling through.",
+    "name": "부동산 팀장",
+    "archetype": "중개 운영자",
+    "tagline": "성과를 내는 팀을 운영합니다. 리드가 들어오고, 매물이 올라가고, 계약이 닫힙니다.",
+    "summary": "주거용 부동산 물량이 많은 팀을 이끄는 팀장이자 관리 중개인입니다. 이 OS 변형은 새는 리드-계약 파이프라인을 기계로 바꿉니다. 리드는 60초 안에 처리되고, 매물은 바로 올라가 여러 채널로 배포되며, 방문 예약은 계속 잡히고, 모든 거래는 아무것도 빠뜨리지 않고 결승선을 넘습니다.",
     "accent": "#22c55e",
-    "northStar": "Net closed GCI per quarter (commission off closed-and-funded deals)",
+    "northStar": "분기별 순 체결 GCI (체결되고 자금이 집행된 거래의 중개 수수료)",
     "pillars": [
       {
-        "name": "Lead Gen & Conversion",
-        "focus": "Inbound buyer/seller leads to booked appointments",
+        "name": "리드 확보와 전환",
+        "focus": "들어오는 매수·매도 리드를 예약된 약속으로",
         "agents": [
           "Speed-to-Lead Bot",
           "Drip Nurturer",
@@ -413,8 +413,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Listings & Marketing",
-        "focus": "List, price, launch, and syndicate every property",
+        "name": "매물과 마케팅",
+        "focus": "모든 매물을 등록하고, 가격을 매기고, 출시하고, 배포합니다",
         "agents": [
           "Listing Launcher",
           "CMA Pricer",
@@ -423,8 +423,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Showings & Transactions",
-        "focus": "Showings booked and deals driven to close",
+        "name": "방문과 거래",
+        "focus": "방문을 예약하고 거래를 체결까지 끌고 갑니다",
         "agents": [
           "Showing Scheduler",
           "Deal Driver",
@@ -432,8 +432,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Team & Accountability",
-        "focus": "Agent production, splits, and pipeline coverage",
+        "name": "팀과 책임",
+        "focus": "중개인 실적, 수수료 배분, 파이프라인 커버리지",
         "agents": [
           "Roster Tracker",
           "Lead Router",
@@ -441,8 +441,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Client Care & Database",
-        "focus": "Past clients, reviews, and repeat/referral business",
+        "name": "고객 관리와 데이터베이스",
+        "focus": "기존 고객, 리뷰, 재계약과 추천 거래",
         "agents": [
           "Review Harvester",
           "SOI Reactivator",
@@ -459,28 +459,28 @@ export const PERSONAS: Persona[] = [
       "BombBomb"
     ],
     "metrics": [
-      "Speed-to-lead (avg first-touch time)",
-      "Lead-to-appointment conversion %",
-      "Active listings + days on market",
-      "Pending-to-close ratio",
-      "GCI pipeline (pending + closed)"
+      "리드 응대 속도 (첫 연락 평균 시간)",
+      "리드 대 약속 전환율 %",
+      "활성 매물 + 시장 체류 일수",
+      "계약 대기 대 체결 비율",
+      "GCI 파이프라인 (대기 + 체결)"
     ],
-    "brainUse": "One shared G-Brain holds every lead's history, property notes, pricing comps, and past-client relationships so any agent answering a call or text already knows the full context.",
-    "signaturePlay": "A Zillow lead hits the system at 11pm: Speed-to-Lead Bot texts within 60 seconds, qualifies budget and timeline against G-Brain, routes the hot one to the on-duty agent and books the showing in ShowingTime before the lead ever calls a competitor."
+    "brainUse": "하나의 공유 G-Brain에 모든 리드의 이력, 매물 메모, 시세 비교, 기존 고객 관계가 들어 있습니다. 그래서 전화나 문자에 답하는 에이전트는 이미 전체 맥락을 알고 있습니다.",
+    "signaturePlay": "밤 11시에 Zillow 리드가 들어옵니다. Speed-to-Lead Bot이 60초 안에 문자를 보내고, G-Brain에 비추어 예산과 일정을 확인합니다. 뜨거운 리드는 당번 중개인에게 넘기고, 리드가 경쟁사에 전화하기 전에 ShowingTime에 방문을 예약합니다."
   },
   {
     "id": "persona-course-creator",
     "order": 7,
-    "name": "Course Creator / Info-Product Operator",
-    "archetype": "Course Creator",
-    "tagline": "Cohorts, evergreen funnels, and student wins on autopilot.",
-    "summary": "An info-product seller running paid cohorts and an always-on evergreen funnel. This OS variant orchestrates launches, keeps students completing the material, and harvests testimonials and affiliate revenue — so enrollments compound without the founder living in the dashboard.",
+    "name": "강의 크리에이터 / 정보 상품 운영자",
+    "archetype": "강의 크리에이터",
+    "tagline": "기수 과정, 상시 퍼널, 수강생의 성과를 자동 조종으로.",
+    "summary": "유료 기수 과정과 상시 운영되는 에버그린 퍼널을 돌리는 정보 상품 판매자입니다. 이 OS 변형은 출시를 조율하고, 수강생이 강의를 끝까지 듣게 하고, 후기와 제휴 수익을 거둡니다. 그래서 창업자가 대시보드에 붙어 있지 않아도 수강 등록이 복리로 늘어납니다.",
     "accent": "#f59e0b",
-    "northStar": "Enrollment revenue x student completion rate (revenue that actually finishes the course)",
+    "northStar": "수강 매출 × 수강 완료율 (실제로 끝까지 듣는 수강생에게서 나오는 매출)",
     "pillars": [
       {
-        "name": "Funnel & Launch",
-        "focus": "Evergreen funnel + live launch carts, urgency, and cart-open ops",
+        "name": "퍼널과 출시",
+        "focus": "에버그린 퍼널 + 실시간 출시 장바구니, 긴박감, 장바구니 오픈 운영",
         "agents": [
           "Cart Sentinel",
           "Launch Conductor",
@@ -489,8 +489,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Audience & Content",
-        "focus": "Top-of-funnel content, lead magnets, and list growth that feeds the funnel",
+        "name": "독자와 콘텐츠",
+        "focus": "퍼널 상단 콘텐츠, 리드 자석, 퍼널에 공급되는 리스트 성장",
         "agents": [
           "Lead-Magnet Bot",
           "Content Repurposer",
@@ -498,8 +498,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Student Success",
-        "focus": "Onboarding, completion nudges, community engagement, testimonial harvest",
+        "name": "수강생 성공",
+        "focus": "온보딩, 완료 독려, 커뮤니티 참여, 후기 수집",
         "agents": [
           "Onboarding Bot",
           "Completion Sentinel",
@@ -508,8 +508,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Money & Recovery",
-        "focus": "Checkout revenue, payment plans, failed-payment dunning, refund/chargeback watch",
+        "name": "매출과 회수",
+        "focus": "결제 매출, 할부 플랜, 결제 실패 독촉, 환불·차지백 감시",
         "agents": [
           "Checkout Pulse",
           "Dunning Bot",
@@ -517,8 +517,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Affiliates & Partners",
-        "focus": "Affiliate recruiting, swipe copy, commission tracking, JV launch ops",
+        "name": "제휴와 파트너",
+        "focus": "제휴 모집, 홍보 문구, 수수료 추적, JV 출시 운영",
         "agents": [
           "Affiliate Recruiter",
           "Commission Bot",
@@ -537,28 +537,28 @@ export const PERSONAS: Persona[] = [
       "PartnerStack"
     ],
     "metrics": [
-      "Cart conversion rate",
-      "Course completion rate",
-      "Email list growth + EPC",
-      "Refund / chargeback rate",
-      "Affiliate-driven revenue %"
+      "장바구니 전환율",
+      "강의 완료율",
+      "이메일 리스트 성장 + EPC",
+      "환불 / 차지백 비율",
+      "제휴 유입 매출 %"
     ],
-    "brainUse": "Every agent reads from one shared G-Brain holding the course curriculum, swipe copy, student FAQs, objection-handling scripts, and past launch numbers — so onboarding nudges, sales replies, and affiliate swipe all speak in one consistent voice.",
-    "signaturePlay": "An evergreen launch loop: Deadline Driver opens a personal-deadline cart the moment a lead finishes the webinar, Cart Sentinel fires ConvertKit sequences and Dunning Bot rescues failed payment-plan charges, while Completion Sentinel pushes the new student to module 3 and Win Harvester captures the testimonial the instant they post a win in Circle — turning one enrollment into the proof that sells the next."
+    "brainUse": "모든 에이전트가 하나의 공유 G-Brain을 읽습니다. 강의 커리큘럼, 홍보 문구, 수강생 FAQ, 이의 대응 스크립트, 과거 출시 수치가 들어 있어서, 온보딩 독려, 판매 답변, 제휴 홍보 문구가 하나의 일관된 목소리로 나옵니다.",
+    "signaturePlay": "에버그린 출시 루프입니다. 리드가 웨비나를 다 보는 순간 Deadline Driver가 개인 마감이 있는 장바구니를 열고, Cart Sentinel이 ConvertKit 시퀀스를 보내며, Dunning Bot이 실패한 할부 결제를 살려 냅니다. 한편 Completion Sentinel은 새 수강생을 3모듈로 밀어 주고, Win Harvester는 수강생이 Circle에 성과를 올리는 즉시 후기를 받아 냅니다. 등록 한 건이 다음 판매를 파는 증거가 됩니다."
   },
   {
     "id": "persona-local-service",
     "order": 8,
-    "name": "Field Service OS",
-    "archetype": "Home-Services Operator",
-    "tagline": "Owner of the truck-and-tools shop. Every job booked, dispatched, paid.",
-    "summary": "A local HVAC/plumbing/contractor owner running a fleet of trucks. This OS variant turns the phone-and-whiteboard chaos of a service business into a closed loop: a missed call becomes a booked job, a booked job becomes a routed tech, a finished job becomes a paid invoice and a 5-star review, and every customer rolls into a recurring maintenance plan.",
+    "name": "현장 서비스 OS",
+    "archetype": "생활 서비스 운영자",
+    "tagline": "트럭과 장비를 가진 가게의 오너. 모든 작업이 예약되고, 배차되고, 결제됩니다.",
+    "summary": "트럭 여러 대를 굴리는 지역 냉난방·배관·공사 업체 오너입니다. 이 OS 변형은 서비스 업체의 전화와 화이트보드 혼돈을 닫힌 루프로 바꿉니다. 놓친 전화는 예약된 작업이 되고, 예약된 작업은 배정된 기사가 되며, 끝난 작업은 결제된 청구서와 별점 5개 리뷰가 되고, 모든 고객은 정기 점검 플랜으로 이어집니다.",
     "accent": "#0a85c2",
-    "northStar": "Booked revenue per truck-day (jobs completed × average ticket, against capacity).",
+    "northStar": "트럭 하루당 예약 매출 (완료한 작업 × 평균 객단가, 가용 용량 대비).",
     "pillars": [
       {
-        "name": "Intake & Booking",
-        "focus": "Turn every inbound call, form, and missed call into a booked job slot",
+        "name": "접수와 예약",
+        "focus": "걸려 온 모든 전화, 양식, 놓친 전화를 예약된 작업 슬롯으로",
         "agents": [
           "Intake Bot",
           "Missed-Call Catcher",
@@ -566,8 +566,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Dispatch & Field Ops",
-        "focus": "Route the right tech to the right job and keep the board full",
+        "name": "배차와 현장 운영",
+        "focus": "알맞은 기사를 알맞은 작업에 보내고 보드를 가득 채웁니다",
         "agents": [
           "Dispatch Bot",
           "Route Optimizer",
@@ -576,8 +576,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Quotes & Close",
-        "focus": "Build estimates fast, chase pending quotes, win the job",
+        "name": "견적과 클로징",
+        "focus": "견적을 빠르게 만들고, 보류 견적을 쫓고, 작업을 따냅니다",
         "agents": [
           "Estimate Builder",
           "Quote Chaser",
@@ -585,8 +585,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Money & Plans",
-        "focus": "Invoice on completion, collect payment, enroll recurring maintenance",
+        "name": "매출과 플랜",
+        "focus": "완료 시 청구하고, 대금을 받고, 정기 점검에 등록합니다",
         "agents": [
           "Invoice Closer",
           "Collections Bot",
@@ -595,8 +595,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Reputation & Repeat",
-        "focus": "Harvest reviews, win back lapsed customers, defend the local rank",
+        "name": "평판과 재방문",
+        "focus": "리뷰를 모으고, 떠난 고객을 되찾고, 지역 순위를 지킵니다",
         "agents": [
           "Review Harvester",
           "Reputation Guard",
@@ -615,28 +615,28 @@ export const PERSONAS: Persona[] = [
       "Twilio"
     ],
     "metrics": [
-      "Booked revenue per truck-day",
-      "Call-to-booked conversion %",
-      "Average ticket",
-      "Quote win rate",
-      "Maintenance plan active members"
+      "트럭 하루당 예약 매출",
+      "전화 대 예약 전환율 %",
+      "평균 객단가",
+      "견적 수주율",
+      "정기 점검 플랜 활성 회원 수"
     ],
-    "brainUse": "Every agent reads one shared G-Brain core holding the price book, service-area map, tech skills/certs, warranty terms, and per-customer equipment history, so quotes, dispatch, and follow-ups all speak with the same numbers and the same memory of every property.",
-    "signaturePlay": "The missed-call-to-paid loop: a call that rings out at 7pm gets an instant text-back, books a next-day slot, auto-routes the nearest qualified tech, fires the \"on my way\" SMS at dawn, drops the invoice the second the job is marked complete, takes the card, and ten minutes later sends the review request — owner never touches the phone."
+    "brainUse": "모든 에이전트가 하나의 공유 G-Brain 코어를 읽습니다. 가격표, 서비스 권역 지도, 기사의 기술과 자격, 보증 조건, 고객별 설비 이력이 들어 있어서, 견적, 배차, 후속 연락이 모두 같은 숫자와 모든 건물에 대한 같은 기억을 바탕으로 말합니다.",
+    "signaturePlay": "놓친 전화에서 결제까지 이어지는 루프입니다. 저녁 7시에 받지 못한 전화에는 즉시 문자가 가고, 다음 날 슬롯이 예약되며, 가장 가까운 자격 있는 기사에게 자동 배정됩니다. 새벽에는 \"출발합니다\" 문자가 나가고, 작업이 완료로 표시되는 순간 청구서가 발송되어 카드 결제가 이뤄지고, 10분 뒤 리뷰 요청이 나갑니다. 오너는 전화기를 만질 일이 없습니다."
   },
   {
     "id": "persona-fractional-exec",
     "order": 9,
-    "name": "Fractional Exec OS",
-    "archetype": "Fractional Operator",
-    "tagline": "One part-time exec, six client orgs, run like one shop.",
-    "summary": "A fractional CFO/COO running advisory retainers across a portfolio of 6-8 client companies — selling frameworks and judgment, not hours. This OS variant keeps every retainer fed, every deliverable shipped on cadence, and every relationship warm enough to renew or refer, so utilization stays high without the operator living in their inbox.",
+    "name": "파트타임 임원 OS",
+    "archetype": "파트타임 임원 운영자",
+    "tagline": "파트타임 임원 한 명, 고객 조직 여섯 곳, 하나의 가게처럼 운영합니다.",
+    "summary": "고객 회사 6~8곳으로 이뤄진 포트폴리오에서 자문 리테이너를 운영하는 파트타임 CFO·COO입니다. 시간이 아니라 프레임워크와 판단을 팝니다. 이 OS 변형은 모든 리테이너에 일감을 공급하고, 모든 산출물을 일정대로 내보내고, 모든 관계를 재계약이나 추천이 나올 만큼 따뜻하게 유지합니다. 그래서 운영자가 받은편지함에 살지 않아도 가동률이 높게 유지됩니다.",
     "accent": "#ff6259",
-    "northStar": "Monthly recurring retainer revenue (MRR) at >85% portfolio utilization",
+    "northStar": "포트폴리오 가동률 85% 이상에서의 월간 반복 리테이너 매출 (MRR)",
     "pillars": [
       {
-        "name": "Pipeline & Retainers",
-        "focus": "Inbound leads, scoping calls, proposals, and retainer renewals",
+        "name": "파이프라인과 리테이너",
+        "focus": "들어오는 리드, 범위 협의 통화, 제안서, 리테이너 재계약",
         "agents": [
           "Scope Bot",
           "Proposal Drafter",
@@ -645,8 +645,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Client Delivery",
-        "focus": "Per-client workrooms, deliverables, and cadence on every active retainer",
+        "name": "고객 납품",
+        "focus": "고객별 워크룸, 산출물, 활성 리테이너 전체의 주기",
         "agents": [
           "Engagement Lead",
           "Deliverable Forge",
@@ -655,8 +655,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Thought Leadership",
-        "focus": "LinkedIn essays, newsletter, talks — the demand engine that feeds pipeline",
+        "name": "오피니언 리더십",
+        "focus": "링크드인 에세이, 뉴스레터, 강연 · 파이프라인에 수요를 공급하는 엔진",
         "agents": [
           "Essay Drafter",
           "Hook Miner",
@@ -664,8 +664,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Practice Finance",
-        "focus": "Retainer invoicing, AR aging, utilization, and effective hourly across the book",
+        "name": "사무소 재무",
+        "focus": "리테이너 청구, 미수금 연령, 포트폴리오 전체의 가동률과 실질 시급",
         "agents": [
           "Invoice Runner",
           "AR Chaser",
@@ -673,8 +673,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Relationship Ops",
-        "focus": "Every client/prospect inbox and DM into one triaged queue with context",
+        "name": "관계 운영",
+        "focus": "모든 고객과 잠재 고객의 받은편지함과 DM을 맥락과 함께 하나의 분류된 대기열로",
         "agents": [
           "Inbox Triage",
           "Meeting Prep Bot",
@@ -693,28 +693,28 @@ export const PERSONAS: Persona[] = [
       "Recall (call notes)"
     ],
     "metrics": [
-      "Retainer MRR",
-      "Portfolio utilization %",
-      "Net revenue retention",
-      "Pipeline coverage (3x rule)",
-      "Effective hourly rate"
+      "리테이너 MRR",
+      "포트폴리오 가동률 %",
+      "순 매출 유지율",
+      "파이프라인 커버리지 (3배 규칙)",
+      "실질 시급"
     ],
-    "brainUse": "Every client's frameworks, decisions, board context, and prior deliverables live in one G-Brain so any agent drafts in that client's voice and never re-asks what was already decided.",
-    "signaturePlay": "After each client call, the Recall transcript hits G-Brain, Deliverable Forge drafts the next memo/model in that client's house style, Status Reporter posts the workroom update, and Cadence Keeper books the follow-up — the engagement advances before the operator's next call ends."
+    "brainUse": "모든 고객의 프레임워크, 결정, 이사회 맥락, 이전 산출물이 하나의 G-Brain에 있습니다. 그래서 어떤 에이전트든 그 고객의 목소리로 초안을 쓰고, 이미 정해진 것을 다시 묻지 않습니다.",
+    "signaturePlay": "고객과 통화가 끝나면 Recall 녹취록이 G-Brain에 들어갑니다. Deliverable Forge가 그 고객의 내부 스타일로 다음 메모나 모델 초안을 쓰고, Status Reporter가 워크룸에 진행 상황을 올리며, Cadence Keeper가 후속 미팅을 잡습니다. 운영자의 다음 통화가 끝나기 전에 일감이 이미 한 단계 나아가 있습니다."
   },
   {
     "id": "persona-community-operator",
     "order": 10,
-    "name": "Membership Community Operator",
-    "archetype": "Community Operator",
-    "tagline": "Creator running a paid membership — keep them in, keep them showing up.",
-    "summary": "A creator who turned an audience into a paid membership/community — recurring members, weekly live calls, a structured curriculum, and an always-on community feed. This OS variant runs the whole retention machine: it watches who's drifting, fills every event seat, keeps the content cadence on schedule, and saves at-risk subscriptions before the card declines.",
+    "name": "멤버십 커뮤니티 운영자",
+    "archetype": "커뮤니티 운영자",
+    "tagline": "유료 멤버십을 운영하는 크리에이터. 회원을 붙잡고, 계속 나타나게 합니다.",
+    "summary": "독자층을 유료 멤버십·커뮤니티로 바꾼 크리에이터입니다. 정기 회원, 주간 라이브 통화, 체계적인 커리큘럼, 항상 돌아가는 커뮤니티 피드를 운영합니다. 이 OS 변형은 리텐션 장치 전체를 돌립니다. 이탈 조짐이 있는 회원을 지켜보고, 모든 행사 좌석을 채우고, 콘텐츠 주기를 일정대로 지키며, 카드가 거절되기 전에 위험한 구독을 살려 냅니다.",
     "accent": "#8b7cff",
-    "northStar": "Net MRR retention — members kept and expanded month over month",
+    "northStar": "순 MRR 유지율 — 매달 유지되고 늘어난 회원",
     "pillars": [
       {
-        "name": "Membership Growth",
-        "focus": "Trials, waitlist, and free-to-paid conversion into the community",
+        "name": "멤버십 성장",
+        "focus": "체험, 대기자 명단, 무료에서 유료 커뮤니티 회원으로의 전환",
         "agents": [
           "Waitlist Warden",
           "Trial Closer",
@@ -722,8 +722,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Retention & Churn",
-        "focus": "At-risk detection, dunning recovery, and cancel saves",
+        "name": "리텐션과 이탈",
+        "focus": "위험 감지, 미납 회수, 해지 방어",
         "agents": [
           "Churn Sentinel",
           "Dunning Recovery Bot",
@@ -731,8 +731,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Community & Engagement",
-        "focus": "Daily feed health, member onboarding, and active-member streaks",
+        "name": "커뮤니티와 참여",
+        "focus": "일일 피드 건강도, 회원 온보딩, 활동 회원의 연속 참여",
         "agents": [
           "Onboarding Concierge",
           "Engagement Pulse",
@@ -740,8 +740,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Events & Live",
-        "focus": "Weekly calls, RSVPs, attendance, and replay distribution",
+        "name": "행사와 라이브",
+        "focus": "주간 통화, 참석 확인, 출석, 다시보기 배포",
         "agents": [
           "RSVP Wrangler",
           "Live Producer",
@@ -749,8 +749,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Content & Curriculum",
-        "focus": "Drip schedule, lesson cadence, and member-only content pipeline",
+        "name": "콘텐츠와 커리큘럼",
+        "focus": "순차 발송 일정, 수업 주기, 회원 전용 콘텐츠 파이프라인",
         "agents": [
           "Drip Scheduler",
           "Curriculum Keeper",
@@ -769,28 +769,28 @@ export const PERSONAS: Persona[] = [
       "G-Brain"
     ],
     "metrics": [
-      "Net MRR retention",
-      "Monthly churn rate",
-      "Active-member rate (WAU/MAU)",
-      "Live-call attendance rate",
-      "Trial-to-paid conversion"
+      "순 MRR 유지율",
+      "월간 이탈률",
+      "활성 회원 비율 (WAU/MAU)",
+      "라이브 통화 출석률",
+      "체험에서 유료 전환율"
     ],
-    "brainUse": "Every agent reads one shared member memory — each person's join date, tier, engagement history, last login, and save/win-back attempts — so saves, onboarding, and event nudges are personal instead of generic blasts.",
-    "signaturePlay": "Churn Sentinel flags a member who hasn't logged in for 14 days and skipped two live calls, pulls their history from G-Brain, then fires a personalized win-back from Win-Back Agent and re-invites them to the next event via RSVP Wrangler — catching the lapse weeks before the renewal date instead of eating the cancel."
+    "brainUse": "모든 에이전트가 하나의 공유 회원 기억을 읽습니다. 사람마다의 가입일, 등급, 참여 이력, 마지막 로그인, 해지 방어와 윈백 시도가 들어 있어서, 해지 방어, 온보딩, 행사 독려가 일괄 발송이 아니라 개인에게 맞춘 메시지가 됩니다.",
+    "signaturePlay": "Churn Sentinel이 14일 동안 로그인하지 않고 라이브 통화를 두 번 빠진 회원을 표시합니다. G-Brain에서 그 회원의 이력을 가져오고, Win-Back Agent가 맞춤형 윈백 메시지를 보냅니다. RSVP Wrangler는 다음 행사에 다시 초대합니다. 해지를 맞고 나서가 아니라 재결제일보다 몇 주 전에 이탈 조짐을 잡습니다."
   },
   {
     "id": "persona-law-firm",
     "order": 11,
-    "name": "Boutique Law Firm OS",
-    "archetype": "Managing Attorney",
-    "tagline": "Every matter moved, every hour captured, every deadline safe.",
-    "summary": "A solo or small-firm managing attorney running a full caseload across intake, matter management, billing, and compliance. This OS variant turns a stack of open files into a watched docket: every deadline calculated, every billable minute captured, every trust dollar accounted for, and every client kept in the loop so nothing slips and no matter goes stale.",
+    "name": "소규모 로펌 OS",
+    "archetype": "담당 변호사",
+    "tagline": "모든 사건이 움직이고, 모든 시간이 기록되고, 모든 기한이 안전합니다.",
+    "summary": "접수, 사건 관리, 청구, 준법 업무 전체에 걸쳐 사건을 맡는 1인 또는 소규모 로펌의 담당 변호사입니다. 이 OS 변형은 쌓인 미결 사건 파일을 감시되는 사건 목록으로 바꿉니다. 모든 기한을 계산하고, 청구 가능한 모든 시간을 기록하고, 신탁 계좌의 모든 금액을 맞추고, 모든 의뢰인을 소식 흐름 안에 두어서 아무것도 미끄러지지 않고 사건이 방치되지 않게 합니다.",
     "accent": "#b8860b",
-    "northStar": "Collected realization rate (billed hours that actually get paid) at zero missed deadlines",
+    "northStar": "기한 누락 0건에서의 수금 실현율 (청구한 시간 중 실제로 대금이 들어온 비율)",
     "pillars": [
       {
-        "name": "Intake & Conflicts",
-        "focus": "Screen inquiries, clear conflicts, and sign engagements",
+        "name": "접수와 이해충돌",
+        "focus": "문의를 선별하고, 이해충돌을 해소하고, 사건 위임을 체결합니다",
         "agents": [
           "Intake Screener",
           "Conflict Checker",
@@ -799,8 +799,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Matter Management",
-        "focus": "Every open matter's tasks, deadlines, and court dates on rails",
+        "name": "사건 관리",
+        "focus": "모든 진행 중 사건의 업무, 기한, 기일을 궤도 위에 올려 둡니다",
         "agents": [
           "Matter Pilot",
           "Docket Sentinel",
@@ -809,8 +809,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Documents & Drafting",
-        "focus": "Draft, assemble, and review documents from templates and precedent",
+        "name": "문서와 작성",
+        "focus": "서식과 선례에서 문서를 초안 작성, 조립, 검토합니다",
         "agents": [
           "Draft Assembler",
           "Clause Librarian",
@@ -819,8 +819,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Billing & Trust",
-        "focus": "Capture time, bill on cadence, and keep trust accounting clean",
+        "name": "청구와 신탁",
+        "focus": "시간을 기록하고, 정해진 주기로 청구하고, 신탁 회계를 깨끗하게 유지합니다",
         "agents": [
           "Time Capturer",
           "Invoice Runner",
@@ -829,8 +829,8 @@ export const PERSONAS: Persona[] = [
         ]
       },
       {
-        "name": "Compliance & Client Care",
-        "focus": "Statutory deadlines, ethics compliance, and client communication",
+        "name": "준법과 고객 관리",
+        "focus": "법정 기한, 윤리 준수, 고객 소통",
         "agents": [
           "Deadline Guardian",
           "CLE Tracker",
@@ -850,13 +850,13 @@ export const PERSONAS: Persona[] = [
       "QuickBooks Online"
     ],
     "metrics": [
-      "Realization rate (billed vs collected)",
-      "Billable hours captured per attorney",
-      "Matters opened vs closed",
-      "Days to invoice (WIP aging)",
-      "Deadline / limitations compliance (missed = 0)"
+      "실현율 (청구 대비 수금)",
+      "변호사 1인당 기록된 청구 가능 시간",
+      "개시 대 종결 사건 수",
+      "청구까지 걸린 일수 (미청구 업무 연령)",
+      "기한 / 출소기간 준수율 (누락 0건)"
     ],
-    "brainUse": "One shared G-Brain holds every matter's facts, precedent, prior filings, client history, and firm playbooks, so any agent drafts from the firm's own work product and never re-researches settled ground.",
-    "signaturePlay": "A new inquiry hits the system: Conflict Checker clears it against the client and matter graph in G-Brain, Engagement Drafter generates the retainer and fee agreement in the firm's language, Retainer Collector takes the deposit through LawPay into the trust account, and Docket Sentinel opens the matter with every statutory deadline pre-calculated from the jurisdiction's rules, so the attorney reviews and signs instead of building the file from scratch."
+    "brainUse": "하나의 공유 G-Brain에 모든 사건의 사실관계, 선례, 이전 제출 서류, 고객 이력, 사무소 플레이북이 들어 있습니다. 그래서 어떤 에이전트든 사무소 자체의 작업 결과물을 바탕으로 초안을 쓰고, 이미 정리된 내용을 다시 조사하지 않습니다.",
+    "signaturePlay": "새 문의가 들어오면 Conflict Checker가 G-Brain의 고객과 사건 관계도에 비추어 이해충돌을 확인합니다. Engagement Drafter가 사무소의 문체로 리테이너와 보수 약정서를 만들고, Retainer Collector가 LawPay를 통해 착수금을 신탁 계좌로 받습니다. Docket Sentinel은 관할 규칙에 따라 법정 기한을 모두 미리 계산해서 사건을 엽니다. 그래서 변호사는 파일을 처음부터 만들지 않고 검토하고 서명합니다."
   }
 ];
