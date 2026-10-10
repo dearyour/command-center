@@ -30,7 +30,7 @@ describe('Plaud placement across the OS', () => {
     const plaud = tools.find((t) => t.id === 'tool-plaud');
     expect(plaud?.name).toBe('Plaud');
     expect(plaud?.category).toBe(tools.find((t) => t.id === 'tool-recall')?.category);
-    expect(plaud?.description).toMatch(/recorder/i);
+    expect(plaud?.description).toMatch(/녹음기/);
   });
 
   test('the sales pillar, Sales Calls Data and Client Success all use plaud', () => {
@@ -77,7 +77,7 @@ describe('Plaud placement across the OS', () => {
     const wiki = buildToolWiki('plaud', [], index);
     expect(wiki.hasPage).toBe(true);
     expect(wiki.path).toBe('brain-store/tools/plaud.md');
-    expect(wiki.summary).toMatch(/recorder/i);
+    expect(wiki.summary).toMatch(/녹음기/);
     expect(wiki.fields.Category).toBe('CRM & Revenue');
     // the agents that mine recordings link to it, so the page has real backlinks
     expect(wiki.backlinks.map((b) => b.slug)).toContain('agents/sales-calls-data');

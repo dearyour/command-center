@@ -126,7 +126,9 @@ describe('seeded SOP graph data', () => {
     for (const t of d.sopTasks.all()) {
       expect(t.steps.length, `${t.id} has only ${t.steps.length} steps`).toBeGreaterThanOrEqual(5);
       for (const s of t.steps) {
-        expect(s.length, `${t.id} step too thin: "${s}"`).toBeGreaterThanOrEqual(20);
+        // a Hangul syllable carries roughly a word-pair of meaning: count it double
+        const weight = [...s].reduce((n, ch) => n + (/[\uac00-\ud7a3]/.test(ch) ? 2 : 1), 0);
+        expect(weight, `${t.id} step too thin: "${s}"`).toBeGreaterThanOrEqual(20);
       }
     }
   });

@@ -139,7 +139,7 @@ export function operatingVolume(x: {
     meters: [
       { label: `연결된 시스템 (${x.connected}/${x.totalConnections})`, frac: pct(x.connected, x.totalConnections), display: `${Math.round(pct(x.connected, x.totalConnections) * 100)}%`, hue: 'var(--accent)' },
       { label: `가동 중인 에이전트 (${x.activeAgents}/${x.totalAgents})`, frac: pct(x.activeAgents, x.totalAgents), display: `${Math.round(pct(x.activeAgents, x.totalAgents) * 100)}%`, hue: 'var(--ramp-1)' },
-      { label: `오늘 성공한 실행 (${ok}/${today.length})`, frac: pct(ok, today.length), display: today.length ? `${ok}건 성공 · ${today.length - ok}건 실패` : '아직 실행 없음', hue: today.length - ok > 0 ? 'var(--warn)' : 'var(--ok)' },
+      { label: `오늘 성공한 실행 (${ok}/${today.length})`, frac: pct(ok, today.length), display: today.length ? `성공 ${ok} · 실패 ${today.length - ok}` : '아직 실행 없음', hue: today.length - ok > 0 ? 'var(--warn)' : 'var(--ok)' },
       { label: 'G-Brain 상태', frac: x.health === null ? 0 : Math.max(0, Math.min(1, x.health / 100)), display: x.health === null ? '오프라인' : `${x.health} / 100`, hue: 'var(--ramp-4)' },
     ],
   };

@@ -43,7 +43,7 @@ describe('the seeded roster is coherent', () => {
   test('the sales head closes and the growth head runs Marketing/Growth', () => {
     const people = seeded().people.all();
     expect(people.find((p) => p.name === 'Marco')?.departmentId).toBe('dept-sales');
-    expect(people.find((p) => p.name === 'Marco')?.role).toMatch(/sales/i);
+    expect(people.find((p) => p.name === 'Marco')?.role).toMatch(/영업/);
     expect(people.find((p) => p.name === 'Nadia')?.departmentId).toBe('dept-marketing-growth');
   });
 

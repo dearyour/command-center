@@ -53,9 +53,9 @@ describe('buildBrainDocs', () => {
   test('an agent doc holds its charter, SOP instructions and wikilinked tools', () => {
     const docs = docsFor(seeded());
     const gmail = docs.find((x) => x.path === 'agents/gmail-worker.md')!.content;
-    expect(gmail).toContain('IMAP Inboxes');
-    expect(gmail).toContain('Triage the four Gmail inboxes');
-    expect(gmail).toContain('Classify each thread');
+    expect(gmail).toContain('IMAP 받은편지함');
+    expect(gmail).toContain('Gmail 받은편지함 4개 분류');
+    expect(gmail).toContain('각 스레드를 분류한다');
     expect(gmail).toContain('[[imap]]');
     expect(gmail).toContain('[[comms-agent]]'); // reports to
     expect(gmail).toContain('[[pillar-communications]]');
@@ -67,7 +67,7 @@ describe('buildBrainDocs', () => {
     for (const section of ['## Purpose', '## Owner', '## Trigger', '## Steps', '## Definition of done', '## Escalation']) {
       expect(sop, `missing ${section}`).toContain(section);
     }
-    expect(sop).toContain('closed-won');
+    expect(sop).toContain('계약 성사');
     expect(sop).toContain('[[client-onboarding]]');
   });
 

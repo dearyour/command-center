@@ -36,7 +36,7 @@ describe('lead magnet rows', () => {
             expect(stack!.url).toContain('stack.example.com');
     expect(stack!.captures).toBe('email');
     // where the leads actually land, so the list is not a dead directory
-    expect(stack!.destination.toLowerCase()).toContain('newsletter');
+    expect(stack!.destination).toContain('뉴스레터');
   });
 
   test('rows sort newest first so the freshest drop leads the list', () => {
