@@ -1779,7 +1779,7 @@ function seededAgentRuns(agentList: Agent[]): AgentRun[] {
         startedAt,
         finishedAt,
         ok,
-        summary: ok ? `${a.name} completed a run.` : `${a.name} run failed and was retried.`,
+        summary: ok ? `${a.name} 실행을 완료했습니다.` : `${a.name} 실행이 실패해 다시 시도했습니다.`,
         model: runModel,
         tokensIn,
         tokensOut,

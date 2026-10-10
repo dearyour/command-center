@@ -31,7 +31,7 @@ import { newsletterAgent } from '@/lib/agents/newsletter-agent';
 async function gmailRun(): Promise<AgentRunResult> {
   const inboxes = parseInboxConfigs(process.env);
   if (inboxes.length === 0) {
-    return { ok: false, summary: 'No inboxes configured — set INBOX_1..4_HOST/_USER/_PASS in .env.local' };
+    return { ok: false, summary: '설정된 받은편지함이 없습니다 — .env.local에 INBOX_1..4_HOST/_USER/_PASS를 설정하세요' };
   }
   const counts = await unreadCounts(process.env);
   const failed = counts.filter((c) => c.error);
@@ -39,9 +39,9 @@ async function gmailRun(): Promise<AgentRunResult> {
   return {
     ok: failed.length < counts.length,
     summary: counts
-      .map((c) => `${c.inbox}: ${c.error ? `ERROR ${c.error.slice(0, 60)}` : `${c.unread} unread`}`)
+      .map((c) => `${c.inbox}: ${c.error ? `오류 ${c.error.slice(0, 60)}` : `안 읽음 ${c.unread}`}`)
       .join(' · ')
-      .concat(` · total ${total} unread`),
+      .concat(` · 전체 안 읽음 ${total}`),
     data: counts,
   };
 }
@@ -53,12 +53,12 @@ async function whatsappRun(): Promise<AgentRunResult> {
 
 async function slackRun(): Promise<AgentRunResult> {
   if (!process.env.SLACK_BOT_TOKEN) {
-    return { ok: false, summary: 'Slack not configured — set SLACK_BOT_TOKEN in .env.local' };
+    return { ok: false, summary: 'Slack이 설정되지 않았습니다 — .env.local에 SLACK_BOT_TOKEN을 설정하세요' };
   }
   const messages = await recentMessages(10);
   return {
     ok: true,
-    summary: `${messages.length} recent messages across ${new Set(messages.map((m) => m.channel)).size} channels`,
+    summary: `채널 ${new Set(messages.map((m) => m.channel)).size}개의 최근 메시지 ${messages.length}개`,
     data: messages,
   };
 }
@@ -73,29 +73,29 @@ async function arcadsRun(): Promise<AgentRunResult> {
   return { ok: status.state === 'connected', summary: status.detail, data: status.meta };
 }
 
-const label = (r: AgentRunResult) => (r.ok ? 'LIVE' : 'DOWN');
+const label = (r: AgentRunResult) => (r.ok ? '가동' : '다운');
 
 const envIntegrationRun =
   (name: string, envKey: string, purpose: string) =>
   async (): Promise<AgentRunResult> => {
     if (!process.env[envKey]) {
-      return { ok: false, summary: `${name} not configured — set ${envKey} · ${purpose}` };
+      return { ok: false, summary: `${name} 설정 안 됨 — ${envKey}를 설정하세요 · ${purpose}` };
     }
-    return { ok: true, summary: `${name} credential present · ${purpose}` };
+    return { ok: true, summary: `${name} 인증 정보 있음 · ${purpose}` };
   };
 
 const plannedLaneRun =
   (name: string, detail: string) =>
-  async (): Promise<AgentRunResult> => ({ ok: false, summary: `${name} lane planned — ${detail}` });
+  async (): Promise<AgentRunResult> => ({ ok: false, summary: `${name} 레인 계획됨 — ${detail}` });
 
 async function stripeSalesRun(): Promise<AgentRunResult> {
   if (!process.env.STRIPE_SECRET_KEY) {
-    return { ok: false, summary: 'Stripe sales checks not configured — set STRIPE_SECRET_KEY in .env.local' };
+    return { ok: false, summary: 'Stripe 영업 확인이 설정되지 않았습니다 — .env.local에 STRIPE_SECRET_KEY를 설정하세요' };
   }
   const snapshot = await stripeSnapshot(process.env);
   return {
     ok: true,
-    summary: `Stripe sales payments: ${snapshot.recentCharges.length} recent charges available for confirmation`,
+    summary: `Stripe 영업 결제: 확인 가능한 최근 결제 ${snapshot.recentCharges.length}건`,
     data: snapshot,
   };
 }
@@ -103,11 +103,11 @@ async function stripeSalesRun(): Promise<AgentRunResult> {
 async function processorConfirmationRun(): Promise<AgentRunResult> {
   const configured = configuredProcessors(process.env).filter((p) => p.configured);
   if (configured.length === 0) {
-    return { ok: false, summary: 'No payment processor APIs configured yet — start with STRIPE_SECRET_KEY' };
+    return { ok: false, summary: '아직 설정된 결제 수단 API가 없습니다 — STRIPE_SECRET_KEY부터 시작하세요' };
   }
   return {
     ok: true,
-    summary: `${configured.map((p) => p.name).join(', ')} configured for payment confirmation`,
+    summary: `${configured.map((p) => p.name).join(', ')} 결제 확인용으로 설정됨`,
     data: configured,
   };
 }
@@ -125,7 +125,7 @@ export const realAgents: RuntimeAgent[] = [
       const stack = await localStackStatus();
       return {
         ok: stack.state === 'connected',
-        summary: `Instance hosts on this machine: ${stack.detail} · all agents bound to builtin runtime until the dedicated host lands`,
+        summary: `이 컴퓨터의 인스턴스 호스트: ${stack.detail} · 전용 호스트가 준비될 때까지 모든 에이전트는 내장 런타임에 연결됨`,
         data: stack.meta,
       };
     },
@@ -157,7 +157,7 @@ export const realAgents: RuntimeAgent[] = [
       const live = [gmail, whatsapp, slack].filter((r) => r.ok).length;
       return {
         ok: live > 0,
-        summary: `${live}/3 channels live → /comms · Gmail ${label(gmail)} · WhatsApp ${label(whatsapp)} · Slack ${label(slack)}`,
+        summary: `채널 ${live}/3 가동 → /comms · Gmail ${label(gmail)} · WhatsApp ${label(whatsapp)} · Slack ${label(slack)}`,
         data: { gmail, whatsapp, slack },
       };
     },
@@ -176,10 +176,10 @@ export const realAgents: RuntimeAgent[] = [
       const [zernio, arcads] = await Promise.all([zernioRun(), arcadsRun()]);
       const live = [zernio, arcads].filter((r) => r.ok).length;
       const queued = getDb().socialPosts.queued().length;
-      const queueNote = queued > 0 ? `${queued} post${queued === 1 ? '' : 's'} queued for publish` : 'no posts queued';
+      const queueNote = queued > 0 ? `게시 대기 게시물 ${queued}개` : '대기 중인 게시물 없음';
       return {
         ok: live > 0,
-        summary: `${live}/2 core content APIs live · Postly ${label(zernio)} · Adsmith ${label(arcads)} · ${queueNote}`,
+        summary: `핵심 콘텐츠 API ${live}/2 가동 · Postly ${label(zernio)} · Adsmith ${label(arcads)} · ${queueNote}`,
         data: { zernio, arcads, queuedPosts: queued },
       };
     },
@@ -195,7 +195,7 @@ export const realAgents: RuntimeAgent[] = [
       const stack = await localStackStatus();
       return {
         ok: stack.state === 'connected',
-        summary: `Reelkit/social editing lane mapped · local stack: ${stack.detail}`,
+        summary: `Reelkit/소셜 편집 레인 연결됨 · 로컬 스택: ${stack.detail}`,
         data: stack.meta,
       };
     },
@@ -209,7 +209,7 @@ export const realAgents: RuntimeAgent[] = [
       const stack = await localStackStatus();
       return {
         ok: stack.state === 'connected',
-        summary: `Renderly creative lane mapped · local stack: ${stack.detail}`,
+        summary: `Renderly 크리에이티브 레인 연결됨 · 로컬 스택: ${stack.detail}`,
         data: stack.meta,
       };
     },
@@ -232,7 +232,7 @@ export const realAgents: RuntimeAgent[] = [
       const [crm, processors] = await Promise.all([attioStatus(), processorConfirmationRun()]);
       return {
         ok: crm.state === 'connected' || processors.ok,
-        summary: `Sales pipeline · Ledger ${crm.state === 'connected' ? 'LIVE' : 'DOWN'} · processors ${label(processors)} · PayKit/FlexPay/calls lanes mapped`,
+        summary: `영업 파이프라인 · Ledger ${crm.state === 'connected' ? '가동' : '다운'} · 결제 수단 ${label(processors)} · PayKit/FlexPay/통화 레인 연결됨`,
         data: { crm, processors },
       };
     },
@@ -251,7 +251,7 @@ export const realAgents: RuntimeAgent[] = [
       return {
         ok: live,
         summary: `Launchpad Cohort · Trakyo ${trakyo.state}${
-          live ? '' : ' — no live attribution source for this lane'
+          live ? '' : ' — 이 레인에는 실시간 유입 추적 소스가 없습니다'
         }`,
         data: { trakyo },
       };
@@ -316,13 +316,13 @@ export const realAgents: RuntimeAgent[] = [
       const failed = ingest?.failed.length ?? 0;
       return {
         ok: live > 0 && failed === 0,
-        summary: `Recorders: Recall ${fathom} · Plaud ${plaud.state}${
+        summary: `녹음기: Recall ${fathom} · Plaud ${plaud.state}${
           plaud.state === 'connected'
-            ? ` (${recordings} recording${recordings === 1 ? '' : 's'}, ${inBrain} in brain, ${filed} filed this pass, ${waiting} awaiting transcription${
-                ingest?.claims ? `, ${ingest.claims} claims to OptimalEngine` : ''
-              }${failed ? `, ${failed} FAILED: ${ingest?.failed.map((f) => f.error).join('; ')}` : ''})`
+            ? ` (녹음 ${recordings}개, 브레인에 ${inBrain}개, 이번에 저장 ${filed}개, 전사 대기 ${waiting}개${
+                ingest?.claims ? `, OptimalEngine 클레임 ${ingest.claims}개` : ''
+              }${failed ? `, 실패 ${failed}개: ${ingest?.failed.map((f) => f.error).join('; ')}` : ''})`
             : ''
-        }${live === 0 ? ' — set FATHOM_API_KEY and PLAUD_REFRESH_TOKEN to capture calls and in-person meetings' : ''}`,
+        }${live === 0 ? ' — 통화와 대면 회의를 기록하려면 FATHOM_API_KEY와 PLAUD_REFRESH_TOKEN을 설정하세요' : ''}`,
         data: { fathom, plaud: plaud.state, recordings, filed, inBrain, waiting, failed, claims: ingest?.claims ?? 0 },
       };
     },
@@ -352,14 +352,14 @@ export const realAgents: RuntimeAgent[] = [
 
       return {
         ok: doctor.connected,
-        summary: `${doctor.detail} · ${store.totalFiles} md pages (largest: ${biggest?.name ?? 'n/a'} ${biggest?.files ?? 0}) · ideas: ${ideas.join(' | ')}`,
+        summary: `${doctor.detail} · md 페이지 ${store.totalFiles}개 (가장 큼: ${biggest?.name ?? '없음'} ${biggest?.files ?? 0}) · 아이디어: ${ideas.join(' | ')}`,
         data: { overview, ideas },
       };
     },
     async respond(message: string) {
       const results = await getBrainProvider().search(message);
       if (results.length === 0) {
-        return { ok: false, summary: `Nothing in G-Brain matches "${message.slice(0, 80)}"` };
+        return { ok: false, summary: `G-Brain에 "${message.slice(0, 80)}"와 일치하는 것이 없습니다` };
       }
       return {
         ok: true,
@@ -404,8 +404,8 @@ export const realAgents: RuntimeAgent[] = [
       return {
         ok: doctor.connected,
         summary: doctor.connected
-          ? `health ${doctor.healthScore ?? '?'}/100 · ${doctor.checks.length} checks, ${warn.length} warning(s)${warn.length ? `: ${warn.map((w) => w.name).join(', ')}` : ''}`
-          : `doctor offline — ${doctor.detail}`,
+          ? `상태 ${doctor.healthScore ?? '?'}/100 · 진단 항목 ${doctor.checks.length}개, 경고 ${warn.length}개${warn.length ? `: ${warn.map((w) => w.name).join(', ')}` : ''}`
+          : `진단 오프라인 — ${doctor.detail}`,
         data: doctor,
       };
     },
@@ -420,18 +420,18 @@ export const realAgents: RuntimeAgent[] = [
     async run() {
       const configured = configuredProcessors(process.env).filter((p) => p.configured);
       if (configured.length === 0) {
-        return { ok: false, summary: 'No payment processors configured — start with STRIPE_SECRET_KEY in .env.local' };
+        return { ok: false, summary: '설정된 결제 수단이 없습니다 — .env.local의 STRIPE_SECRET_KEY부터 시작하세요' };
       }
       if (configured.some((p) => p.id === 'stripe')) {
         const snapshot = await stripeSnapshot(process.env);
         const available = snapshot.available[0];
         return {
           ok: true,
-          summary: `Stripe: ${((available?.amount ?? 0) / 100).toFixed(2)} ${(available?.currency ?? 'usd').toUpperCase()} available · ${snapshot.recentCharges.length} recent charges`,
+          summary: `Stripe: 사용 가능 ${((available?.amount ?? 0) / 100).toFixed(2)} ${(available?.currency ?? 'usd').toUpperCase()} · 최근 결제 ${snapshot.recentCharges.length}건`,
           data: snapshot,
         };
       }
-      return { ok: true, summary: `${configured.map((p) => p.name).join(', ')} configured (no live client yet)` };
+      return { ok: true, summary: `${configured.map((p) => p.name).join(', ')} 설정됨 (아직 실시간 클라이언트 없음)` };
     },
   },
   {
@@ -459,12 +459,12 @@ export const realAgents: RuntimeAgent[] = [
       const servingAttio = live.state === 'connected' && live.clients.length > 0;
       const byVenture = new Map<string, number>();
       for (const j of converted) byVenture.set(j.venture, (byVenture.get(j.venture) ?? 0) + 1);
-      const ventures = [...byVenture.entries()].map(([v, n]) => `${v} ${n}`).join(' · ') || 'none yet';
+      const ventures = [...byVenture.entries()].map(([v, n]) => `${v} ${n}`).join(' · ') || '아직 없음';
       return {
         ok: true,
         summary: servingAttio
-          ? `Serving Ledger live: ${live.clients.length} deals on the roster · funnel backup holds ${converted.length} clients`
-          : `Serving seeded funnel: ${converted.length} clients (${ventures}) · ${journeys.length - converted.length} in pipeline · Ledger ${live.state}`,
+          ? `Ledger 실시간 제공: 명단의 거래 ${live.clients.length}건 · 퍼널 백업 고객 ${converted.length}명`
+          : `샘플 퍼널 제공: 고객 ${converted.length}명 (${ventures}) · 파이프라인 ${journeys.length - converted.length}명 · Ledger ${live.state}`,
         data: {
           source: servingAttio ? 'ledger' : 'funnel',
           attio: { state: live.state, deals: live.clients.length },
@@ -486,8 +486,8 @@ export const realAgents: RuntimeAgent[] = [
       const live = [attio, slack].filter((s) => s.state === 'connected').length;
       return {
         ok: live > 0,
-        summary: `Onboarding rails: Ledger ${attio.state} · Slack ${slack.state}${
-          live < 2 ? ' — connect the missing rail to run onboarding end to end' : ''
+        summary: `온보딩 레일: Ledger ${attio.state} · Slack ${slack.state}${
+          live < 2 ? ' — 온보딩을 끝까지 실행하려면 빠진 레일을 연결하세요' : ''
         }`,
         data: { attio: attio.state, slack: slack.state },
       };
@@ -507,8 +507,8 @@ export const realAgents: RuntimeAgent[] = [
       const live = (slack.state === 'connected' ? 1 : 0) + (fathom === 'configured' ? 1 : 0) + (plaud === 'configured' ? 1 : 0);
       return {
         ok: live > 0,
-        summary: `Servicing rails: Recall ${fathom} · Plaud ${plaud} · Slack ${slack.state}${
-          live === 0 ? ' — set FATHOM_API_KEY, PLAUD_REFRESH_TOKEN and a Slack bot token to service clients' : ''
+        summary: `고객 관리 레일: Recall ${fathom} · Plaud ${plaud} · Slack ${slack.state}${
+          live === 0 ? ' — 고객을 관리하려면 FATHOM_API_KEY, PLAUD_REFRESH_TOKEN, Slack 봇 토큰을 설정하세요' : ''
         }`,
         data: { fathom, plaud, slack: slack.state },
       };
@@ -525,7 +525,7 @@ export const realAgents: RuntimeAgent[] = [
       const [stack, wispr] = await Promise.all([localStackStatus(), wisprStatus()]);
       return {
         ok: stack.state === 'connected',
-        summary: `${stack.detail} · Dictate: ${wispr.state === 'connected' ? wispr.detail : wispr.state}`,
+        summary: `${stack.detail} · 받아쓰기: ${wispr.state === 'connected' ? wispr.detail : wispr.state}`,
         data: { stack: stack.meta, wispr: wispr.meta },
       };
     },

@@ -134,7 +134,7 @@ export function digestSummary(r: DigestRunResult): string {
   const c = r.digest.counts;
   const dead = r.sources.filter((s) => !s.ok).map((s) => s.source);
   const held = r.digest.entries.filter((e) => e.carried).length;
-  const scope = held ? `${r.digest.total} open (${held} held over)` : `${r.digest.total} in 24h`;
-  const head = `${r.digest.needsReply} need a reply (${c.call} call · ${c.client} client · ${c.people} people · ${c.branddeal} brand) of ${scope}; ${r.digest.unsubscribes.length} to unsubscribe`;
-  return dead.length ? `${head} — ${dead.join(', ')} unavailable` : head;
+  const scope = held ? `열린 항목 ${r.digest.total}개 (이월 ${held}개)` : `24시간 동안 ${r.digest.total}건`;
+  const head = `${scope} 중 답장 필요 ${r.digest.needsReply}건 (통화 ${c.call} · 고객 ${c.client} · 사람 ${c.people} · 협찬 ${c.branddeal}); 구독 해지 대상 ${r.digest.unsubscribes.length}개`;
+  return dead.length ? `${head} — ${dead.join(', ')} 사용 불가` : head;
 }
