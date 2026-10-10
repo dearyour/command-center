@@ -45,8 +45,8 @@ describe('/doctor keeps the health readouts', () => {
   const doctor = read('app/doctor/page.tsx');
 
   test('carries the pipeline and the query path moved off /brain', () => {
-    expect(doctor).toContain('Pipeline');
-    expect(doctor).toContain('Query path');
+    expect(doctor).toContain('파이프라인');
+    expect(doctor).toContain('검색 경로');
     expect(doctor).toContain('gbrain CLI');
   });
 

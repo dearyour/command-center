@@ -25,35 +25,35 @@ import {
  * federated brain, and the daemons are the ones this OS actually names.
  */
 
-const OPERATOR_NAME = process.env.FOUNDER_OPERATOR_NAME?.trim() || 'the operator';
+const OPERATOR_NAME = process.env.FOUNDER_OPERATOR_NAME?.trim() || '운영자';
 
 /** Static infrastructure inventory: the only hand-listed layer, because hosts
  *  live outside this repo's registries. Keep tiny and factual. */
 const HOSTS: BlueprintNode[] = [
-  { id: 'host-workstation', kind: 'host', name: 'Workstation', layer: 4, status: 'live', blurb: 'Where the OS is built and operated; the dev server and the local CLIs run here.', facts: {}, icon: 'laptop' },
-  { id: 'host-railway', kind: 'host', name: 'Railway', layer: 4, status: 'configured', blurb: 'The production service (Dockerfile from GitHub) with a persistent volume at DATA_DIR. Reachability is not probed at compile time.', facts: { platform: 'Railway' }, icon: 'server' },
+  { id: 'host-workstation', kind: 'host', name: '워크스테이션', layer: 4, status: 'live', blurb: 'OS를 만들고 운영하는 곳. 개발 서버와 로컬 CLI가 여기서 실행됩니다.', facts: {}, icon: 'laptop' },
+  { id: 'host-railway', kind: 'host', name: 'Railway', layer: 4, status: 'configured', blurb: 'DATA_DIR에 영구 볼륨이 있는 운영 서비스 (GitHub의 Dockerfile). 컴파일 시점에는 접속 여부를 확인하지 않습니다.', facts: { platform: 'Railway' }, icon: 'server' },
 ];
 
 const STORES: BlueprintNode[] = [
-  { id: 'store-db', kind: 'store', name: 'OS database', layer: 4, status: 'live', blurb: 'Agents, runs, departments, workflows, crons, metrics (SQLite).', facts: { path: 'data/command-center.db' }, icon: 'database' },
-  { id: 'store-ledger', kind: 'store', name: 'Ledger', layer: 4, status: 'live', blurb: 'Statement events and income by business (SQLite).', facts: { path: 'data/ledger.db' }, icon: 'database' },
-  { id: 'store-bank', kind: 'store', name: 'Bank', layer: 4, status: 'live', blurb: 'Uploaded statements and the bank line items (SQLite).', facts: { path: 'data/bank.db' }, icon: 'database' },
-  { id: 'store-candles', kind: 'store', name: 'Candles', layer: 4, status: 'live', blurb: 'Crypto and ETF candles the trading backtests read.', facts: { path: 'data/candles/' }, icon: 'list' },
+  { id: 'store-db', kind: 'store', name: 'OS 데이터베이스', layer: 4, status: 'live', blurb: '에이전트, 실행, 부서, 워크플로, 크론, 지표 (SQLite).', facts: { path: 'data/command-center.db' }, icon: 'database' },
+  { id: 'store-ledger', kind: 'store', name: '원장', layer: 4, status: 'live', blurb: '명세서 이벤트와 사업별 수입 (SQLite).', facts: { path: 'data/ledger.db' }, icon: 'database' },
+  { id: 'store-bank', kind: 'store', name: '은행', layer: 4, status: 'live', blurb: '업로드한 명세서와 은행 거래 항목 (SQLite).', facts: { path: 'data/bank.db' }, icon: 'database' },
+  { id: 'store-candles', kind: 'store', name: '캔들', layer: 4, status: 'live', blurb: '트레이딩 백테스트가 읽는 암호화폐·ETF 캔들.', facts: { path: 'data/candles/' }, icon: 'list' },
   {
     id: 'store-brain',
     kind: 'store',
-    name: 'Brain store',
+    name: '브레인 저장소',
     layer: 4,
     status: 'live',
-    blurb: 'The knowledge base G-Brain retrieves from, via the configured brain provider.',
+    blurb: '설정된 브레인 제공자를 통해 G-Brain이 검색하는 지식 베이스.',
     // Static, honest facts: the provider may shell a CLI, so its live status is
     // NOT polled here; that would mean this page's compile spawns a subprocess
     // on every request.
-    facts: { provider: process.env.BRAIN_PROVIDER ?? 'federated', note: 'status not polled at compile time' },
+    facts: { provider: process.env.BRAIN_PROVIDER ?? 'federated', note: '컴파일 시점에는 상태를 확인하지 않음' },
     icon: 'book-open',
   },
-  { id: 'store-notion-deals', kind: 'store', name: 'Notion Brand Deals Hub', layer: 4, status: 'live', blurb: 'The sponsorship pipeline. Notion stays the source of truth; the OS reads it.', facts: { source: 'Notion data source' }, icon: 'handshake' },
-  { id: 'store-ad-intel', kind: 'store', name: 'Ad intel', layer: 4, status: 'live', blurb: "Adscout's synced ads, signals and saves.", facts: { path: 'data/ad-intel/' }, icon: 'radar' },
+  { id: 'store-notion-deals', kind: 'store', name: 'Notion 브랜드 협찬 허브', layer: 4, status: 'live', blurb: '협찬 파이프라인. 원본은 Notion이고 OS는 읽기만 합니다.', facts: { source: 'Notion data source' }, icon: 'handshake' },
+  { id: 'store-ad-intel', kind: 'store', name: '광고 인텔', layer: 4, status: 'live', blurb: 'Adscout가 동기화한 광고, 신호, 저장 항목.', facts: { path: 'data/ad-intel/' }, icon: 'radar' },
 ];
 
 /** Honest inventory of the background processes this OS names. None is
@@ -65,40 +65,40 @@ function daemons(): BlueprintNode[] {
     {
       id: 'daemon-cron',
       kind: 'daemon',
-      name: 'Cron scheduler',
+      name: '크론 스케줄러',
       layer: 4,
       status: 'configured',
-      blurb: 'Runs the agent crons on schedule and records every run in cron_runs. Ticks on /api/cron/tick; whether the tick is being called is visible on /workflows, not here.',
+      blurb: '에이전트 크론을 일정대로 실행하고 모든 실행을 cron_runs에 기록합니다. /api/cron/tick에서 동작하며, 실제로 호출되는지는 여기가 아니라 /workflows에서 볼 수 있습니다.',
       facts: { tick: '/api/cron/tick' },
       icon: 'sunrise',
     },
     {
       id: 'daemon-analytics-refresh',
       kind: 'daemon',
-      name: 'Analytics refresh',
+      name: '분석 새로고침',
       layer: 4,
       status: 'configured',
-      blurb: 'The 15-minute sweep that snapshots metrics so /analytics never pays a live call per render.',
-      facts: { cadence: 'every 15 min' },
+      blurb: '15분마다 지표 스냅샷을 찍어서 /analytics가 화면을 그릴 때마다 실시간 호출을 하지 않게 합니다.',
+      facts: { cadence: '15분마다' },
       icon: 'radar',
     },
     {
       id: 'daemon-hermes',
       kind: 'daemon',
-      name: 'Hermes gateway',
+      name: 'Hermes 게이트웨이',
       layer: 4,
       status: has('HERMES_GATEWAY_URL') ? 'configured' : 'not-configured',
-      blurb: has('HERMES_GATEWAY_URL') ? 'Gateway URL set; the dashboard tab on /agents talks to it. Not probed at compile time.' : 'HERMES_GATEWAY_URL is unset on this host.',
+      blurb: has('HERMES_GATEWAY_URL') ? '게이트웨이 URL 설정됨. /agents의 대시보드 탭이 여기에 연결합니다. 컴파일 시점에는 확인하지 않습니다.' : '이 호스트에는 HERMES_GATEWAY_URL이 설정되어 있지 않습니다.',
       facts: {},
       icon: 'send',
     },
     {
       id: 'daemon-telegram',
       kind: 'daemon',
-      name: 'Telegram bridge',
+      name: 'Telegram 브리지',
       layer: 4,
       status: has('TELEGRAM_BOT_TOKEN') ? 'configured' : 'not-configured',
-      blurb: has('TELEGRAM_BOT_TOKEN') ? 'The front door from a phone: a message becomes a comment on the cockpit issue and wakes the Conductor.' : 'TELEGRAM_BOT_TOKEN is unset on this host.',
+      blurb: has('TELEGRAM_BOT_TOKEN') ? '휴대폰에서 들어오는 입구: 메시지가 콕핏 이슈의 댓글이 되고 컨덕터를 깨웁니다.' : '이 호스트에는 TELEGRAM_BOT_TOKEN이 설정되어 있지 않습니다.',
       facts: {},
       icon: 'message-circle',
     },
@@ -230,7 +230,7 @@ export async function compileBlueprint(db: FounderDb, opts: CompileOptions = {})
   const connectorNodeIds = new Set(connectors.map((c) => `connector-${c.id}`));
 
   // L0 + L1: the spine.
-  nodes.push({ id: 'operator', kind: 'operator', name: OPERATOR_NAME, layer: 0, status: 'live', blurb: 'The operator. Everything answers upward to here.', facts: {}, icon: 'user-round' });
+  nodes.push({ id: 'operator', kind: 'operator', name: OPERATOR_NAME, layer: 0, status: 'live', blurb: '운영자. 모든 것이 위로 여기에 보고합니다.', facts: {}, icon: 'user-round' });
   const conductor = agents.find((a) => a.id === 'conductor');
   nodes.push({
     id: 'agent-conductor',
@@ -238,7 +238,7 @@ export async function compileBlueprint(db: FounderDb, opts: CompileOptions = {})
     name: 'Conductor',
     layer: 1,
     status: 'live',
-    blurb: conductor?.description.slice(0, 140) ?? 'The super agent: talks to everything, routes to everyone.',
+    blurb: conductor?.description.slice(0, 140) ?? '슈퍼 에이전트: 모든 것과 대화하고 모두에게 일을 배분합니다.',
     facts: conductor ? { role: conductor.role, model: conductor.model } : {},
     icon: 'wand-2',
   });
@@ -314,7 +314,7 @@ export async function compileBlueprint(db: FounderDb, opts: CompileOptions = {})
       name: id,
       layer: 3,
       status: engineUp ? 'live' : 'not-configured',
-      blurb: 'In the gateway fallback chain: tried in order when the preferred model is refused.',
+      blurb: '게이트웨이 대체 체인: 선호 모델이 거부되면 순서대로 시도합니다.',
       facts: { id },
       icon: KIND_ICON.model,
     });
@@ -330,7 +330,7 @@ export async function compileBlueprint(db: FounderDb, opts: CompileOptions = {})
       name: item.label,
       layer: 3,
       status: 'live',
-      blurb: `OS page at ${item.href}.`,
+      blurb: `${item.href}의 OS 페이지.`,
       facts: { route: item.href },
       icon: SURFACE_ICON[item.href] ?? 'square',
     });
@@ -349,11 +349,11 @@ export async function compileBlueprint(db: FounderDb, opts: CompileOptions = {})
   nodes.push({
     id: 'router-deals',
     kind: 'router',
-    name: 'Deal routing',
+    name: '거래 라우팅',
     layer: 3,
     status: 'live',
-    blurb: 'Deal routing: inbound sponsor messages land in the Notion hub, the brand-deal agents draft there, the board reads it back.',
-    facts: { rule: 'Notion is the source of truth; the OS never writes a deal, only reads the hub' },
+    blurb: '거래 라우팅: 들어온 스폰서 메시지는 Notion 허브에 쌓이고, 브랜드 협찬 에이전트가 거기서 초안을 쓰며, 보드가 그것을 다시 읽습니다.',
+    facts: { rule: '원본은 Notion이며, OS는 거래를 쓰지 않고 허브를 읽기만 합니다' },
     icon: 'route',
   });
   edges.push({ from: 'surface-comms', to: 'router-deals', kind: 'uses', via: 'inbound' });

@@ -105,22 +105,22 @@ export const APP_ID = 'k-founder';
 export const CLOUD_ID = 'k-cloud';
 
 export const KIND_LABEL: Record<HKind, string> = {
-  operator: 'operator',
-  command: 'engine',
-  app: 'the OS',
-  router: 'router',
-  agent: 'agent',
-  person: 'person',
-  department: 'department',
-  skill: 'skill',
-  connector: 'connector',
-  model: 'model',
-  store: 'store',
-  surface: 'page',
-  daemon: 'daemon',
-  machine: 'machine',
-  cloud: 'cloud',
-  group: 'group',
+  operator: '운영자',
+  command: '엔진',
+  app: 'OS',
+  router: '라우터',
+  agent: '에이전트',
+  person: '사람',
+  department: '부서',
+  skill: '스킬',
+  connector: '커넥터',
+  model: '모델',
+  store: '저장소',
+  surface: '페이지',
+  daemon: '데몬',
+  machine: '머신',
+  cloud: '클라우드',
+  group: '그룹',
 };
 
 export const KIND_ICON: Record<HKind, string> = {
@@ -146,20 +146,20 @@ export const KIND_ICON: Record<HKind, string> = {
 export const LEGEND: HKind[] = ['operator', 'router', 'agent', 'person', 'department', 'skill', 'connector', 'model', 'store', 'surface', 'daemon', 'machine'];
 
 export const STATUS_LABEL: Record<HStatus, string> = {
-  live: 'live',
-  configured: 'configured',
-  'not-configured': 'not configured',
-  designed: 'designed',
+  live: '운영 중',
+  configured: '설정됨',
+  'not-configured': '설정 안 됨',
+  designed: '설계만 됨',
 };
 
 const EDGE_LABEL: Record<BlueprintEdge['kind'], string> = {
-  commands: 'commands',
-  'member-of': 'member of',
-  uses: 'uses',
-  'runs-on': 'runs on',
-  reads: 'reads',
-  writes: 'writes',
-  'delivers-to': 'delivers to',
+  commands: '지휘',
+  'member-of': '소속',
+  uses: '사용',
+  'runs-on': '실행 위치',
+  reads: '읽기',
+  writes: '쓰기',
+  'delivers-to': '전달',
 };
 
 function node(n: BlueprintNode, kind: HKind, shape: HShape, sub = n.blurb): HNode {
@@ -170,12 +170,11 @@ function group(id: string, name: string, sub: string, kind: HKind, icon: string,
   return { type: 'group', id, name, sub, kind, icon, children, level, ...extra };
 }
 
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 /** Agents' facts carry role/model/tools: the one-line sub says the role. */
 function agentSub(n: BlueprintNode): string {
   const role = n.facts.role;
-  if (n.status === 'designed') return role ? `${role} · designed, not wired` : 'designed, not wired';
+  if (n.status === 'designed') return role ? `${role} · 설계만 됨, 미연결` : '설계만 됨, 미연결';
   return role || n.blurb;
 }
 
@@ -201,7 +200,7 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
       name: operator.name,
       sub: operator.blurb,
       icon: 'user-round',
-      rows: [[node(operator, 'operator', 'start', 'operator · everything answers upward to here')]],
+      rows: [[node(operator, 'operator', 'start', '운영자 · 모든 것이 위로 여기에 보고합니다')]],
       facts: {},
     });
   }
@@ -224,12 +223,12 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
       'folder',
       members.map((m) => (m.kind === 'agent' ? node(m, 'agent', 'compact', agentSub(m)) : node(m, 'person', 'compact'))),
       3,
-      { cols: 2, status: live > 0 ? 'live' : 'configured', badge: own.length ? `${live} of ${own.length} live` : 'no agent' },
+      { cols: 2, status: live > 0 ? 'live' : 'configured', badge: own.length ? `${own.length}개 중 ${live}개 운영 중` : '에이전트 없음' },
     );
   });
   // agents/people that belong to no department still belong on the map
   const orphans = [...agents, ...people].filter((m) => !deptOf.has(m.id));
-  if (orphans.length) deptGroups.push(group('dept-unassigned', 'Unassigned', 'no department yet', 'department', 'folder', orphans.map((m) => node(m, m.kind === 'agent' ? 'agent' : 'person', 'compact', m.kind === 'agent' ? agentSub(m) : m.blurb)), 3, { cols: 2, status: 'configured', badge: `${orphans.length}` }));
+  if (orphans.length) deptGroups.push(group('dept-unassigned', '미배정', '아직 부서 없음', 'department', 'folder', orphans.map((m) => node(m, m.kind === 'agent' ? 'agent' : 'person', 'compact', m.kind === 'agent' ? agentSub(m) : m.blurb)), 3, { cols: 2, status: 'configured', badge: `${orphans.length}` }));
 
   const connectors = byKind('connector');
   const skills = byKind('skillpack');
@@ -237,10 +236,10 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
   const surfaces = byKind('surface');
   const routers = byKind('router');
   const capability: HGroup[] = [];
-  if (connectors.length) capability.push(group('g-connectors', 'Connectors', `${connectors.length} wired · ${connectors.filter((c) => c.status === 'live').length} connected`, 'connector', 'plug', connectors.map((c) => node(c, 'connector', 'compact', c.facts.kind || c.blurb)), 2, { cols: 3 }));
-  if (skills.length) capability.push(group('g-skills', 'Skills', plural(skills.length, 'skill pack'), 'skill', 'sparkles', skills.map((s) => node(s, 'skill', 'compact')), 2, { cols: 3 }));
-  if (stores.length) capability.push(group('g-stores', 'Stores', plural(stores.length, 'store'), 'store', 'database', stores.map((s) => node(s, 'store', 'compact', s.facts.path || s.blurb)), 2, { cols: 2 }));
-  if (surfaces.length) capability.push(group('g-pages', 'Pages', `${surfaces.length} surfaces`, 'surface', 'layout-grid', surfaces.map((s) => node(s, 'surface', 'compact', s.facts.route || s.blurb)), 2, { cols: 4 }));
+  if (connectors.length) capability.push(group('g-connectors', '커넥터', `연결 구성 ${connectors.length}개 · 연결됨 ${connectors.filter((c) => c.status === 'live').length}개`, 'connector', 'plug', connectors.map((c) => node(c, 'connector', 'compact', c.facts.kind || c.blurb)), 2, { cols: 3 }));
+  if (skills.length) capability.push(group('g-skills', '스킬', `스킬 팩 ${skills.length}개`, 'skill', 'sparkles', skills.map((s) => node(s, 'skill', 'compact')), 2, { cols: 3 }));
+  if (stores.length) capability.push(group('g-stores', '저장소', `저장소 ${stores.length}개`, 'store', 'database', stores.map((s) => node(s, 'store', 'compact', s.facts.path || s.blurb)), 2, { cols: 2 }));
+  if (surfaces.length) capability.push(group('g-pages', '페이지', `화면 ${surfaces.length}개`, 'surface', 'layout-grid', surfaces.map((s) => node(s, 'surface', 'compact', s.facts.route || s.blurb)), 2, { cols: 4 }));
 
   const appRows: HItem[][] = [];
   if (wizardNode) {
@@ -249,7 +248,7 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
     appRows.push(row);
   }
   const routerDepartments: HNode | null = deptGroups.length
-    ? { type: 'node', id: ROUTER_DEPARTMENTS, name: 'Department routing', sub: 'hands work to the owner', kind: 'router', status: 'live', shape: 'diamond', icon: 'route', facts: { rule: 'every agent belongs to one department; the Wizard hands a task to the agent whose department owns it' } }
+    ? { type: 'node', id: ROUTER_DEPARTMENTS, name: '부서 라우팅', sub: '담당 부서에 일을 넘김', kind: 'router', status: 'live', shape: 'diamond', icon: 'route', facts: { rule: '모든 에이전트는 한 부서에 속하며, 위저드는 해당 부서를 맡은 에이전트에게 작업을 넘깁니다' } }
     : null;
   if (routerDepartments) appRows.push([routerDepartments]);
   if (deptGroups.length) appRows.push(deptGroups);
@@ -260,8 +259,8 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
       type: 'container',
       id: APP_ID,
       kind: 'app',
-      name: 'Command Center',
-      sub: 'the running OS · the Conductor commands agents · agents belong to departments · agents use tools',
+      name: '커맨드 센터',
+      sub: '실행 중인 OS · 컨덕터가 에이전트를 지휘 · 에이전트는 부서에 소속 · 에이전트는 도구를 사용',
       icon: 'layout-dashboard',
       rows: appRows,
       facts: { agents: String(agents.length), departments: String(departments.length), pages: String(surfaces.length) },
@@ -276,7 +275,7 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
     const rows: HItem[][] = [];
     const myDaemons = daemons.filter((d) => hostOf.get(d.id) === h.id);
     const myStores = hostedStores.filter((s) => hostOf.get(s.id) === h.id);
-    if (myDaemons.length) rows.push([group(`g-daemons-${h.id}`, 'Daemons', `${myDaemons.length} background processes · launchd`, 'daemon', 'play', myDaemons.map((d) => node(d, 'daemon', 'card', d.facts.schedule ? `${d.facts.schedule} · ${d.blurb}` : d.blurb)), 2, { cols: 2 })]);
+    if (myDaemons.length) rows.push([group(`g-daemons-${h.id}`, '데몬', `백그라운드 프로세스 ${myDaemons.length}개 · launchd`, 'daemon', 'play', myDaemons.map((d) => node(d, 'daemon', 'card', d.facts.schedule ? `${d.facts.schedule} · ${d.blurb}` : d.blurb)), 2, { cols: 2 })]);
     if (myStores.length) rows.push(myStores.map((s) => node(s, 'store', 'compact', s.facts.path || s.blurb)));
     if (!rows.length) continue;
     containers.push({ type: 'container', id: `k-${h.id}`, kind: 'machine', name: h.name, sub: h.blurb, icon: h.icon || 'server', rows, facts: h.facts });
@@ -289,10 +288,10 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
       type: 'container',
       id: CLOUD_ID,
       kind: 'cloud',
-      name: 'Cloud',
-      sub: 'AI compute the OS calls out to',
+      name: '클라우드',
+      sub: 'OS가 호출하는 AI 연산',
       icon: 'globe',
-      rows: [[group('g-models', 'Models', `${models.length} generation models · identity routing decides which`, 'model', 'cpu', models.map((m) => node(m, 'model', 'external', m.facts.family ? `${m.facts.family}${m.facts.identity ? ` · ${m.facts.identity}` : ''}` : m.blurb)), 2, { cols: 4 })]],
+      rows: [[group('g-models', '모델', `생성 모델 ${models.length}개 · 아이덴티티 라우팅이 선택`, 'model', 'cpu', models.map((m) => node(m, 'model', 'external', m.facts.family ? `${m.facts.family}${m.facts.identity ? ` · ${m.facts.identity}` : ''}` : m.blurb)), 2, { cols: 4 })]],
       facts: {},
     });
   }
@@ -300,17 +299,17 @@ export function buildHierarchy(graph: BlueprintGraph): Hierarchy {
   // ── Structural edges (always drawn): each one exists in the graph ──
   const has = (from: string, to: string, kind?: BlueprintEdge['kind']) => graph.edges.some((e) => e.from === from && e.to === to && (!kind || e.kind === kind));
   if (operator && wizardNode && has(operator.id, wizardNode.id, 'commands')) spine.push({ from: operator.id, to: wizardNode.id, kind: 'hot', label: 'commands' });
-  if (wizardNode && engineNode && has(wizardNode.id, engineNode.id, 'runs-on')) spine.push({ from: wizardNode.id, to: engineNode.id, kind: 'soft', label: 'runs on' });
+  if (wizardNode && engineNode && has(wizardNode.id, engineNode.id, 'runs-on')) spine.push({ from: wizardNode.id, to: engineNode.id, kind: 'soft', label: '실행 위치' });
   if (wizardNode && routerDepartments) spine.push({ from: wizardNode.id, to: ROUTER_DEPARTMENTS, kind: 'hot' });
-  if (routerDepartments && deptGroups.length) spine.push({ from: ROUTER_DEPARTMENTS, to: deptGroups.map((d) => d.id), kind: 'hot', label: 'by ownership', bus: true });
+  if (routerDepartments && deptGroups.length) spine.push({ from: ROUTER_DEPARTMENTS, to: deptGroups.map((d) => d.id), kind: 'hot', label: '담당별', bus: true });
   if (deptGroups.length && capability.length) {
     const usesAny = graph.edges.some((e) => e.kind === 'uses' && e.from.startsWith('agent-'));
-    spine.push({ from: deptGroups[Math.floor((deptGroups.length - 1) / 2)].id, to: capability.map((c) => c.id), kind: 'soft', label: usesAny ? 'agents use' : undefined, bus: true });
+    spine.push({ from: deptGroups[Math.floor((deptGroups.length - 1) / 2)].id, to: capability.map((c) => c.id), kind: 'soft', label: usesAny ? '에이전트가 사용' : undefined, bus: true });
   }
   const gsend = graph.edges.find((e) => e.from === 'router-deals' && e.to.startsWith('daemon-'));
   if (gsend && hostOf.has(gsend.to)) spine.push({ from: 'router-deals', to: gsend.to, kind: 'soft', label: gsend.via, gutter: 'right' });
   const identityToModel = graph.edges.find((e) => e.from === 'router-identity' && e.to.startsWith('model-'));
-  if (identityToModel && models.length) spine.push({ from: 'router-identity', to: 'g-models', kind: 'soft', label: 'routes to', gutter: 'left' });
+  if (identityToModel && models.length) spine.push({ from: 'router-identity', to: 'g-models', kind: 'soft', label: '라우팅 대상', gutter: 'left' });
 
   // ── Relations (drawn on selection): every graph edge that is not containment
   const relations: HRelation[] = [];
@@ -449,7 +448,7 @@ export function matchesKind(idx: HierarchyIndex, id: string, kind: HKind): boole
 export function describeScope(h: Hierarchy, idx: HierarchyIndex, id: string | null): Record<string, unknown> {
   if (!id || !idx.items.has(id)) {
     return {
-      scope: 'the whole system',
+      scope: '시스템 전체',
       containers: h.containers.map((c) => ({ name: c.name, what: c.sub, holds: c.rows.flat().map((g) => (g.type === 'group' ? `${g.name} (${idx.countLeaves(g)})` : g.name)) })),
     };
   }

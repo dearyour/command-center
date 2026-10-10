@@ -126,10 +126,10 @@ export function KnowledgeGraphFullscreen({
                 className="state-fade max-w-[150px] truncate text-[12.5px] font-bold leading-tight"
                 style={currentDept ? { color: currentDept.color } : undefined}
               >
-                {currentDept?.name ?? 'Pick a pillar'}
+                {currentDept?.name ?? '축을 고르세요'}
               </span>
               <span className="font-mono text-[8.5px] uppercase tracking-[0.14em] text-os-dim">
-                {idx >= 0 ? `${idx + 1} / ${deptList.length}` : `${deptList.length} pillars`}
+                {idx >= 0 ? `${idx + 1} / ${deptList.length}` : `축 ${deptList.length}개`}
               </span>
             </div>
             <div className="flex items-center gap-0.5 border-l border-os-border pl-2">
@@ -177,8 +177,8 @@ export function KnowledgeGraphFullscreen({
                 onPointerUp={onResizeUp}
                 role="separator"
                 aria-orientation="vertical"
-                aria-label="Drag to resize the directory"
-                title="Drag to resize"
+                aria-label="드래그해서 목록 크기 조절"
+                title="드래그해서 크기 조절"
                 className="group absolute -left-2 top-0 z-10 flex h-full w-4 cursor-ew-resize touch-none items-center justify-center"
               >
                 <span className="state-fade h-12 w-0.5 rounded-full bg-os-border-strong group-hover:bg-os-accent" />
@@ -193,7 +193,7 @@ export function KnowledgeGraphFullscreen({
           onClick={onClose}
           className="pressable absolute right-5 top-5 z-20 flex items-center gap-1.5 rounded-sm-t border border-os-border bg-os-surface px-2.5 py-1 font-mono text-[11px] text-os-muted hover:border-os-border-strong hover:text-os-text"
         >
-          <Minimize2 className="h-3.5 w-3.5" /> Exit
+          <Minimize2 className="h-3.5 w-3.5" /> 나가기
         </button>
 
         {/* department nav — a single control pinned to the BOTTOM CENTER at all
@@ -204,8 +204,8 @@ export function KnowledgeGraphFullscreen({
           <div className="absolute bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-full border border-os-border-strong bg-os-bg/90 px-1.5 py-1.5 backdrop-blur">
             <button
               onClick={() => step(-1)}
-              aria-label="Previous department"
-              title="Previous pillar (←)"
+              aria-label="이전 부서"
+              title="이전 축 (←)"
               className="pressable flex h-10 w-10 items-center justify-center rounded-full text-os-muted hover:bg-os-surface hover:text-os-text"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -214,12 +214,12 @@ export function KnowledgeGraphFullscreen({
               className="min-w-[96px] px-1 text-center font-mono text-[11px] font-semibold leading-none"
               style={currentDept ? { color: currentDept.color } : undefined}
             >
-              {currentDept?.name ?? 'All pillars'}
+              {currentDept?.name ?? '모든 축'}
             </span>
             <button
               onClick={() => step(1)}
-              aria-label="Next department"
-              title="Next pillar (→)"
+              aria-label="다음 부서"
+              title="다음 축 (→)"
               className="pressable flex h-10 w-10 items-center justify-center rounded-full text-os-muted hover:bg-os-surface hover:text-os-text"
             >
               <ChevronRight className="h-5 w-5" />
@@ -239,7 +239,7 @@ export function KnowledgeGraphFullscreen({
           {/* the trail: node → pillar (this) → home. Same affordance inline. */}
           <button
             onClick={onBack}
-            aria-label={`Back to the ${currentDept?.name ?? 'graph'} pillar`}
+            aria-label={`${currentDept?.name ?? '그래프'} 축으로 돌아가기`}
             className="pressable flex shrink-0 items-center gap-1.5 border-b border-os-border px-3 py-2 text-left font-mono text-[10px] uppercase tracking-[0.14em] text-os-dim hover:text-os-text"
           >
             <ArrowLeft className="h-3 w-3 shrink-0" />

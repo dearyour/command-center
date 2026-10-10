@@ -6,7 +6,7 @@ describe('headForDepartment', () => {
     expect(headForDepartment('dept-sales')).toEqual({
       id: 'head:dept-sales',
       name: 'Marco',
-      role: 'Head of Sales',
+      role: '영업 총괄',
       departmentId: 'dept-sales',
     });
     expect(headForDepartment('dept-marketing-growth')?.name).toBe('Nadia');

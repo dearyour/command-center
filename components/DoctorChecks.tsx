@@ -70,10 +70,10 @@ export function DoctorChecks({
         </div>
         <div className="min-w-0">
           <div className="font-mono text-[11px] text-os-dim">
-            / 100 health{connected ? '' : ' · CLI unreachable'}
+            / 100 상태{connected ? '' : ' · CLI 연결 불가'}
           </div>
           <div className="mt-1 font-mono text-[10.5px] text-os-muted">
-            {busy ? 'reading the engine…' : `${checks.length} checks`}
+            {busy ? '엔진 읽는 중…' : `진단 항목 ${checks.length}개`}
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ export function DoctorChecks({
             ))}
         {!busy && checks.length === 0 && (
           <li className="rounded-panel border border-dashed border-os-border px-3 py-2 font-mono text-[11px] text-os-dim">
-            doctor offline · {detail}
+            진단 오프라인 · {detail}
           </li>
         )}
       </ul>

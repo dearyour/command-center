@@ -57,11 +57,11 @@ export function BrainCore({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Open G-Brain doctor and search"
+          aria-label="G-Brain 진단 및 검색 열기"
           className="group absolute left-1/2 top-1/2 grid h-[27%] w-[27%] -translate-x-1/2 -translate-y-1/2 place-items-end justify-center rounded-full pb-[6%] outline-none ring-os-accent/50 transition-[box-shadow] hover:shadow-[var(--glow)] focus-visible:ring-2"
         >
           <span className="pointer-events-none flex translate-y-3 items-center gap-1 rounded-full border border-os-accent/40 bg-os-bg/80 px-2 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.12em] text-os-accent opacity-0 backdrop-blur transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
-            <Search className="h-2.5 w-2.5" /> doctor · search
+            <Search className="h-2.5 w-2.5" /> 진단 · 검색
           </span>
         </button>
       </div>
@@ -78,12 +78,12 @@ export function BrainCore({
             <div className="sticky top-0 flex items-center justify-between border-b border-os-border bg-os-bg2 px-5 py-3.5">
               <div className="flex items-center gap-2">
                 <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-os-dim">G-Brain</span>
-                <span className="text-sm font-semibold">Doctor · Search</span>
+                <span className="text-sm font-semibold">진단 · 검색</span>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close"
+                aria-label="닫기"
                 className="pressable grid h-7 w-7 place-items-center rounded-ctl border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
               >
                 <X className="h-3.5 w-3.5" />
@@ -95,20 +95,20 @@ export function BrainCore({
               <div>
                 <div className="mb-2 flex items-baseline justify-between">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-os-dim">
-                    Doctor — warnings
+                    진단 — 경고
                   </span>
                   <span className="font-mono text-[10px] text-os-dim">
-                    {doctor.connected ? `${warnings.length} of ${doctor.checks.length} checks` : 'offline'}
+                    {doctor.connected ? `항목 ${doctor.checks.length}개 중 ${warnings.length}개` : '오프라인'}
                   </span>
                 </div>
                 <div className="rounded-md-t border border-os-border bg-os-surface px-3.5 py-3">
                   {doctor.connected && warnings.length === 0 && doctor.checks.length > 0 && (
                     <div className="font-mono text-[11px] text-os-muted">
-                      all {doctor.checks.length} checks green · health {doctor.healthScore ?? '—'}/100
+                      항목 {doctor.checks.length}개 모두 정상 · 상태 {doctor.healthScore ?? '—'}/100
                     </div>
                   )}
                   {!doctor.connected && (
-                    <div className="font-mono text-[11px] text-os-err">doctor offline — {doctor.detail}</div>
+                    <div className="font-mono text-[11px] text-os-err">진단 오프라인 — {doctor.detail}</div>
                   )}
                   {warnings.length > 0 && (
                     <ul className="space-y-2">
@@ -128,20 +128,20 @@ export function BrainCore({
               {/* Hybrid search */}
               <div className="border-t border-os-border pt-5">
                 <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-os-dim">
-                  Hybrid search
+                  하이브리드 검색
                 </div>
                 <BrainQuery fallbackActive={fallbackActive} />
                 {fallbackActive && (
                   <div className="mt-2.5 flex items-center gap-2.5 rounded-md-t border border-os-border bg-os-surface px-3 py-2.5">
                     <Zap className="h-3.5 w-3.5 shrink-0 text-os-warn" strokeWidth={1.7} />
                     <div className="flex-1 text-[11.5px] text-os-muted">
-                      Supabase free tier is paused — hybrid queries fall back to local grep until revived.
+                      Supabase 무료 플랜이 일시정지 상태입니다 — 다시 켜질 때까지 하이브리드 검색은 로컬 grep으로 대체됩니다.
                     </div>
                     <Link
                       href="/roadmap"
                       className="pressable shrink-0 rounded-ctl border border-os-border-strong bg-os-surface2 px-2.5 py-1 text-[11px] font-semibold hover:border-os-dim"
                     >
-                      Roadmap →
+                      로드맵 →
                     </Link>
                   </div>
                 )}

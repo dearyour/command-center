@@ -97,7 +97,7 @@ describe('/doctor mock-3b: radius rule', () => {
 
   test('the Storage layers box stays structural — no radius at all', () => {
     const box = page.slice(page.indexOf('{/* Core status'), page.indexOf('{/* The pipeline'));
-    expect(box).toContain('Storage layers');
+    expect(box).toContain('저장 계층');
     expect(box).not.toMatch(/rounded-(panel|tile|ctl|lg-t|md-t|sm-t|lg|md|sm|xl|2xl)/);
   });
 });

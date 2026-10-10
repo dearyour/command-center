@@ -24,8 +24,8 @@ describe('/brain mock-1d: capture bar states', () => {
 
   test('Save is the three-state AsyncButton: saving → ✓ embedded', () => {
     expect(dump).toContain('AsyncButton');
-    expect(dump).toContain("busyLabel=\"saving\"");
-    expect(dump).toContain('embedded');
+    expect(dump).toContain("busyLabel=\"저장 중\"");
+    expect(dump).toContain('임베딩됨');
     // the outcome drives the done label — a failed save never reads as ✓ embedded
     expect(dump).toContain('failed');
   });
@@ -37,7 +37,7 @@ describe('/brain mock-1d: capture bar states', () => {
   });
 
   test('the footer message line still reflects every state', () => {
-    expect(dump).toContain("'saving…'");
+    expect(dump).toContain("'저장 중…'");
     expect(dump).toContain('status.embedded');
     expect(dump).toContain("status.kind === 'error'");
   });
@@ -116,8 +116,8 @@ describe('/brain mock-1d: directory filters and its empty state', () => {
   });
 
   test('with every pillar off the list says so and offers a way back', () => {
-    expect(gd).toContain('No pillars selected.');
-    expect(gd).toContain('show all pillars');
+    expect(gd).toContain('선택한 축이 없습니다.');
+    expect(gd).toContain('모든 축 보기');
     expect(gd).toContain('onShowAllPillars');
     expect(gd).toContain('data-lens="c"');
   });
@@ -150,7 +150,7 @@ describe('/brain mock-1d: node hover card', () => {
   });
 
   test('it names the node and its links under a "node · hover card" eyebrow', () => {
-    expect(card).toContain('node · hover card');
+    expect(card).toContain('노드 · 미리보기 카드');
     expect(card).toContain('links');
   });
 

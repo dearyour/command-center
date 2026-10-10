@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   const prompt = [
     "You are Adscout, the user's ad-intelligence analyst. Answer from the DATA below: competitor ads tracked via Foreplay.",
     'Rules: days-running-while-live is the only spend proxy (no engagement/spend numbers exist: never invent any).',
-    'Be direct and specific; cite brands and hooks from the data. 120 words max. Plain text, no markdown.',
+    'Be direct and specific; cite brands and hooks from the data. 120 words max. Plain text, no markdown. Answer in Korean (한국어).',
     '',
     `DATA: tracked ads (longevity-ranked): ${JSON.stringify(wall)}`,
     `DATA: recent signals: ${JSON.stringify(signals)}`,

@@ -15,7 +15,7 @@ describe('pillar = department-head agent', () => {
   test('pillars wear their original Users icon; no head kind anywhere in the graph chrome', () => {
     const kg = read('components/KnowledgeGraph.tsx');
     // the operator 2026-08-07: robot pillars reverted to the original look
-    expect(kg).toContain("team: { color: 'var(--brain-1)', Icon: Users, label: 'Pillars', r: 15 }");
+    expect(kg).toContain("team: { color: 'var(--brain-1)', Icon: Users, label: '축', r: 15 }");
     expect(kg).not.toContain("Icon: Crown");
     expect(kg).toContain("['team', 'board', 'task', 'person', 'employee', 'tool']"); // side legend: no self, no head
   });

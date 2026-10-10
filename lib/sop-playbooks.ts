@@ -47,18 +47,18 @@ export type SopPlaybook = z.infer<typeof SopPlaybookSchema>;
 export type ResolvedPlaybook = SopPlaybook & { skillMarkdown: string };
 
 const AUTONOMY_LABEL: Record<AutonomyLevel, string> = {
-  'human-led': 'HUMAN-LED',
-  'human-assisted': 'HUMAN-ASSISTED',
-  'fully-autonomous': 'FULLY AUTONOMOUS',
+  'human-led': '사람 주도',
+  'human-assisted': '사람 보조',
+  'fully-autonomous': '완전 자율',
 };
 export function autonomyLabel(level: AutonomyLevel): string {
   return AUTONOMY_LABEL[level];
 }
 
 const STATUS_LABEL: Record<PlaybookStatus, string> = {
-  'not-started': 'NOT STARTED',
-  'in-development': 'IN DEVELOPMENT',
-  'ready-to-run': 'READY TO RUN',
+  'not-started': '시작 전',
+  'in-development': '개발 중',
+  'ready-to-run': '실행 준비됨',
 };
 export function statusLabel(status: PlaybookStatus): string {
   return STATUS_LABEL[status];

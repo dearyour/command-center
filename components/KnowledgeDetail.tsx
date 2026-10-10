@@ -16,6 +16,7 @@ import {
   playbookFor, autonomyLabel, statusLabel, AUTONOMY_LEVELS,
   type AutonomyLevel, type PlaybookStatus,
 } from '@/lib/sop-playbooks';
+import { statusKo } from '@/lib/status-labels';
 
 export type AgentLite = { id: string; name: string; role: string; model: string };
 export type ToolLite = { id: string; slug: string; name: string; mcp: boolean };
@@ -48,7 +49,7 @@ function PanelHeader({
   return (
     <div className="flex items-start gap-2 border-b border-os-border px-3 py-2">
       {onBack && (
-        <button onClick={onBack} aria-label="Back" className="pressable mt-0.5 shrink-0 text-os-dim hover:text-os-text">
+        <button onClick={onBack} aria-label="뒤로" className="pressable mt-0.5 shrink-0 text-os-dim hover:text-os-text">
           <ArrowLeft className="h-3.5 w-3.5" />
         </button>
       )}
@@ -57,7 +58,7 @@ function PanelHeader({
         {sub && <div className="truncate font-mono text-[9.5px] text-os-dim">{sub}</div>}
       </div>
       {onClose && (
-        <button onClick={onClose} aria-label="Close" className="pressable shrink-0 text-os-dim hover:text-os-text">
+        <button onClick={onClose} aria-label="닫기" className="pressable shrink-0 text-os-dim hover:text-os-text">
           <X className="h-3.5 w-3.5" />
         </button>
       )}
@@ -114,17 +115,17 @@ export function DeptOverviewCard({
     <div className="flex h-full flex-col">
       <PanelHeader title={dept.name} sub={dept.tagline} color={dept.color} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5">
-        <SectionLabel icon={UserCog}>Human personnel</SectionLabel>
+        <SectionLabel icon={UserCog}>사람 담당자</SectionLabel>
         {head ? (
-          <Row color={dept.color} title={head.name} sub={head.role} badge="lead" onClick={() => onPerson(dept.deptId)} />
+          <Row color={dept.color} title={head.name} sub={head.role} badge="리드" onClick={() => onPerson(dept.deptId)} />
         ) : (
           <p className="rounded-md-t border border-dashed border-os-border px-3 py-2 font-mono text-[10.5px] text-os-dim">
-            No human lead yet — this team runs on agents.
+            아직 사람 리드가 없습니다 — 이 팀은 에이전트로 운영됩니다.
           </p>
         )}
 
         <div className="mt-4">
-          <SectionLabel icon={User}>Agents ({agents.length})</SectionLabel>
+          <SectionLabel icon={User}>에이전트 ({agents.length})</SectionLabel>
           <div className="flex flex-col gap-1.5">
             {agents.map((a) => (
               <Row key={a.id} color="var(--accent)" title={a.name} sub={`${a.role} · ${a.model}`} onClick={() => onAgent(a.id)} />
@@ -133,12 +134,12 @@ export function DeptOverviewCard({
         </div>
 
         <div className="mt-4">
-          <SectionLabel icon={Wrench}>Tools ({tools.length})</SectionLabel>
+          <SectionLabel icon={Wrench}>도구 ({tools.length})</SectionLabel>
           <div className="flex flex-wrap gap-x-3 gap-y-1.5">
             {tools.map((t) => (
               <WikiLink key={t.id} label={t.name} mcp={t.mcp} onClick={() => onTool(t.id)} />
             ))}
-            {tools.length === 0 && <span className="font-mono text-[10.5px] text-os-dim">no tools wired</span>}
+            {tools.length === 0 && <span className="font-mono text-[10.5px] text-os-dim">연결된 도구 없음</span>}
           </div>
         </div>
       </div>
@@ -172,11 +173,11 @@ export function AgentHarnessCard({
 }) {
   return (
     <div className="flex h-full flex-col">
-      <PanelHeader title={agent.name} sub={`${agent.role} · AI agent`} onBack={onBack} onClose={onClose} />
+      <PanelHeader title={agent.name} sub={`${agent.role} · AI 에이전트`} onBack={onBack} onClose={onClose} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5">
         <p className="mb-3 text-[11px] leading-relaxed text-os-muted">{agent.description}</p>
 
-        <SectionLabel icon={ListChecks}>instructions{task ? '' : ' · no SOP assigned'}</SectionLabel>
+        <SectionLabel icon={ListChecks}>지시사항{task ? '' : ' · 배정된 SOP 없음'}</SectionLabel>
         {task ? (
           <button onClick={onTask} disabled={!onTask} className={`pressable mb-1 text-left ${onTask ? 'hover:opacity-80' : ''}`}>
             <span className="font-mono text-[10.5px] text-os-accent">[[{task.title}]]</span>
@@ -191,15 +192,15 @@ export function AgentHarnessCard({
           ))}
         </ol>
 
-        <SectionLabel icon={Server}>harness</SectionLabel>
+        <SectionLabel icon={Server}>실행 환경</SectionLabel>
         <div className="mb-4 flex flex-col gap-1 font-mono text-[10.5px] text-os-muted">
           <span>
-            <span className="text-os-dim">tier</span> {agent.tier} · <span className="text-os-dim">runs on</span>{' '}
+            <span className="text-os-dim">등급</span> {statusKo(agent.tier)} · <span className="text-os-dim">실행 위치</span>{' '}
             {agent.instance} · {agent.model}
           </span>
           {parentName && (
             <span>
-              <span className="text-os-dim">reports to</span>{' '}
+              <span className="text-os-dim">보고 대상</span>{' '}
               {parentAgentId && onAgent ? (
                 <button onClick={() => onAgent(parentAgentId)} className="pressable text-os-accent hover:opacity-80">
                   {parentName}
@@ -211,12 +212,12 @@ export function AgentHarnessCard({
           )}
           {headName && (
             <span>
-              <span className="text-os-dim">human lead</span> {headName}
+              <span className="text-os-dim">사람 리드</span> {headName}
             </span>
           )}
           {subAgents.length > 0 && (
             <span className="flex flex-wrap items-center gap-x-2">
-              <span className="text-os-dim">sub-agents</span>
+              <span className="text-os-dim">하위 에이전트</span>
               {subAgents.map((s) =>
                 onAgent ? (
                   <button key={s.id} onClick={() => onAgent(s.id)} className="pressable text-os-accent hover:opacity-80">
@@ -230,7 +231,7 @@ export function AgentHarnessCard({
           )}
         </div>
 
-        <SectionLabel icon={Wrench}>tools ({agent.tools.length})</SectionLabel>
+        <SectionLabel icon={Wrench}>도구 ({agent.tools.length})</SectionLabel>
         <div className="mb-4 flex flex-wrap gap-x-3 gap-y-1.5">
           {agent.tools.map((slug) => (
             <WikiLink
@@ -239,10 +240,10 @@ export function AgentHarnessCard({
               onClick={onTool ? () => onTool(slug) : undefined}
             />
           ))}
-          {agent.tools.length === 0 && <span className="font-mono text-[10.5px] text-os-dim">no tools wired</span>}
+          {agent.tools.length === 0 && <span className="font-mono text-[10.5px] text-os-dim">연결된 도구 없음</span>}
         </div>
 
-        <SectionLabel icon={FileText}>last run</SectionLabel>
+        <SectionLabel icon={FileText}>마지막 실행</SectionLabel>
         {lastRun ? (
           <div className="flex items-start gap-2">
             <span
@@ -255,7 +256,7 @@ export function AgentHarnessCard({
             </p>
           </div>
         ) : (
-          <p className="font-mono text-[10.5px] text-os-dim">never run — trigger it from /agents</p>
+          <p className="font-mono text-[10.5px] text-os-dim">실행한 적 없음 — /agents 에서 실행하세요</p>
         )}
       </div>
     </div>
@@ -324,7 +325,7 @@ export function ToolDetailCard({
         ) : null}
         <WikiFields fields={wiki.fields} />
 
-        <SectionLabel icon={FileText}>page{wiki.hasPage ? ` · ${wiki.path}` : ''}</SectionLabel>
+        <SectionLabel icon={FileText}>페이지{wiki.hasPage ? ` · ${wiki.path}` : ''}</SectionLabel>
         <div className="mb-4 flex items-center gap-2">
           {wiki.hasPage ? (
             <WikiLink label={`${wiki.slug}.md`} mcp={wiki.mcp} />
@@ -332,17 +333,17 @@ export function ToolDetailCard({
             // Honest: the store has no page for this tool. Saying so is what
             // turns the panel from decoration into an audit surface.
             <span className="font-mono text-[10.5px] text-os-dim">
-              no page in the brain-store yet — run `npm run brain:docs`
+              브레인 저장소에 아직 페이지가 없습니다 — `npm run brain:docs` 를 실행하세요
             </span>
           )}
         </div>
 
-        <WikiLinks label="links to" refs={wiki.links} icon={LinkIcon} />
-        <WikiLinks label="linked from" refs={wiki.backlinks} icon={LinkIcon} />
+        <WikiLinks label="링크 대상" refs={wiki.links} icon={LinkIcon} />
+        <WikiLinks label="링크된 곳" refs={wiki.backlinks} icon={LinkIcon} />
 
-        <SectionLabel icon={User}>used by ({wiki.usedBy.length})</SectionLabel>
+        <SectionLabel icon={User}>사용하는 곳 ({wiki.usedBy.length})</SectionLabel>
         {wiki.usedBy.length === 0 ? (
-          <p className="font-mono text-[10.5px] text-os-dim">no agents in view</p>
+          <p className="font-mono text-[10.5px] text-os-dim">표시할 에이전트 없음</p>
         ) : (
           <div className="flex flex-col gap-1">
             {wiki.usedBy.map((n) => (
@@ -379,8 +380,8 @@ export function ClientRosterCard({
   return (
     <div className="flex h-full flex-col">
       <PanelHeader
-        title="Client roster"
-        sub={`${converted.length} active · ${pipeline.length} in pipeline${lost > 0 ? ` · ${lost} lost` : ''} · ${source === 'attio' ? 'live · Attio' : 'seeded · funnel'}`}
+        title="고객 명단"
+        sub={`활성 ${converted.length} · 파이프라인 ${pipeline.length}${lost > 0 ? ` · 무산 ${lost}` : ''} · ${source === 'attio' ? '실시간 · Attio' : '샘플 · 퍼널'}`}
         color={color}
         onClose={onClose}
       />
@@ -396,7 +397,7 @@ export function ClientRosterCard({
                     key={c.id}
                     color={color}
                     title={c.name}
-                    sub={c.amountUsd ? `$${c.amountUsd.toLocaleString('en-US')}` : 'active client'}
+                    sub={c.amountUsd ? `$${c.amountUsd.toLocaleString('en-US')}` : '활성 고객'}
                   />
                 ))}
             </div>
@@ -404,7 +405,7 @@ export function ClientRosterCard({
         ))}
         {unventured.length > 0 && (
           <div className="mb-4">
-            <SectionLabel icon={UserCog}>clients</SectionLabel>
+            <SectionLabel icon={UserCog}>고객</SectionLabel>
             <div className="flex flex-col gap-1.5">
               {unventured.map((c) => (
                 <Row
@@ -418,11 +419,11 @@ export function ClientRosterCard({
           </div>
         )}
         {converted.length === 0 && (
-          <p className="mb-4 font-mono text-[10.5px] text-os-dim">No active clients yet.</p>
+          <p className="mb-4 font-mono text-[10.5px] text-os-dim">아직 활성 고객이 없습니다.</p>
         )}
         {pipeline.length > 0 && (
           <div>
-            <SectionLabel icon={ClipboardList}>in pipeline ({pipeline.length})</SectionLabel>
+            <SectionLabel icon={ClipboardList}>파이프라인 ({pipeline.length})</SectionLabel>
             <div className="flex flex-col gap-1">
               {pipeline.map((c) => (
                 <span key={c.id} className="truncate font-mono text-[10.5px] text-os-dim">
@@ -448,7 +449,7 @@ export function MemoryNoteCard({
 }) {
   return (
     <div className="flex h-full flex-col">
-      <PanelHeader title={note.label} sub="memory · brain-store" color={color} onBack={onBack} onClose={onClose} />
+      <PanelHeader title={note.label} sub="기억 · 브레인 저장소" color={color} onBack={onBack} onClose={onClose} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5">
         <div className="mb-3 flex items-center gap-2">
           <span
@@ -458,15 +459,15 @@ export function MemoryNoteCard({
             {note.folder}
           </span>
           <span className="font-mono text-[9.5px] text-os-dim">
-            {note.wordCount} words · {note.chunks} chunk{note.chunks === 1 ? '' : 's'}
+            단어 {note.wordCount}개 · 청크 {note.chunks}개
           </span>
         </div>
         {note.excerpt ? (
           <p className="mb-3 text-[11px] leading-relaxed text-os-muted">{note.excerpt}</p>
         ) : (
-          <p className="mb-3 font-mono text-[10.5px] text-os-dim">no excerpt</p>
+          <p className="mb-3 font-mono text-[10.5px] text-os-dim">발췌 없음</p>
         )}
-        <SectionLabel icon={FileText}>source</SectionLabel>
+        <SectionLabel icon={FileText}>출처</SectionLabel>
         <WikiLink label={`${note.id}.md`} />
       </div>
     </div>
@@ -531,7 +532,7 @@ export function MemoryCoreCard({
       setResults(data.results ?? []);
       setProvider(data.provider ?? null);
     } catch {
-      setError('search failed — the brain provider may be offline');
+      setError('검색 실패 — 브레인 제공자가 오프라인일 수 있습니다');
       setResults([]);
     } finally {
       setLoading(false);
@@ -540,7 +541,7 @@ export function MemoryCoreCard({
 
   return (
     <div className="flex h-full flex-col">
-      <PanelHeader title="Obsidian" sub="the company knowledge brain" color={color} onBack={onBack} onClose={onClose} />
+      <PanelHeader title="Obsidian" sub="회사 지식 브레인" color={color} onBack={onBack} onClose={onClose} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5">
         {/* query bar — search the whole brain */}
         <form
@@ -555,14 +556,14 @@ export function MemoryCoreCard({
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="query the whole brain…"
-              aria-label="Search the knowledge base"
+              placeholder="브레인 전체 검색…"
+              aria-label="지식 베이스 검색"
               className="min-w-0 flex-1 bg-transparent text-[12px] text-os-text placeholder:text-os-dim focus:outline-none"
             />
             {loading ? (
               <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-os-dim" />
             ) : (
-              <button type="submit" aria-label="Search" className="pressable shrink-0 text-os-dim hover:text-os-accent">
+              <button type="submit" aria-label="검색" className="pressable shrink-0 text-os-dim hover:text-os-accent">
                 <CornerDownLeft className="h-3.5 w-3.5" />
               </button>
             )}
@@ -570,7 +571,7 @@ export function MemoryCoreCard({
         </form>
         {suggestions.length > 0 && results === null && (
           <div className="mb-4 flex flex-wrap gap-1.5">
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-os-dim">try</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-os-dim">추천</span>
             {suggestions.map((s) => (
               <button
                 key={s}
@@ -587,16 +588,16 @@ export function MemoryCoreCard({
         {results !== null && (
           <div className="mb-4">
             <SectionLabel icon={Search}>
-              {loading ? 'searching…' : `${results.length} result${results.length === 1 ? '' : 's'}`}
+              {loading ? '검색 중…' : `결과 ${results.length}개`}
               {provider && !loading ? ` · ${provider}` : ''}
               {' · '}
               <button onClick={() => { setResults(null); setError(null); setQ(''); }} className="pressable text-os-dim hover:text-os-text">
-                clear
+                지우기
               </button>
             </SectionLabel>
             {error && <p className="mb-2 text-[10.5px] text-os-warn">{error}</p>}
             {!loading && results.length === 0 && !error && (
-              <p className="font-mono text-[10.5px] text-os-dim">nothing matched. try another phrasing.</p>
+              <p className="font-mono text-[10.5px] text-os-dim">일치하는 결과가 없습니다. 다른 표현으로 검색해 보세요.</p>
             )}
             <div className="flex flex-col gap-1.5">
               {results.map((r, i) => (
@@ -614,35 +615,35 @@ export function MemoryCoreCard({
 
         {!memory ? (
           <p className="font-mono text-[10.5px] text-os-dim">
-            The brain is not loaded on this machine (the store was unreadable). Numbers appear once
-            the brain-store and vault can be read.
+            이 컴퓨터에는 브레인이 불러와지지 않았습니다 (저장소를 읽을 수 없음). 브레인 저장소와
+            보관소를 읽을 수 있게 되면 숫자가 표시됩니다.
           </p>
         ) : (
           <>
             <p className="mb-4 text-[11px] leading-relaxed text-os-muted">
-              The operator&apos;s entire second brain, distilled: every note, folder and link across the
-              brain-store and the Obsidian vault, clustered into the domains the whole OS reasons over.
+              운영자의 세컨드 브레인 전체를 정리한 것: 브레인 저장소와 Obsidian 보관소의 모든 메모, 폴더, 링크를
+              OS 전체가 판단에 쓰는 영역별로 묶었습니다.
             </p>
 
-            <SectionLabel icon={Boxes}>the brain in numbers</SectionLabel>
+            <SectionLabel icon={Boxes}>숫자로 보는 브레인</SectionLabel>
             <div className="mb-2 grid grid-cols-2 gap-2">
-              <Stat label="notes" value={fmt(pages.length)} color={color} />
-              <Stat label="folders" value={fmt(folders.length)} color={color} />
-              <Stat label="wiki-links" value={fmt(links)} color={color} />
-              <Stat label="clusters" value={fmt(clusters)} color={color} />
+              <Stat label="메모" value={fmt(pages.length)} color={color} />
+              <Stat label="폴더" value={fmt(folders.length)} color={color} />
+              <Stat label="위키 링크" value={fmt(links)} color={color} />
+              <Stat label="묶음" value={fmt(clusters)} color={color} />
             </div>
             <p className="mb-4 font-mono text-[9.5px] text-os-dim">
-              ~{fmt(words)} words across {fmt(pages.length)} distilled notes
+              정리된 메모 {fmt(pages.length)}개, 약 {fmt(words)}단어
             </p>
 
-            <SectionLabel icon={FolderTree}>knowledge domains</SectionLabel>
+            <SectionLabel icon={FolderTree}>지식 영역</SectionLabel>
             <div className="mb-4 flex flex-col gap-1.5">
               {topFolders.map(([folder, count]) => (
                 <button
                   key={folder}
                   onClick={() => runSearch(folder)}
                   className="pressable group flex w-full items-center gap-2 text-left"
-                  title={`search "${folder}"`}
+                  title={`"${folder}" 검색`}
                 >
                   <span className="w-28 shrink-0 truncate text-[10.5px] text-os-muted group-hover:text-os-text" title={folder}>{folder}</span>
                   <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-os-surface">
@@ -651,19 +652,19 @@ export function MemoryCoreCard({
                   <span className="w-6 shrink-0 text-right font-mono text-[9.5px] text-os-dim">{count}</span>
                 </button>
               ))}
-              {topFolders.length === 0 && <span className="font-mono text-[10px] text-os-dim">no folders</span>}
+              {topFolders.length === 0 && <span className="font-mono text-[10px] text-os-dim">폴더 없음</span>}
             </div>
 
             {topNotes.length > 0 && (
               <>
-                <SectionLabel icon={FileText}>most-linked notes</SectionLabel>
+                <SectionLabel icon={FileText}>가장 많이 연결된 메모</SectionLabel>
                 <div className="mb-4 flex flex-col gap-1">
                   {topNotes.map((note) => (
                     <button
                       key={note.id}
                       onClick={() => runSearch(note.label)}
                       className="pressable group flex w-full items-center gap-2 rounded-md-t border border-os-border bg-os-surface px-2.5 py-1.5 text-left hover:border-os-border-strong"
-                      title={`search "${note.label}"`}
+                      title={`"${note.label}" 검색`}
                     >
                       <span className="min-w-0 flex-1 truncate text-[11px] text-os-muted group-hover:text-os-text">{note.label}</span>
                       <span className="shrink-0 font-mono text-[8.5px] uppercase tracking-wide text-os-dim">{note.folder}</span>
@@ -674,11 +675,11 @@ export function MemoryCoreCard({
               </>
             )}
 
-            <SectionLabel icon={Database}>where it comes from</SectionLabel>
+            <SectionLabel icon={Database}>데이터 출처</SectionLabel>
             <p className="text-[11px] leading-relaxed text-os-muted">
-              The brain-store markdown plus the Obsidian vault (the Claude Archive is the bulk of it),
-              embedded through GBrain into Supabase pgvector. Every agent answers from these same notes,
-              cited, never invented. Search above, or click any node in the graph to open its source.
+              브레인 저장소의 마크다운과 Obsidian 보관소(대부분은 Claude Archive)를 GBrain으로
+              Supabase pgvector에 임베딩했습니다. 모든 에이전트는 같은 메모를 근거로, 출처를 밝혀 답하며
+              지어내지 않습니다. 위에서 검색하거나 그래프의 노드를 눌러 출처를 열어 보세요.
             </p>
           </>
         )}
@@ -789,33 +790,33 @@ export function SopTaskDetailCard({
         >
           <Download className="h-3.5 w-3.5 shrink-0 text-os-accent" />
           <span className="min-w-0 flex-1">
-            <span className="block text-[11px] font-semibold text-os-text">1 runnable skill file</span>
-            <span className="block font-mono text-[9px] text-os-dim">yours to download</span>
+            <span className="block text-[11px] font-semibold text-os-text">실행 가능한 스킬 파일 1개</span>
+            <span className="block font-mono text-[9px] text-os-dim">다운로드해서 쓰세요</span>
           </span>
         </button>
 
-        <SectionLabel icon={Puzzle}>breaks into</SectionLabel>
+        <SectionLabel icon={Puzzle}>세부 구성</SectionLabel>
         <div className="mb-3.5 flex flex-wrap gap-1.5">
           {pb.breaksInto.map((s) => (
             <Chip key={s} label={s} />
           ))}
         </div>
 
-        <SectionLabel icon={Layers}>builds on</SectionLabel>
+        <SectionLabel icon={Layers}>기반</SectionLabel>
         <div className="mb-3.5 flex flex-wrap gap-1.5">
           {pb.buildsOn.length ? (
             pb.buildsOn.map((s) => <Chip key={s} label={s} dashed />)
           ) : (
-            <span className="font-mono text-[10px] text-os-dim">nothing upstream</span>
+            <span className="font-mono text-[10px] text-os-dim">선행 항목 없음</span>
           )}
         </div>
 
-        <SectionLabel icon={DollarSign}>what it replaces</SectionLabel>
+        <SectionLabel icon={DollarSign}>대체하는 것</SectionLabel>
         <p className="mb-4 rounded-md-t border border-os-border bg-os-surface px-2.5 py-2 text-[11px] leading-relaxed text-os-muted">
           {pb.replaces}
         </p>
 
-        <SectionLabel icon={GitBranch}>the ladder</SectionLabel>
+        <SectionLabel icon={GitBranch}>자동화 단계</SectionLabel>
         <div className="mb-4 flex flex-col gap-1">
           {AUTONOMY_LEVELS.map((lvl) => (
             <LadderRung
@@ -827,20 +828,20 @@ export function SopTaskDetailCard({
           ))}
         </div>
 
-        <SectionLabel icon={UserCheck}>the human</SectionLabel>
+        <SectionLabel icon={UserCheck}>사람의 역할</SectionLabel>
         <p className="mb-4 text-[11px] leading-relaxed text-os-muted">{pb.theHuman}</p>
 
-        <SectionLabel icon={UserCog}>done by</SectionLabel>
+        <SectionLabel icon={UserCog}>담당</SectionLabel>
         <div className="mb-4">
           <Row color={assigneeColor} title={assigneeName} sub={assigneeKindLabel} badge="1:1" onClick={onAssignee} />
           {runtime && (
             <p className="mt-1 font-mono text-[9.5px] text-os-dim">
-              runs on <span className="text-os-muted">{runtime}</span>
+              실행 위치 <span className="text-os-muted">{runtime}</span>
             </p>
           )}
         </div>
 
-        <SectionLabel icon={ListChecks}>the SOP, written out</SectionLabel>
+        <SectionLabel icon={ListChecks}>SOP 전체 내용</SectionLabel>
         <ol className="mb-4 flex flex-col gap-1.5">
           {task.steps.map((s, i) => (
             <li key={i} className="flex gap-2 text-[11px] leading-relaxed text-os-muted">
@@ -850,18 +851,18 @@ export function SopTaskDetailCard({
           ))}
         </ol>
 
-        <SectionLabel icon={Wrench}>tools at the end of the chain ({tools.length})</SectionLabel>
+        <SectionLabel icon={Wrench}>최종적으로 쓰는 도구 ({tools.length})</SectionLabel>
         <div className="mb-4 flex flex-wrap gap-x-3 gap-y-1.5">
           {tools.map((t) => (
             <WikiLink key={t.slug} label={t.name} mcp={t.mcp} onClick={onTool ? () => onTool(t.slug) : undefined} />
           ))}
-          {tools.length === 0 && <span className="font-mono text-[10.5px] text-os-dim">no tools wired</span>}
+          {tools.length === 0 && <span className="font-mono text-[10.5px] text-os-dim">연결된 도구 없음</span>}
         </div>
 
-        <SectionLabel icon={StickyNote}>build notes</SectionLabel>
+        <SectionLabel icon={StickyNote}>구축 메모</SectionLabel>
         <p className="mb-4 text-[11px] leading-relaxed text-os-muted">{pb.buildNotes}</p>
 
-        <SectionLabel icon={Sparkles}>take the skill</SectionLabel>
+        <SectionLabel icon={Sparkles}>스킬 가져가기</SectionLabel>
         <div className="mb-2 rounded-md-t border border-os-border bg-os-surface">
           <button
             onClick={() => setSkillOpen((v) => !v)}
@@ -882,14 +883,14 @@ export function SopTaskDetailCard({
                 onClick={downloadSkill}
                 className="pressable flex w-full items-center justify-center gap-1.5 border-t border-os-border px-2.5 py-1.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-os-dim hover:text-os-accent"
               >
-                <Download className="h-3 w-3" /> download {pb.skill.slug}.md
+                <Download className="h-3 w-3" /> {pb.skill.slug}.md 다운로드
               </button>
             </div>
           )}
         </div>
 
         <button className="pressable mt-1 flex w-full items-center justify-center gap-1.5 rounded-md-t border border-dashed border-os-border px-2.5 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim hover:border-os-border-strong hover:text-os-text">
-          <HelpCircle className="h-3.5 w-3.5" /> need help building this?
+          <HelpCircle className="h-3.5 w-3.5" /> 구축하는 데 도움이 필요하세요?
         </button>
       </div>
     </div>
@@ -912,20 +913,20 @@ export function GraphHumanDetailCard({
 }) {
   return (
     <div className="flex h-full flex-col">
-      <PanelHeader title={person.name} sub={`${person.role} · human`} color={color} onBack={onBack} onClose={onClose} />
+      <PanelHeader title={person.name} sub={`${person.role} · 사람`} color={color} onBack={onBack} onClose={onClose} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5">
         <p className="mb-3 text-[11px] leading-relaxed text-os-muted">
-          Human employee in <span className="font-semibold">{deptName}</span> — one job, done by them alone.
+          <span className="font-semibold">{deptName}</span>의 사람 직원 — 이 사람만 하는 한 가지 일.
         </p>
-        <SectionLabel icon={ClipboardList}>their job</SectionLabel>
+        <SectionLabel icon={ClipboardList}>맡은 일</SectionLabel>
         <div className="mb-4">
           {task ? (
             <Row color={color} title={task.title} sub={task.summary} badge="sop" onClick={onTask} />
           ) : (
-            <p className="font-mono text-[10.5px] text-os-dim">no task assigned</p>
+            <p className="font-mono text-[10.5px] text-os-dim">배정된 작업 없음</p>
           )}
         </div>
-        <SectionLabel icon={Wrench}>works with ({tools.length})</SectionLabel>
+        <SectionLabel icon={Wrench}>함께 쓰는 도구 ({tools.length})</SectionLabel>
         <div className="flex flex-wrap gap-x-3 gap-y-1.5">
           {tools.map((t) => (
             <WikiLink key={t.slug} label={t.name} mcp={t.mcp} onClick={onTool ? () => onTool(t.slug) : undefined} />
@@ -952,11 +953,11 @@ export function PersonDetailCard({
       <PanelHeader title={person.name} sub={person.role} color={color} onBack={onBack} onClose={onClose} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-2.5">
         <p className="mb-3 text-[11px] leading-relaxed text-os-muted">
-          Leads <span className="font-semibold" style={{ color }}>{deptName}</span> — manages {agents.length} agent{agents.length === 1 ? '' : 's'}.
+          <span className="font-semibold" style={{ color }}>{deptName}</span> 리드 — 에이전트 {agents.length}개를 관리합니다.
         </p>
-        <SectionLabel icon={FileText}>context · brain-store/people/{person.name.toLowerCase()}.md</SectionLabel>
+        <SectionLabel icon={FileText}>맥락 · brain-store/people/{person.name.toLowerCase()}.md</SectionLabel>
         <div className="mb-4"><WikiLink label={`${person.name.toLowerCase()}.md`} /></div>
-        <SectionLabel icon={User}>manages</SectionLabel>
+        <SectionLabel icon={User}>관리 대상</SectionLabel>
         <div className="flex flex-col gap-1">
           {agents.map((a) => (
             <span key={a.id} className="font-mono text-[11px] text-os-muted">{a.name}</span>
@@ -970,7 +971,7 @@ export function PersonDetailCard({
 /** Department-head card — the crown node: its board seat, a real Run, and the
  * department's SOP skills it presides over. */
 export function HeadDetailCard({
-  title, deptName, color, boardLead, sops, roleLabel = 'department head', blurb, showSops = true, embed = null, onBack, onClose, onTask,
+  title, deptName, color, boardLead, sops, roleLabel = '부서장', blurb, showSops = true, embed = null, onBack, onClose, onTask,
 }: {
   title: string;
   deptName: string;
@@ -1001,9 +1002,9 @@ export function HeadDetailCard({
       const res = await fetch(`/api/board/agents/${boardLead.id}/run`, { method: 'POST' });
       const body = (await res.json().catch(() => null)) as { error?: string } | null;
       if (!res.ok) throw new Error(body?.error ?? `HTTP ${res.status}`);
-      setRunMsg('Run started on the board — watch the chips go green.');
+      setRunMsg('보드에서 실행을 시작했습니다 — 칩이 초록색으로 바뀌는지 보세요.');
     } catch (err) {
-      setRunMsg(`Run failed: ${err instanceof Error ? err.message : String(err)}`);
+      setRunMsg(`실행 실패: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setRunning(false);
     }
@@ -1016,12 +1017,12 @@ export function HeadDetailCard({
         <p className="mb-3 text-[11px] leading-relaxed text-os-muted">
           {blurb ?? (
             <>
-              Executive seat of <span className="font-semibold">{deptName}</span> — every SOP below reports through this desk.
+              <span className="font-semibold">{deptName}</span>의 임원 자리 — 아래 모든 SOP가 이 자리를 거쳐 보고됩니다.
             </>
           )}
         </p>
 
-        <SectionLabel icon={Crown}>board seat</SectionLabel>
+        <SectionLabel icon={Crown}>보드 자리</SectionLabel>
         <div className="mb-3">
           {boardLead ? (
             <div className="flex items-center gap-2 rounded border border-os-border bg-os-bg px-2.5 py-1.5">
@@ -1031,11 +1032,11 @@ export function HeadDetailCard({
                 }`}
               />
               <span className="min-w-0 flex-1 truncate text-[11.5px] font-semibold">{boardLead.name}</span>
-              <span className="font-mono text-[9.5px] uppercase tracking-wider text-os-dim">{boardLead.status}</span>
+              <span className="font-mono text-[9.5px] uppercase tracking-wider text-os-dim">{statusKo(boardLead.status)}</span>
               {boardLead.model && <span className="font-mono text-[9px] text-os-dim">{boardLead.model}</span>}
             </div>
           ) : (
-            <p className="font-mono text-[10.5px] text-os-dim">no board seat yet — hire this head on the Paperclip board</p>
+            <p className="font-mono text-[10.5px] text-os-dim">아직 보드 자리가 없습니다 — Paperclip 보드에서 이 부서장을 채용하세요</p>
           )}
         </div>
 
@@ -1044,13 +1045,13 @@ export function HeadDetailCard({
           disabled={!boardLead || running}
           className="pressable mb-1.5 flex w-full items-center justify-center gap-1.5 rounded border border-os-border-strong bg-os-surface2 px-3 py-1.5 text-[11.5px] font-semibold text-os-text hover:border-os-dim disabled:opacity-40"
         >
-          <Play className="h-3 w-3" /> {running ? 'starting run…' : 'Run heartbeat on the board'}
+          <Play className="h-3 w-3" /> {running ? '실행 시작 중…' : '보드에서 하트비트 실행'}
         </button>
         {runMsg && <p className="mb-3 font-mono text-[9.5px] leading-snug text-os-dim">{runMsg}</p>}
 
         {embed && (
           <>
-            <SectionLabel icon={Server}>{embed.title} — live</SectionLabel>
+            <SectionLabel icon={Server}>{embed.title} — 실시간</SectionLabel>
             <div className="mb-1.5 overflow-hidden rounded border border-os-border bg-os-bg">
               <iframe src={embed.url} title={embed.title} className="h-80 w-full" style={{ border: 0 }} />
             </div>
@@ -1060,19 +1061,19 @@ export function HeadDetailCard({
               rel="noreferrer"
               className="mb-3 block font-mono text-[9.5px] text-os-dim underline-offset-2 hover:underline"
             >
-              open the full dashboard ↗
+              전체 대시보드 열기 ↗
             </a>
           </>
         )}
 
         {showSops && (
           <>
-            <SectionLabel icon={ClipboardList}>presides over ({sops.length} skills)</SectionLabel>
+            <SectionLabel icon={ClipboardList}>총괄 (스킬 {sops.length}개)</SectionLabel>
             <div className="space-y-1">
               {sops.map((s) => (
-                <Row key={s.id} color={color} title={s.title} sub={s.skillName} badge="skill" onClick={onTask ? () => onTask(s.id) : undefined} />
+                <Row key={s.id} color={color} title={s.title} sub={s.skillName} badge="스킬" onClick={onTask ? () => onTask(s.id) : undefined} />
               ))}
-              {sops.length === 0 && <p className="font-mono text-[10.5px] text-os-dim">no SOPs in this department yet</p>}
+              {sops.length === 0 && <p className="font-mono text-[10.5px] text-os-dim">이 부서에는 아직 SOP가 없습니다</p>}
             </div>
           </>
         )}

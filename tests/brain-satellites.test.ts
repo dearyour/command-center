@@ -50,7 +50,7 @@ describe('the satellite layer', () => {
     expect(src).toContain("fetch('/api/brain/satellites')");
     expect(src).toContain('g-brain ›');
     expect(src).toContain('/api/brain?q=');
-    expect(src).toContain('retrieved from');
+    expect(src).toContain('에서 검색');
     expect(src).not.toContain('LEGEND'); // dropped on request: the graph has its own legend
     expect(src).toMatch(/<form[^>]*className=\{`[^`]*left-3 top-3/); // the ask bar sits top-left of the canvas
     expect(src).toMatch(/right-\[124px\] top-3/); // identity sits beside the graph's Fullscreen tab
@@ -62,7 +62,7 @@ describe('the satellite layer', () => {
     expect(src).not.toContain('gbr-corner'); // corners dropped: they collided with the graph's own controls
     expect(src).toContain('const CHIP'); // one recipe for every chip, mirroring the graph's Fullscreen tab
     expect(src).toMatch(/rounded-sm-t border border-os-border-strong bg-os-bg\/80 px-2 py-1 font-mono text-\[10\.5px\] text-os-muted backdrop-blur/);
-    expect(src).toContain('live retrieval');
+    expect(src).toContain('실시간 검색');
     expect(src).toContain('rise');
   });
 

@@ -133,7 +133,7 @@ export function graphDirectory(
       toolRows.set(slug, {
         id: slug,
         label: n.label,
-        sub: `${users.size} user${users.size === 1 ? '' : 's'}`,
+        sub: `사용자 ${users.size}명`,
         deptIds,
       });
     }
@@ -142,14 +142,14 @@ export function graphDirectory(
   return [
     {
       kind: 'employee',
-      title: 'AI agents',
+      title: 'AI 에이전트',
       rows: agents
         .map((a) => ({ id: `emp:${a.id}`, label: a.name, sub: deptName.get(a.departmentId) ?? a.departmentId, deptIds: [a.departmentId] }))
         .sort(byLabel),
     },
     {
       kind: 'person',
-      title: 'Humans',
+      title: '사람',
       rows: people
         .map((p) => ({ id: `person:${p.id}`, label: p.name, sub: deptName.get(p.departmentId) ?? p.departmentId, deptIds: [p.departmentId] }))
         .sort(byLabel),
@@ -163,7 +163,7 @@ export function graphDirectory(
     },
     {
       kind: 'tool',
-      title: 'Tools',
+      title: '도구',
       rows: [...toolRows.values()].sort(byLabel),
     },
   ];

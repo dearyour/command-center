@@ -409,10 +409,10 @@ export const HierarchyCanvas = forwardRef<CanvasHandle, Props>(function Hierarch
         </div>
       </div>
       <div className="bh-hud bh-hud-zoom">
-        <button type="button" className="pressable bh-hud-btn" aria-label="Zoom in" onClick={() => tween(zoomCam(cam.current, 1.25, view().w / 2, view().h / 2), 260)}>
+        <button type="button" className="pressable bh-hud-btn" aria-label="확대" onClick={() => tween(zoomCam(cam.current, 1.25, view().w / 2, view().h / 2), 260)}>
           <PlusIcon />
         </button>
-        <button type="button" className="pressable bh-hud-btn" aria-label="Zoom out" onClick={() => tween(zoomCam(cam.current, 0.8, view().w / 2, view().h / 2), 260)}>
+        <button type="button" className="pressable bh-hud-btn" aria-label="축소" onClick={() => tween(zoomCam(cam.current, 0.8, view().w / 2, view().h / 2), 260)}>
           <MinusIcon />
         </button>
         <div ref={pctRef} className="bh-hud-pct">

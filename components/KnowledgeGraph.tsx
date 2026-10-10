@@ -56,14 +56,14 @@ const RIM_DELTA_DEG = (WHEEL_GEOM.delta * 180) / Math.PI;
 // connection count (see nodeRadius / TIER_OPACITY).
 const CAT: Record<KGNodeKind, { color: string; Icon: LucideIcon; label: string; r: number }> = {
   self: { color: 'var(--text)', Icon: Sparkles, label: 'Obsidian', r: 18 },
-  team: { color: 'var(--brain-1)', Icon: Users, label: 'Pillars', r: 15 },
+  team: { color: 'var(--brain-1)', Icon: Users, label: '축', r: 15 },
   // live Paperclip seats (Conductor, Forge, …) — the symmetric inner ring,
   // wearing the OS emblem in white, deliberately no green
-  board: { color: 'var(--text)', Icon: OsMarkGlyph, label: 'Board agents', r: 10 },
-  task: { color: 'var(--muted)', Icon: ClipboardList, label: 'SOP tasks', r: 7 },
-  person: { color: 'var(--kg-person, var(--warn))', Icon: UserRound, label: 'Humans', r: 10 },
-  employee: { color: 'var(--kg-employee, var(--accent))', Icon: VantageMark, label: 'AI agents', r: 10 },
-  tool: { color: 'var(--kg-tool)', Icon: Wrench, label: 'Tools', r: 7.5 },
+  board: { color: 'var(--text)', Icon: OsMarkGlyph, label: '보드 에이전트', r: 10 },
+  task: { color: 'var(--muted)', Icon: ClipboardList, label: 'SOP 작업', r: 7 },
+  person: { color: 'var(--kg-person, var(--warn))', Icon: UserRound, label: '사람', r: 10 },
+  employee: { color: 'var(--kg-employee, var(--accent))', Icon: VantageMark, label: 'AI 에이전트', r: 10 },
+  tool: { color: 'var(--kg-tool)', Icon: Wrench, label: '도구', r: 7.5 },
 };
 
 // Everything reads bright at rest, deliberately kept lit up: the old tier
@@ -108,11 +108,11 @@ const agoLabel = (iso: string): string => {
   const ms = Date.now() - new Date(iso).getTime();
   if (!Number.isFinite(ms) || ms < 0) return '';
   const m = Math.floor(ms / 60_000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m ago`;
+  if (m < 1) return '방금';
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
 };
 
 // ── the operator memory core (Obsidian constellation) ────────────────────────────
@@ -1332,7 +1332,7 @@ export function KnowledgeGraph({
                     setSelectedMemoryId((s) => (s === m.id ? null : m.id));
                   }}
                 >
-                  <title>{`${m.label} · memory`}</title>
+                  <title>{`${m.label} · 기억`}</title>
                   {coreExpanded && <circle r={Math.max(6, mr + 4)} fill="transparent" />}
                   {/* the node itself is a slight hexagon (the field's outer
                       boundary stays a circle) */}
@@ -1644,11 +1644,11 @@ export function KnowledgeGraph({
       {(
         [
           { label: 'Obsidian', color: HUB_COLOR, Icon: CAT.self.Icon },
-          { label: 'Board agent', color: CAT.board.color, Icon: CAT.board.Icon },
-          { label: 'Human', color: CAT.person.color, Icon: CAT.person.Icon },
-          { label: 'AI agent', color: CAT.employee.color, Icon: CAT.employee.Icon },
-          { label: 'Tool', color: CAT.tool.color, Icon: CAT.tool.Icon },
-          { label: 'SOP task', color: CAT.task.color, Icon: CAT.task.Icon },
+          { label: '보드 에이전트', color: CAT.board.color, Icon: CAT.board.Icon },
+          { label: '사람', color: CAT.person.color, Icon: CAT.person.Icon },
+          { label: 'AI 에이전트', color: CAT.employee.color, Icon: CAT.employee.Icon },
+          { label: '도구', color: CAT.tool.color, Icon: CAT.tool.Icon },
+          { label: 'SOP 작업', color: CAT.task.color, Icon: CAT.task.Icon },
         ] as const
       ).map(({ label, color, Icon }) => (
         <span key={label} className="flex items-center gap-1.5 font-mono text-[9.5px] text-os-muted">
@@ -1673,9 +1673,9 @@ export function KnowledgeGraph({
           setMemQuery('');
         }
       }}
-      placeholder="find a note…  /"
-      aria-label="Search the vault"
-      title="Press / to search the vault"
+      placeholder="메모 찾기…  /"
+      aria-label="보관소 검색"
+      title="/ 를 누르면 보관소를 검색합니다"
       spellCheck={false}
       className="w-40 rounded-sm-t border border-os-border-strong bg-os-bg/85 px-2 py-1.5 font-mono text-[10.5px] text-os-text placeholder:text-os-dim backdrop-blur outline-none state-fade focus:border-os-accent"
     />
@@ -1756,7 +1756,7 @@ export function KnowledgeGraph({
       .map((t) => ({ id: `task:${t.id}`, title: t.title, skillName: playbookFor(t).skill.name }));
     return (
       <HeadDetailCard
-        title={DEPT_EXEC_TITLES[deptId] ?? 'Lead'}
+        title={DEPT_EXEC_TITLES[deptId] ?? '리드'}
         deptName={teamNode.label}
         color={color}
         boardLead={boardLeads[deptId] ?? null}
@@ -1778,19 +1778,19 @@ export function KnowledgeGraph({
     return (
       <HeadDetailCard
         title={node.label}
-        deptName="Paperclip board"
-        roleLabel="board agent"
+        deptName="Paperclip 보드"
+        roleLabel="보드 에이전트"
         blurb={
           <>
-            Live seat on the <span className="font-semibold">Paperclip board</span> — a real agent in the operator&apos;s
-            company, reporting straight to the core.
+            <span className="font-semibold">Paperclip 보드</span>의 실시간 자리 — 운영자 회사의 실제 에이전트로,
+            코어에 직접 보고합니다.
           </>
         }
         showSops={false}
         color={CAT.board.color}
         boardLead={live}
         sops={[]}
-        embed={/hermes/i.test(node.label) && hermesUrl ? { url: hermesUrl, title: 'Hermes worker pool' } : null}
+        embed={/hermes/i.test(node.label) && hermesUrl ? { url: hermesUrl, title: 'Hermes 작업자 풀' } : null}
         onClose={() => setSelectedBoardId(null)}
       />
     );
@@ -1825,11 +1825,11 @@ export function KnowledgeGraph({
         <SopTaskDetailCard
           task={selectedTask}
           assigneeName={selectedTaskWorkerNode?.label ?? selectedTask.assigneeId}
-          assigneeKindLabel={selectedTask.assigneeKind === 'person' ? 'human employee' : 'AI agent'}
+          assigneeKindLabel={selectedTask.assigneeKind === 'person' ? '사람 직원' : 'AI 에이전트'}
           assigneeColor={selectedTask.assigneeKind === 'person' ? 'var(--warn)' : 'var(--accent)'}
           runtime={
             selectedTask.assigneeKind === 'person'
-              ? 'human · judgment call'
+              ? '사람 · 판단 필요'
               : (() => {
                   const a = agents.find((x) => x.id === selectedTask.assigneeId);
                   return a ? `${a.instance} · ${a.model}` : null;
@@ -1900,7 +1900,7 @@ export function KnowledgeGraph({
     <div className="flex shrink-0 items-center border-b border-os-border pr-1">
       <button
         onClick={clearDetail}
-        aria-label={`Back to the ${focusedTeam?.label ?? 'directory'}`}
+        aria-label={`${focusedTeam?.label ?? '목록'}(으)로 돌아가기`}
         className="pressable flex min-w-0 flex-1 items-center gap-1.5 px-3 py-2 text-left font-mono text-[10px] uppercase tracking-[0.14em] text-os-dim hover:text-os-text"
       >
         <ArrowLeft className="h-3 w-3 shrink-0" />
@@ -1910,16 +1910,16 @@ export function KnowledgeGraph({
       </button>
       <button
         onClick={() => setDetailExpanded((v) => !v)}
-        aria-label={detailExpanded ? 'Collapse the detail card' : 'Expand the detail card'}
-        title={detailExpanded ? 'Collapse' : 'Expand to a wider view'}
+        aria-label={detailExpanded ? '상세 카드 접기' : '상세 카드 펼치기'}
+        title={detailExpanded ? '접기' : '넓게 펼치기'}
         className="pressable flex h-7 w-7 shrink-0 items-center justify-center rounded-sm-t text-os-dim hover:text-os-accent"
       >
         {detailExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
       </button>
       <button
         onClick={clearDetail}
-        aria-label="Close and go back to the directory"
-        title="Close"
+        aria-label="닫고 목록으로 돌아가기"
+        title="닫기"
         className="pressable flex h-7 w-7 shrink-0 items-center justify-center rounded-sm-t text-os-dim hover:text-os-err"
       >
         <X className="h-3.5 w-3.5" />
@@ -2055,7 +2055,7 @@ export function KnowledgeGraph({
         viewBox={`0 0 ${W} ${H}`}
         className="h-full w-full"
         role="img"
-        aria-label="Operating knowledge graph"
+        aria-label="운영 지식 그래프"
         onPointerDown={onCanvasPointerDown}
         onPointerMove={onCanvasPointerMove}
         onPointerUp={onCanvasPointerUp}
@@ -2340,7 +2340,7 @@ export function KnowledgeGraph({
                   onNodeClick(n);
                 }}
               >
-                <title>Obsidian: all of the operator&apos;s markdown, click to open the graph</title>
+                <title>Obsidian: 운영자의 모든 마크다운, 클릭하면 그래프가 열립니다</title>
                 {memoryCoreInner}
                 {/* synapse sparks — positions written from the camera rAF */}
                 <g
@@ -2399,7 +2399,7 @@ export function KnowledgeGraph({
                             setSelectedMemoryId(m.id);
                           }}
                         >
-                          <title>{`${m.label} · memory`}</title>
+                          <title>{`${m.label} · 기억`}</title>
                           <circle r={Math.max(4, mr + 3)} fill="transparent" />
                           <polygon points={hexPts(mr + 0.4)} fill={memColor(m)} />
                           <circle r={mr + 1.6} fill="none" stroke="#ffffff" strokeWidth={0.5} opacity={0.9} />
@@ -2683,10 +2683,10 @@ export function KnowledgeGraph({
               if (!focusTeamId && deptList[0]) navDept(deptList[0].teamId);
               setFullscreen(true);
             }}
-            title="Open the department wheel"
+            title="부서 휠 열기"
             className="pressable absolute right-3 top-3 z-20 flex items-center gap-1.5 rounded-sm-t border border-os-border-strong bg-os-bg/80 px-2 py-1 font-mono text-[10.5px] text-os-muted backdrop-blur hover:text-os-accent"
           >
-            <Maximize2 className="h-3.5 w-3.5" /> Fullscreen
+            <Maximize2 className="h-3.5 w-3.5" /> 전체 화면
           </button>
 
           {/* department title — big, bold, WHITE, pinned top-center whenever a
@@ -2711,27 +2711,27 @@ export function KnowledgeGraph({
             <div className="absolute left-3 top-3 z-10 flex items-center gap-2">
               <button
                 onClick={clearAll}
-                aria-label="Back to the home view"
-                title="Back to the home view"
+                aria-label="홈 보기로 돌아가기"
+                title="홈 보기로 돌아가기"
                 className="pressable flex items-center gap-1.5 rounded-sm-t border border-os-border-strong bg-os-bg/85 px-2 py-1.5 font-mono text-[10.5px] text-os-muted backdrop-blur hover:text-os-accent"
               >
-                <ArrowLeft className="h-3.5 w-3.5" /> Back
+                <ArrowLeft className="h-3.5 w-3.5" /> 뒤로
               </button>
               {vaultSearchInput}
               {focusSet && (
                 <div className="flex items-center gap-0.5 rounded-sm-t border border-os-border-strong bg-os-bg/85 px-1 py-1 backdrop-blur">
                   <button
                     onClick={() => stepDept(-1)}
-                    aria-label="Previous department"
-                    title="Previous department"
+                    aria-label="이전 부서"
+                    title="이전 부서"
                     className="pressable flex h-6 w-6 items-center justify-center rounded-sm-t text-os-dim hover:text-os-text"
                   >
                     <ChevronLeft className="h-3.5 w-3.5" />
                   </button>
                   <button
                     onClick={() => stepDept(1)}
-                    aria-label="Next department"
-                    title="Next department"
+                    aria-label="다음 부서"
+                    title="다음 부서"
                     className="pressable flex h-6 w-6 items-center justify-center rounded-sm-t text-os-dim hover:text-os-text"
                   >
                     <ChevronRight className="h-3.5 w-3.5" />
@@ -2741,8 +2741,8 @@ export function KnowledgeGraph({
                   </span>
                   <button
                     onClick={clearAll}
-                    aria-label="Close focus"
-                    title="Back to all"
+                    aria-label="집중 닫기"
+                    title="전체로 돌아가기"
                     className="pressable flex h-6 w-6 items-center justify-center rounded-sm-t border-l border-os-border text-os-dim hover:text-os-err"
                   >
                     <X className="h-3.5 w-3.5" />
@@ -2759,8 +2759,8 @@ export function KnowledgeGraph({
             <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border border-os-border-strong bg-os-bg/90 px-1.5 py-1.5 backdrop-blur">
               <button
                 onClick={() => stepDept(-1)}
-                aria-label="Turn to the previous pillar"
-                title="Previous pillar (←)"
+                aria-label="이전 축으로 돌리기"
+                title="이전 축 (←)"
                 className="pressable flex h-9 w-9 items-center justify-center rounded-full text-os-muted hover:bg-os-surface hover:text-os-text"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -2769,12 +2769,12 @@ export function KnowledgeGraph({
                 className="min-w-[92px] px-1 text-center font-mono text-[11px] font-semibold leading-none"
                 style={{ color: focusedTeam?.color ?? 'var(--text)' }}
               >
-                {focusedTeam?.label ?? 'Pillar'}
+                {focusedTeam?.label ?? '축'}
               </span>
               <button
                 onClick={() => stepDept(1)}
-                aria-label="Turn to the next pillar"
-                title="Next pillar (→)"
+                aria-label="다음 축으로 돌리기"
+                title="다음 축 (→)"
                 className="pressable flex h-9 w-9 items-center justify-center rounded-full text-os-muted hover:bg-os-surface hover:text-os-text"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -2797,29 +2797,29 @@ export function KnowledgeGraph({
         <aside className={`flex max-h-[560px] shrink-0 flex-col gap-3.5 rounded-lg-t border border-os-border bg-os-surface p-3 lg:max-h-none ${fill ? 'lg:h-full' : 'lg:h-[680px]'} ${directoryCollapsed ? 'w-auto lg:w-16' : 'w-full lg:w-72'}`}>
           <div className={directoryCollapsed ? 'hidden' : undefined}>
             <div className="mb-1.5 flex items-baseline justify-between font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">
-              <span>Lens</span>
+              <span>렌즈</span>
               {lensId && (
                 <button onClick={() => setLensId(null)} className="pressable text-os-dim hover:text-os-err">
-                  clear · {lensLit?.size ?? 0} lit
+                  지우기 · {lensLit?.size ?? 0}개 표시
                 </button>
               )}
             </div>
             <div className="mb-3 flex flex-col gap-1">
               {(
                 [
-                  ['Entity', ENTITY_LENSES],
-                  ['Function', FUNCTION_LENSES],
-                  ['Action', ACTION_LENSES],
+                  ['대상', ENTITY_LENSES],
+                  ['기능', FUNCTION_LENSES],
+                  ['행동', ACTION_LENSES],
                 ] as [string, Lens[]][]
               ).map(([groupLabel, lenses]) => (
                 <select
                   key={groupLabel}
                   value={lenses.some((l) => l.id === lensId) ? lensId! : ''}
                   onChange={(e) => setLensId(e.target.value || null)}
-                  aria-label={`${groupLabel} lens`}
+                  aria-label={`${groupLabel} 렌즈`}
                   className="w-full rounded-sm-t border border-os-border bg-os-bg px-1.5 py-1 font-mono text-[10px] text-os-muted focus:border-os-border-strong focus:outline-none"
                 >
-                  <option value="">{groupLabel} · all</option>
+                  <option value="">{groupLabel} · 전체</option>
                   {lenses.map((l) => (
                     <option key={l.id} value={l.id}>
                       {l.label}
@@ -2829,7 +2829,7 @@ export function KnowledgeGraph({
               ))}
             </div>
 
-            <div className="mb-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">Legend</div>
+            <div className="mb-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">범례</div>
             <div className="flex flex-col gap-1">
               {LEGEND_KINDS.map((k) => {
                 const cat = CAT[k];

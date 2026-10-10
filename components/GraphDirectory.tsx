@@ -48,13 +48,13 @@ export function GraphDirectory({
       <button
         type="button"
         onClick={onToggleCollapse}
-        title="Show directory"
-        aria-label="Show directory"
+        title="목록 보기"
+        aria-label="목록 보기"
         className={`pressable group flex w-9 shrink-0 flex-col items-center gap-3 rounded-sm-t border border-os-border-strong bg-os-bg/95 py-3 backdrop-blur hover:border-os-dim ${className}`}
       >
         <ChevronLeft className="h-4 w-4 lens-child text-os-dim group-hover:text-os-text" />
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-os-dim [writing-mode:vertical-rl] group-hover:text-os-muted">
-          Directory
+          목록
         </span>
       </button>
     );
@@ -64,13 +64,13 @@ export function GraphDirectory({
       className={`flex flex-col overflow-hidden rounded-sm-t border border-os-border-strong bg-os-bg/95 backdrop-blur ${className}`}
     >
       <div className="flex items-center justify-between border-b border-os-border px-3 py-2">
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-os-dim">Directory</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-os-dim">목록</span>
         {onToggleCollapse && (
           <button
             type="button"
             onClick={onToggleCollapse}
-            title="Hide directory"
-            aria-label="Hide directory"
+            title="목록 숨기기"
+            aria-label="목록 숨기기"
             className="pressable -mr-1 rounded-sm-t p-0.5 text-os-dim hover:text-os-text"
           >
             <ChevronRight className="h-4 w-4" />
@@ -80,17 +80,17 @@ export function GraphDirectory({
       <div className="min-h-0 flex-1 overflow-y-auto px-1.5 pb-2">
         {groups.every((g) => g.rows.length === 0) && (
           <div className="px-2 py-6 text-center">
-            <p className="font-mono text-[11px] text-os-muted">No pillars selected.</p>
+            <p className="font-mono text-[11px] text-os-muted">선택한 축이 없습니다.</p>
             {onShowAllPillars && (
               <>
-                <p className="mt-1 font-mono text-[10px] text-os-dim">turn a filter back on, or</p>
+                <p className="mt-1 font-mono text-[10px] text-os-dim">필터를 다시 켜거나</p>
                 <button
                   type="button"
                   onClick={onShowAllPillars}
                   data-lens="c"
                   className="pressable is-dark mt-2 inline-flex h-6 items-center rounded-ctl border border-os-border bg-os-bg px-2.5 font-mono text-[10px] font-semibold text-os-muted"
                 >
-                  show all pillars
+                  모든 축 보기
                 </button>
               </>
             )}
@@ -120,7 +120,7 @@ export function GraphDirectory({
                   onMouseLeave={() => onHover?.(g.kind, null)}
                   data-lens="r"
                   className="pressable is-row group relative flex w-full items-center gap-2 rounded-sm-t py-1.5 pl-3 pr-2 text-left hover:bg-os-surface2"
-                  title={`Show ${r.label} on the graph`}
+                  title={`그래프에서 ${r.label} 보기`}
                 >
                   {/* colored left accent in the group's color makes the hovered
                       row unmistakable at a glance */}

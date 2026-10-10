@@ -4,7 +4,7 @@ import type { BrainOverview } from '@/lib/connectors/gbrain';
 import type { PillarAxis } from '@/lib/pillar-radar';
 
 /** A storage layer no check covered on this read. */
-const NOT_CHECKED = 'NOT CHECKED';
+const NOT_CHECKED = '확인 안 됨';
 
 /**
  * /doctor in the Brand Deals look (Alex, 2026-09-24). One pure pass over
@@ -63,27 +63,27 @@ export function doctorLayers(x: Pick<DoctorVolumeInput, 'doctor' | 'store'> & { 
     {
       name: 'gbrain CLI',
       sub: 'v0.47 · ~/.bun/bin/gbrain · doctor --fast',
-      val: doctor.connected ? 'LIVE' : 'UNREACHABLE',
+      val: doctor.connected ? '가동 중' : '연결 불가',
       state: doctor.connected ? 'connected' : 'error',
     },
     {
       name: 'brain-store/',
-      sub: `${x.storeShort} · markdown knowledge`,
-      val: `${store.totalFiles} pages`,
+      sub: `${x.storeShort} · 마크다운 지식`,
+      val: `${store.totalFiles} 페이지`,
       state: store.totalFiles > 0 ? 'connected' : 'available',
     },
     {
       name: 'Ollama (bge-m3)',
-      sub: 'hybrid-search embeddings · local, 1024d',
+      sub: '하이브리드 검색 임베딩 · 로컬, 1024차원',
       // `doctor --fast` runs no embeddings check (and an unreachable doctor
       // runs none), so without one the layer is unverified, not LIVE.
-      val: embedCheck ? (embedCheck.status === 'ok' ? 'LIVE' : embedCheck.status.toUpperCase()) : NOT_CHECKED,
+      val: embedCheck ? (embedCheck.status === 'ok' ? '가동 중' : embedCheck.status.toUpperCase()) : NOT_CHECKED,
       state: embedCheck && embedCheck.status === 'ok' ? 'connected' : 'available',
     },
     {
-      name: 'Supabase Second Brain',
-      sub: '918 pages / 11k chunks · free tier idle-pause',
-      val: fallbackActive ? 'PAUSED' : 'LIVE',
+      name: 'Supabase 세컨드 브레인',
+      sub: '918 페이지 / 11k 청크 · 무료 플랜 유휴 시 일시정지',
+      val: fallbackActive ? '일시정지' : '가동 중',
       state: fallbackActive ? 'available' : 'connected',
     },
   ];
@@ -105,11 +105,11 @@ export function doctorVolume(x: DoctorVolumeInput): DoctorVolume {
   const counts = { ok, warn, fail, total };
 
   const chips: DoctorVolume['chips'] = [];
-  if (!live) chips.push({ tone: 'err', text: 'unreachable' });
+  if (!live) chips.push({ tone: 'err', text: '연결 불가' });
   else {
-    if (ok) chips.push({ tone: 'ok', text: `${ok} passing` });
-    if (warn) chips.push({ tone: 'warn', text: `${warn} warn` });
-    if (fail) chips.push({ tone: 'err', text: `${fail} failing` });
+    if (ok) chips.push({ tone: 'ok', text: `통과 ${ok}` });
+    if (warn) chips.push({ tone: 'warn', text: `경고 ${warn}` });
+    if (fail) chips.push({ tone: 'err', text: `실패 ${fail}` });
   }
 
   const score = live ? doctor.healthScore : null;
@@ -125,29 +125,29 @@ export function doctorVolume(x: DoctorVolumeInput): DoctorVolume {
   const pillarF = frac(pillarMean, 100);
   const meters: Meter[] = [
     {
-      label: `Engine health (${score ?? ' - '}/100)`,
+      label: `엔진 상태 (${score ?? ' - '}/100)`,
       frac: healthF,
-      display: score == null ? (live ? 'no score' : 'unreachable') : pct(healthF),
+      display: score == null ? (live ? '점수 없음' : '연결 불가') : pct(healthF),
       hue: 'var(--accent)',
     },
     {
-      label: `Checks passing (${ok}/${total})`,
+      label: `통과한 진단 항목 (${ok}/${total})`,
       frac: checksF,
-      display: total ? `${ok} ok · ${total - ok} flagged` : 'no checks run',
+      display: total ? `정상 ${ok} · 표시됨 ${total - ok}` : '실행한 진단 없음',
       hue: total > 0 && ok === total ? 'var(--ok)' : 'var(--warn)',
     },
     {
       label: unchecked
-        ? `Storage layers live (${layersLive}/${layersChecked} checked · ${unchecked} unchecked)`
-        : `Storage layers live (${layersLive}/${layers.length})`,
+        ? `가동 중인 저장 계층 (확인된 ${layersChecked}개 중 ${layersLive}개 · 미확인 ${unchecked}개)`
+        : `가동 중인 저장 계층 (${layersLive}/${layers.length})`,
       frac: layersF,
       display: pct(layersF),
       hue: 'var(--ramp-1)',
     },
     {
-      label: `Pillar health (${x.axes.length} pillars)`,
+      label: `축별 상태 (축 ${x.axes.length}개)`,
       frac: pillarF,
-      display: x.axes.length ? `${pillarMean}/100` : 'no pillars',
+      display: x.axes.length ? `${pillarMean}/100` : '축 없음',
       hue: 'var(--ramp-4)',
     },
   ];
@@ -186,21 +186,21 @@ export function doctorVolume(x: DoctorVolumeInput): DoctorVolume {
   const insight: DoctorVolume['insight'] = !live
     ? {
         value: null,
-        headline: 'The doctor is unreachable.',
-        body: 'gbrain doctor did not answer; searches fall back to grepping the brain-store on disk.',
+        headline: '진단에 연결할 수 없습니다.',
+        body: 'gbrain doctor가 응답하지 않아 검색은 디스크의 브레인 저장소를 grep 하는 방식으로 대체됩니다.',
         frac: 0,
       }
     : {
         value: flagged.length,
-        headline: flagged.length ? `${warn} warn · ${fail} failing.` : 'Every check passed.',
+        headline: flagged.length ? `경고 ${warn} · 실패 ${fail}.` : '모든 진단 항목을 통과했습니다.',
         body: flagged.length
           ? flagged
               .slice(0, 3)
               .map((c) => c.name)
               .join(' · ')
           : total
-            ? `${total} checks green, nothing waiting on you.`
-            : 'The doctor answered but ran no checks.',
+            ? `진단 항목 ${total}개 정상, 기다리는 일 없음.`
+            : '진단이 응답했지만 실행한 항목이 없습니다.',
         frac: frac(flagged.length, total),
       };
 
@@ -208,9 +208,9 @@ export function doctorVolume(x: DoctorVolumeInput): DoctorVolume {
     headline: score,
     counts,
     chips,
-    caption: live ? `${total} checks · ${store.totalFiles} pages on disk` : `gbrain unreachable · ${store.totalFiles} pages on disk, local grep answers`,
+    caption: live ? `진단 항목 ${total}개 · 디스크의 페이지 ${store.totalFiles}개` : `gbrain 연결 불가 · 디스크의 페이지 ${store.totalFiles}개, 로컬 grep이 응답`,
     meters,
-    foot: `${store.folders.length} folders · ${x.axes.length} pillars · ${layersLive}/${layers.length} layers live`,
+    foot: `폴더 ${store.folders.length}개 · 축 ${x.axes.length}개 · 가동 중인 계층 ${layersLive}/${layers.length}`,
     series,
     runsInWindow,
     failedInWindow,

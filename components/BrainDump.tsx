@@ -80,7 +80,7 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
     rec.onend = () => setListening(false);
     rec.onerror = (e) => {
       setListening(false);
-      setStatus({ kind: 'error', detail: `mic: ${e.error}` });
+      setStatus({ kind: 'error', detail: `마이크: ${e.error}` });
     };
     recRef.current = rec;
     setStatus({ kind: 'idle' });
@@ -104,7 +104,7 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
       setText('');
       setTitle('');
     } catch (err) {
-      setStatus({ kind: 'error', detail: err instanceof Error ? err.message : 'save failed' });
+      setStatus({ kind: 'error', detail: err instanceof Error ? err.message : '저장 실패' });
     }
   };
 
@@ -114,7 +114,7 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
     const texty = files.filter((f) => TEXTY.test(f.name) || f.type.startsWith('text/'));
     const skipped = files.length - texty.length;
     if (texty.length === 0) {
-      setStatus({ kind: 'error', detail: 'only text documents for now (.md .txt .csv .json …)' });
+      setStatus({ kind: 'error', detail: '지금은 텍스트 문서만 가능합니다 (.md .txt .csv .json …)' });
       return;
     }
     setStatus({ kind: 'saving' });
@@ -137,11 +137,11 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
       }
       setStatus({
         kind: 'saved',
-        detail: `${saved} doc${saved === 1 ? '' : 's'}${skipped ? ` · ${skipped} skipped (not text)` : ''}`,
+        detail: `문서 ${saved}개${skipped ? ` · ${skipped}개 건너뜀 (텍스트 아님)` : ''}`,
         embedded: embedded === saved,
       });
     } catch (err) {
-      setStatus({ kind: 'error', detail: err instanceof Error ? err.message : 'ingest failed' });
+      setStatus({ kind: 'error', detail: err instanceof Error ? err.message : '수집 실패' });
     }
   };
 
@@ -179,13 +179,13 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) void save();
             }}
             rows={2}
-            placeholder={dragOver ? 'drop it — one note per document' : 'dump into the brain… or drop documents'}
+            placeholder={dragOver ? '여기에 놓기 — 문서당 메모 하나' : '브레인에 쏟아내기… 또는 문서 끌어다 놓기'}
             className="w-full resize-none border-0 bg-transparent px-1.5 py-1 pr-9 font-mono text-[11.5px] leading-relaxed text-os-text placeholder:text-os-dim focus:outline-none"
           />
           {supported && (
             <button
               onClick={listening ? stopListening : startListening}
-              title={listening ? 'Stop dictation' : 'Start dictation'}
+              title={listening ? '받아쓰기 중지' : '받아쓰기 시작'}
               data-lens="c"
               className={`pressable absolute right-0 top-0 flex h-6 w-6 items-center justify-center rounded-ctl border ${
                 listening
@@ -214,33 +214,33 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
         <div className="mt-1.5 flex items-center gap-1.5 border-t border-os-border px-1.5 pt-1.5">
           <span className="min-w-0 flex-1 truncate font-mono text-[9.5px] text-os-dim">
             {status.kind === 'saving'
-              ? 'saving…'
+              ? '저장 중…'
               : status.kind === 'saved'
-                ? `✓ ${status.embedded ? 'embedded' : 'saved'} · ${status.slug ?? status.detail}`
+                ? `✓ ${status.embedded ? '임베딩됨' : '저장됨'} · ${status.slug ?? status.detail}`
                 : status.kind === 'error'
                   ? `✗ ${status.detail}`
-                  : 'text · voice · drag or upload'}
+                  : '텍스트 · 음성 · 끌어다 놓기 또는 업로드'}
           </span>
           <button
             onClick={() => fileRef.current?.click()}
-            title="Choose documents to upload"
+            title="업로드할 문서 선택"
             data-lens="c"
             className="pressable is-dark flex shrink-0 items-center gap-1 rounded-ctl border border-os-border bg-os-surface px-2 py-0.5 font-mono text-[10px] text-os-muted"
           >
             <Upload className="h-3 w-3" />
-            Upload
+            업로드
           </button>
           <AsyncButton
             run={save}
             tone="primary"
-            busyLabel="saving"
-            doneLabel="embedded"
-            failLabel="save failed"
+            busyLabel="저장 중"
+            doneLabel="임베딩됨"
+            failLabel="저장 실패"
             failed={status.kind === 'error'}
             disabled={!text.trim()}
             className="shrink-0 !h-[22px] !px-2.5 !text-[10px]"
           >
-            Save
+            저장
           </AsyncButton>
         </div>
       </div>
@@ -254,9 +254,9 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
     >
       <div className="flex items-center gap-2">
         <BrainCircuit className="h-4 w-4 text-os-muted" />
-        <h3 className="text-sm font-bold">Brain dump</h3>
+        <h3 className="text-sm font-bold">브레인 덤프</h3>
         <span className="text-[11px] text-os-dim">
-          speak, type, or drop documents → saved to the brain-store & embedded into G-Brain
+          말하거나, 입력하거나, 문서를 놓으세요 → 브레인 저장소에 저장되고 G-Brain에 임베딩됩니다
         </span>
       </div>
 
@@ -265,7 +265,7 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title (optional — derived from first words)"
+            placeholder="제목 (선택 — 비우면 첫 단어로 자동 생성)"
             className="flex-1 rounded-lg border border-os-border bg-os-bg px-3 py-2 text-xs text-os-text placeholder:text-os-dim focus:border-os-border-bright focus:outline-none"
           />
           <select
@@ -284,13 +284,13 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={4}
-            placeholder={supported ? 'Dump it here, or hit the mic and just talk…' : 'Type your dump (voice needs Chrome/Safari)…'}
+            placeholder={supported ? '여기에 쏟아내거나, 마이크를 누르고 그냥 말하세요…' : '내용을 입력하세요 (음성은 Chrome/Safari 필요)…'}
             className="w-full resize-y rounded-lg border border-os-border bg-os-bg px-3 py-2 pr-12 text-sm leading-relaxed text-os-text placeholder:text-os-dim focus:border-os-border-bright focus:outline-none"
           />
           {supported && (
             <button
               onClick={listening ? stopListening : startListening}
-              title={listening ? 'Stop dictation' : 'Start dictation'}
+              title={listening ? '받아쓰기 중지' : '받아쓰기 시작'}
               className={`pressable absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-ctl border ${
  listening
  ? 'animate-pulse border-[#ef4444] bg-[#ef4444] text-black'
@@ -303,7 +303,7 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] uppercase tracking-widest text-os-dim">tag venture</span>
+          <span className="text-[10px] uppercase tracking-widest text-os-dim">사업 태그</span>
           {VENTURES.map((v) => {
             const on = tags.includes(v.brainTag);
             return (
@@ -325,7 +325,7 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
             disabled={!text.trim() || status.kind === 'saving'}
             className="pressable ml-auto rounded-ctl bg-os-text px-4 py-1.5 text-xs font-bold text-os-bg transition-opacity disabled:opacity-30"
           >
-            {status.kind === 'saving' ? 'Saving…' : 'Save to brain'}
+            {status.kind === 'saving' ? '저장 중…' : '브레인에 저장'}
           </button>
         </div>
 
@@ -333,8 +333,8 @@ export function BrainDump({ compact = false }: { compact?: boolean }) {
           <p className="animate-enter font-mono text-[11px] text-os-muted">
             <span className="animate-pop inline-block">✓</span>{' '}
             {status.embedded
-              ? `saved & embedded → ${status.slug ?? status.detail} — retrievable by agents now`
-              : `saved → brain-store/${status.detail} — embed pending (G-Brain unreachable, will sync later)`}
+              ? `저장 및 임베딩 완료 → ${status.slug ?? status.detail} — 이제 에이전트가 찾을 수 있습니다`
+              : `저장됨 → brain-store/${status.detail} — 임베딩 대기 (G-Brain 연결 불가, 나중에 동기화)`}
           </p>
         )}
         {status.kind === 'error' && <p className="animate-enter font-mono text-[11px] text-os-muted">✗ {status.detail}</p>}

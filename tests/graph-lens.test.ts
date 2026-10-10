@@ -20,12 +20,12 @@ const ctx = contextFromSeed();
 describe('graph lenses — Alex taxonomy (2026-07-12)', () => {
   test('the requested categories all exist', () => {
     expect(ENTITY_LENSES.map((l) => l.label)).toEqual([
-      'All people', 'Sub-agents', 'Tools', 'Workflows', 'SOPs', 'Projects', 'Teams', 'Departments',
+      '모든 사람', '하위 에이전트', '도구', '워크플로', 'SOP', '프로젝트', '팀', '부서',
     ]);
-    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('Core');
-    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('Enabling');
-    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('Vantage team');
-    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('Launchpad Cohort team');
+    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('핵심');
+    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('지원');
+    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('Vantage 팀');
+    expect(FUNCTION_LENSES.map((l) => l.label)).toContain('Launchpad Cohort 팀');
     expect(ACTION_LENSES).toHaveLength(11);
     expect(new Set(ALL_LENSES.map((l) => l.id)).size).toBe(ALL_LENSES.length);
   });

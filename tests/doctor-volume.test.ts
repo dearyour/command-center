@@ -56,10 +56,10 @@ describe('doctorLayers: the four storage layers, from the real reads', () => {
   test('live doctor, reachable database: every layer connected', () => {
     const { layers, fallbackActive } = doctorLayers({ ...LIVE, storeShort: '~/brain-store' });
     expect(fallbackActive).toBe(false);
-    expect(layers.map((l) => l.name)).toEqual(['gbrain CLI', 'brain-store/', 'Ollama (bge-m3)', 'Supabase Second Brain']);
-    expect(layers[1].val).toBe('60 pages');
+    expect(layers.map((l) => l.name)).toEqual(['gbrain CLI', 'brain-store/', 'Ollama (bge-m3)', 'Supabase 세컨드 브레인']);
+    expect(layers[1].val).toBe('60 페이지');
     // the embeddings check is ok, so Ollama reads LIVE
-    expect(layers[2]).toMatchObject({ val: 'LIVE', state: 'connected' });
+    expect(layers[2]).toMatchObject({ val: '가동 중', state: 'connected' });
     expect(layers.every((l) => l.state === 'connected')).toBe(true);
   });
 
@@ -67,13 +67,13 @@ describe('doctorLayers: the four storage layers, from the real reads', () => {
     const doctor = { ...LIVE.doctor, checks: [{ name: 'supabase database', status: 'error', message: 'paused' }] };
     const { layers, fallbackActive } = doctorLayers({ ...LIVE, doctor, storeShort: '~' });
     expect(fallbackActive).toBe(true);
-    expect(layers[3]).toMatchObject({ val: 'PAUSED', state: 'available' });
+    expect(layers[3]).toMatchObject({ val: '일시정지', state: 'available' });
   });
 
   test('unreachable doctor: the CLI is an error and the fallback is active', () => {
     const { layers, fallbackActive } = doctorLayers({ ...OFFLINE, storeShort: '~' });
     expect(fallbackActive).toBe(true);
-    expect(layers[0]).toMatchObject({ val: 'UNREACHABLE', state: 'error' });
+    expect(layers[0]).toMatchObject({ val: '연결 불가', state: 'error' });
   });
 });
 
@@ -84,23 +84,23 @@ describe('doctorVolume: the Health Volume card', () => {
     expect(v.headline).toBe(82);
     expect(v.counts).toEqual({ ok: 2, warn: 1, fail: 1, total: 4 });
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '2 passing' },
-      { tone: 'warn', text: '1 warn' },
-      { tone: 'err', text: '1 failing' },
+      { tone: 'ok', text: '통과 2' },
+      { tone: 'warn', text: '경고 1' },
+      { tone: 'err', text: '실패 1' },
     ]);
-    expect(v.caption).toContain('4 checks');
-    expect(v.caption).toContain('60 pages');
+    expect(v.caption).toContain('진단 항목 4개');
+    expect(v.caption).toContain('페이지 60개');
   });
 
   test('meters are honest fractions of a real whole', () => {
     const byLabel = Object.fromEntries(v.meters.map((m) => [m.label.split(' (')[0], m]));
-    expect(byLabel['Engine health'].frac).toBeCloseTo(0.82);
-    expect(byLabel['Checks passing'].frac).toBeCloseTo(0.5);
-    expect(byLabel['Checks passing'].label).toContain('2/4');
-    expect(byLabel['Storage layers live'].frac).toBeCloseTo(1);
+    expect(byLabel['엔진 상태'].frac).toBeCloseTo(0.82);
+    expect(byLabel['통과한 진단 항목'].frac).toBeCloseTo(0.5);
+    expect(byLabel['통과한 진단 항목'].label).toContain('2/4');
+    expect(byLabel['가동 중인 저장 계층'].frac).toBeCloseTo(1);
     // pillar health is the mean of the radar's own scores, over 100
-    expect(byLabel['Pillar health'].frac).toBeCloseTo(0.8);
-    expect(byLabel['Pillar health'].display).toBe('80/100');
+    expect(byLabel['축별 상태'].frac).toBeCloseTo(0.8);
+    expect(byLabel['축별 상태'].display).toBe('80/100');
     for (const m of v.meters) {
       expect(m.frac).toBeGreaterThanOrEqual(0);
       expect(m.frac).toBeLessThanOrEqual(1);
@@ -109,8 +109,8 @@ describe('doctorVolume: the Health Volume card', () => {
   });
 
   test('the foot names the store and the pillars behind the numbers', () => {
-    expect(v.foot).toContain('3 folders');
-    expect(v.foot).toContain('3 pillars');
+    expect(v.foot).toContain('폴더 3개');
+    expect(v.foot).toContain('축 3개');
   });
 });
 
@@ -119,27 +119,27 @@ describe('doctorVolume: offline is honest', () => {
 
   test('no score is invented and the doctor meters sit empty', () => {
     expect(v.headline).toBeNull();
-    expect(v.chips).toEqual([{ tone: 'err', text: 'unreachable' }]);
-    const health = v.meters.find((m) => m.label.startsWith('Engine health'))!;
-    const checks = v.meters.find((m) => m.label.startsWith('Checks passing'))!;
+    expect(v.chips).toEqual([{ tone: 'err', text: '연결 불가' }]);
+    const health = v.meters.find((m) => m.label.startsWith('엔진 상태'))!;
+    const checks = v.meters.find((m) => m.label.startsWith('통과한 진단 항목'))!;
     expect(health.frac).toBe(0);
-    expect(health.display).toBe('unreachable');
+    expect(health.display).toBe('연결 불가');
     expect(checks.frac).toBe(0);
-    expect(checks.display).toBe('no checks run');
-    expect(v.caption).toMatch(/unreachable/);
+    expect(checks.display).toBe('실행한 진단 없음');
+    expect(v.caption).toMatch(/연결 불가/);
   });
 
   test('the insight does not claim zero warnings when the doctor never answered', () => {
     expect(v.insight.value).toBeNull();
-    expect(v.insight.headline).toMatch(/unreachable/i);
+    expect(v.insight.headline).toMatch(/연결할 수 없습니다/);
     expect(v.insight.frac).toBe(0);
   });
 
   test('no pillars, no store: empty meters rather than fabricated ones', () => {
     const empty = doctorVolume({ ...OFFLINE, axes: [], store: { path: '/x', totalFiles: 0, folders: [] } });
-    const pillar = empty.meters.find((m) => m.label.startsWith('Pillar health'))!;
+    const pillar = empty.meters.find((m) => m.label.startsWith('축별 상태'))!;
     expect(pillar.frac).toBe(0);
-    expect(pillar.display).toBe('no pillars');
+    expect(pillar.display).toBe('축 없음');
     expect(empty.store.cols).toEqual([]);
   });
 });
@@ -173,8 +173,8 @@ describe('doctorVolume: the second row', () => {
 
   test('the one insight card counts the checks that need attention', () => {
     expect(v.insight.value).toBe(2);
-    expect(v.insight.headline).toContain('1 warn');
-    expect(v.insight.headline).toContain('1 failing');
+    expect(v.insight.headline).toContain('경고 1');
+    expect(v.insight.headline).toContain('실패 1');
     expect(v.insight.body).toContain('stale pages');
     expect(v.insight.body).toContain('orphans');
     expect(v.insight.frac).toBeCloseTo(0.5);
@@ -183,7 +183,7 @@ describe('doctorVolume: the second row', () => {
   test('all green says so', () => {
     const green = doctorVolume({ ...LIVE, doctor: { ...LIVE.doctor, checks: LIVE.doctor.checks.slice(0, 2) } });
     expect(green.insight.value).toBe(0);
-    expect(green.insight.headline).toMatch(/every check passed/i);
+    expect(green.insight.headline).toMatch(/모든 진단 항목을 통과했습니다/);
   });
 });
 
@@ -193,18 +193,18 @@ describe('an unchecked layer is not a live layer (review 2026-09-24)', () => {
   const noEmbed = { ...LIVE.doctor, checks: LIVE.doctor.checks.filter((c) => c.name !== 'embeddings') };
   test('with no embeddings check Ollama reads NOT CHECKED and is not counted live', () => {
     const { layers } = doctorLayers({ ...LIVE, doctor: noEmbed, storeShort: '~' });
-    expect(layers[2]).toMatchObject({ val: 'NOT CHECKED', state: 'available' });
+    expect(layers[2]).toMatchObject({ val: '확인 안 됨', state: 'available' });
   });
   test('the storage meter counts live layers over the layers actually checked', () => {
     const v = doctorVolume({ ...LIVE, doctor: noEmbed });
-    const m = v.meters.find((x) => x.label.startsWith('Storage layers live'))!;
-    expect(m.label).toBe('Storage layers live (3/3 checked · 1 unchecked)');
+    const m = v.meters.find((x) => x.label.startsWith('가동 중인 저장 계층'))!;
+    expect(m.label).toBe('가동 중인 저장 계층 (확인된 3개 중 3개 · 미확인 1개)');
     expect(m.frac).toBeCloseTo(1);
   });
   test('an unreachable doctor never reads a layer as live on a default', () => {
     const v = doctorVolume(OFFLINE);
-    const m = v.meters.find((x) => x.label.startsWith('Storage layers live'))!;
+    const m = v.meters.find((x) => x.label.startsWith('가동 중인 저장 계층'))!;
     // brain-store on disk is still a real read; the CLI is down; Ollama unchecked
-    expect(m.label).toMatch(/^Storage layers live \(1\//);
+    expect(m.label).toMatch(/^가동 중인 저장 계층 \(확인된 \d+개 중 1개/);
   });
 });

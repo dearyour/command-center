@@ -42,7 +42,7 @@ export function HierarchyInspector({
   const has = opened.length > 0;
   const current = active && opened.includes(active) ? active : opened[opened.length - 1];
   const it = current ? idx.items.get(current) : undefined;
-  const handleLabel = (active && idx.items.get(active)?.name) || it?.name || 'Details';
+  const handleLabel = (active && idx.items.get(active)?.name) || it?.name || '상세';
 
   const rels = it ? relationsOf(h, idx, it.id) : [];
   const grouped = new Map<string, typeof rels>();
@@ -58,7 +58,7 @@ export function HierarchyInspector({
 
   return (
     <>
-      <button type="button" className="pressable bh-insp-handle" title="Show details (i)" onClick={() => onMinimize(false)} style={{ display: has && minimized ? 'inline-flex' : 'none' }}>
+      <button type="button" className="pressable bh-insp-handle" title="상세 보기 (i)" onClick={() => onMinimize(false)} style={{ display: has && minimized ? 'inline-flex' : 'none' }}>
         <PanelRightOpen />
         <span>{handleLabel}</span>
       </button>
@@ -71,7 +71,7 @@ export function HierarchyInspector({
                 <span
                   className="x"
                   role="button"
-                  aria-label="Close"
+                  aria-label="닫기"
                   onClick={(e) => {
                     e.stopPropagation();
                     onCloseTab(id);
@@ -82,7 +82,7 @@ export function HierarchyInspector({
               </button>
             ))}
           </div>
-          <button type="button" className="pressable bh-insp-min" title="Hide panel (i)" onClick={() => onMinimize(true)}>
+          <button type="button" className="pressable bh-insp-min" title="패널 숨기기 (i)" onClick={() => onMinimize(true)}>
             <PanelRightClose />
           </button>
         </div>
@@ -119,13 +119,13 @@ export function HierarchyInspector({
             )}
             {it.sub && (
               <div className="bh-insp-sec">
-                <div className="h">What it is</div>
+                <div className="h">설명</div>
                 <div className="bh-insp-what">{it.sub}</div>
               </div>
             )}
             {facts.length > 0 && (
               <div className="bh-insp-sec">
-                <div className="h">Facts</div>
+                <div className="h">정보</div>
                 <div className="bh-kv">
                   {facts.map(([k, v]) => (
                     <div key={k} className="contents">
@@ -139,7 +139,7 @@ export function HierarchyInspector({
             {members.length > 0 && (
               <div className="bh-insp-sec">
                 <div className="h">
-                  <span>Inside</span>
+                  <span>내부</span>
                   <span>{members.length}</span>
                 </div>
                 {members.slice(0, 14).map((m) => {
@@ -157,13 +157,13 @@ export function HierarchyInspector({
                     </div>
                   );
                 })}
-                {members.length > 14 && <div className="bh-insp-more">+{members.length - 14} more</div>}
+                {members.length > 14 && <div className="bh-insp-more">+{members.length - 14}개 더</div>}
               </div>
             )}
             {rels.length > 0 && (
               <div className="bh-insp-sec">
                 <div className="h">
-                  <span>Connections</span>
+                  <span>연결</span>
                   <span>{rels.length}</span>
                 </div>
                 {[...grouped.entries()].map(([label, list]) =>
@@ -190,17 +190,17 @@ export function HierarchyInspector({
             <div className="bh-insp-actions">
               <button type="button" className="pressable bh-btn" onClick={onFocus}>
                 <Focus />
-                <span>Focus</span>
+                <span>집중</span>
               </button>
               {it.type === 'group' ? (
                 <button type="button" className="pressable bh-btn" onClick={() => onToggle(it.id)}>
                   {expanded.has(it.id) ? <Minimize2 /> : <Maximize2 />}
-                  <span>{expanded.has(it.id) ? 'Collapse' : 'Expand'}</span>
+                  <span>{expanded.has(it.id) ? '접기' : '펼치기'}</span>
                 </button>
               ) : (
                 <button type="button" className="pressable bh-btn" onClick={onFit}>
                   <Scan />
-                  <span>Whole map</span>
+                  <span>전체 지도</span>
                 </button>
               )}
             </div>

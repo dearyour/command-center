@@ -12,9 +12,9 @@ import { AskBar, type AskHandle } from './AskBar';
 
 type Level = 1 | 2 | 3;
 const LEVELS: Array<{ n: Level; label: string; Icon: typeof Layers }> = [
-  { n: 1, label: 'Overview', Icon: Minimize2 },
-  { n: 2, label: 'Systems', Icon: Layers },
-  { n: 3, label: 'Everything', Icon: Maximize2 },
+  { n: 1, label: '개요', Icon: Minimize2 },
+  { n: 2, label: '시스템', Icon: Layers },
+  { n: 3, label: '전체', Icon: Maximize2 },
 ];
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -200,7 +200,7 @@ export function HierarchyWorkspace({ graph, subline }: { graph: BlueprintGraph; 
     <div className="bh-page">
       <header className="bh-top">
         <div className="bh-title">
-          <div className="bh-h1">Blueprint</div>
+          <div className="bh-h1">설계도</div>
           <div className="bh-sub">{subline}</div>
         </div>
         <div className="bh-levels">
@@ -229,11 +229,11 @@ export function HierarchyWorkspace({ graph, subline }: { graph: BlueprintGraph; 
         <div className="bh-actions">
           <button type="button" className="pressable bh-btn" onClick={() => canvas.current?.fitAll()}>
             <Scan />
-            <span>Fit</span>
+            <span>화면 맞춤</span>
           </button>
           <button type="button" className={`pressable bh-btn bh-btn-primary ${tracing ? 'is-busy' : ''}`} onClick={() => void trace()}>
             <Play />
-            <span>Trace the chain</span>
+            <span>연결 경로 추적</span>
           </button>
         </div>
       </header>

@@ -107,7 +107,7 @@ describe('blueprint hierarchy — the graph as buckets', () => {
   it('department frames carry an honest live badge', () => {
     const sales = idx.items.get('dept-sales');
     expect(sales?.type).toBe('group');
-    if (sales?.type === 'group') expect(sales.badge).toBe('1 of 2 live');
+    if (sales?.type === 'group') expect(sales.badge).toBe('2개 중 1개 운영 중');
   });
 
   it('layout: no two drawn cards or frames overlap at any level; containers stack without touching', () => {
@@ -176,7 +176,7 @@ describe('blueprint hierarchy — the graph as buckets', () => {
   it('search finds by name and by subline and reports the path', () => {
     const hits = searchHierarchy(idx, 'attio');
     expect(hits.map((x) => x.id)).toEqual(expect.arrayContaining(['agent-crm', 'connector-attio']));
-    expect(hits.find((x) => x.id === 'connector-attio')?.path).toBe('Command Center › Connectors');
+    expect(hits.find((x) => x.id === 'connector-attio')?.path).toBe('커맨드 센터 › 커넥터');
     expect(searchHierarchy(idx, 'closer')[0]?.id).toBe('agent-atlas');
     expect(searchHierarchy(idx, 'zzz')).toHaveLength(0);
   });
@@ -184,11 +184,11 @@ describe('blueprint hierarchy — the graph as buckets', () => {
   it('the ask scope describes the selection, its members and its relations, never invents', () => {
     const scope = describeScope(h, idx, 'dept-sales') as { scope: string; path: string; inside?: unknown[]; relations?: string[] };
     expect(scope.scope).toBe('Sales');
-    expect(scope.path).toBe('Command Center › Sales');
+    expect(scope.path).toBe('커맨드 센터 › Sales');
     expect(scope.inside).toHaveLength(3);
     expect(scope.relations?.some((r) => r.includes('Attio'))).toBe(true);
     const whole = describeScope(h, idx, null) as { scope: string; containers: unknown[] };
-    expect(whole.scope).toBe('the whole system');
+    expect(whole.scope).toBe('시스템 전체');
     expect(whole.containers.length).toBe(h.containers.length);
   });
 });

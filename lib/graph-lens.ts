@@ -20,35 +20,35 @@ export type LensContext = {
 };
 
 export const ENTITY_LENSES: Lens[] = [
-  { id: 'ent-people', group: 'entity', label: 'All people' },
-  { id: 'ent-subagents', group: 'entity', label: 'Sub-agents' },
-  { id: 'ent-tools', group: 'entity', label: 'Tools' },
-  { id: 'ent-workflows', group: 'entity', label: 'Workflows' },
-  { id: 'ent-sops', group: 'entity', label: 'SOPs' },
-  { id: 'ent-projects', group: 'entity', label: 'Projects' },
-  { id: 'ent-teams', group: 'entity', label: 'Teams' },
-  { id: 'ent-departments', group: 'entity', label: 'Departments' },
+  { id: 'ent-people', group: 'entity', label: '모든 사람' },
+  { id: 'ent-subagents', group: 'entity', label: '하위 에이전트' },
+  { id: 'ent-tools', group: 'entity', label: '도구' },
+  { id: 'ent-workflows', group: 'entity', label: '워크플로' },
+  { id: 'ent-sops', group: 'entity', label: 'SOP' },
+  { id: 'ent-projects', group: 'entity', label: '프로젝트' },
+  { id: 'ent-teams', group: 'entity', label: '팀' },
+  { id: 'ent-departments', group: 'entity', label: '부서' },
 ];
 
 export const FUNCTION_LENSES: Lens[] = [
-  { id: 'fn-core', group: 'function', label: 'Core' },
-  { id: 'fn-enabling', group: 'function', label: 'Enabling' },
-  { id: 'fn-vantage', group: 'function', label: 'Vantage team' },
-  { id: 'fn-launchpad-cohort', group: 'function', label: 'Launchpad Cohort team' },
+  { id: 'fn-core', group: 'function', label: '핵심' },
+  { id: 'fn-enabling', group: 'function', label: '지원' },
+  { id: 'fn-vantage', group: 'function', label: 'Vantage 팀' },
+  { id: 'fn-launchpad-cohort', group: 'function', label: 'Launchpad Cohort 팀' },
 ];
 
 export const ACTION_LENSES: Lens[] = [
-  { id: 'act-ad-creation', group: 'action', label: 'Ad creation' },
-  { id: 'act-lead-generation', group: 'action', label: 'Lead generation' },
-  { id: 'act-content-repurposing', group: 'action', label: 'Content repurposing' },
-  { id: 'act-content-ideation', group: 'action', label: 'Content ideation' },
-  { id: 'act-content-scripts', group: 'action', label: 'Content script creation' },
-  { id: 'act-social-sentiment', group: 'action', label: 'Social media sentiment analysis' },
-  { id: 'act-social-scheduler', group: 'action', label: 'Social posting & scheduler' },
-  { id: 'act-ai-visuals', group: 'action', label: 'AI-generated visual assets' },
-  { id: 'act-competitor-intel', group: 'action', label: 'Competitor ad intelligence' },
-  { id: 'act-icp-simulation', group: 'action', label: 'ICP identification & simulation' },
-  { id: 'act-channel-budget', group: 'action', label: 'Channel & budget allocation' },
+  { id: 'act-ad-creation', group: 'action', label: '광고 제작' },
+  { id: 'act-lead-generation', group: 'action', label: '리드 발굴' },
+  { id: 'act-content-repurposing', group: 'action', label: '콘텐츠 재가공' },
+  { id: 'act-content-ideation', group: 'action', label: '콘텐츠 아이디어' },
+  { id: 'act-content-scripts', group: 'action', label: '콘텐츠 대본 작성' },
+  { id: 'act-social-sentiment', group: 'action', label: '소셜 미디어 반응 분석' },
+  { id: 'act-social-scheduler', group: 'action', label: '소셜 게시 & 예약' },
+  { id: 'act-ai-visuals', group: 'action', label: 'AI 생성 시각 자료' },
+  { id: 'act-competitor-intel', group: 'action', label: '경쟁사 광고 분석' },
+  { id: 'act-icp-simulation', group: 'action', label: 'ICP 식별 & 시뮬레이션' },
+  { id: 'act-channel-budget', group: 'action', label: '채널 & 예산 배분' },
 ];
 
 export const ALL_LENSES: Lens[] = [...ENTITY_LENSES, ...FUNCTION_LENSES, ...ACTION_LENSES];

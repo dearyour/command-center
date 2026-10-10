@@ -31,12 +31,12 @@ export function BrainQuery({ fallbackActive }: { fallbackActive: boolean }) {
 
   const statusLine =
     state.phase === 'busy'
-      ? 'querying — hybrid (local + bge-m3)…'
+      ? '검색 중 — 하이브리드 (로컬 + bge-m3)…'
       : state.phase === 'done'
-        ? `${state.hits.length} hits · "${state.query}"${fallbackActive ? ' · local fallback (supabase paused)' : ''}`
+        ? `결과 ${state.hits.length}개 · "${state.query}"${fallbackActive ? ' · 로컬 대체 검색 (supabase 일시정지)' : ''}`
         : state.phase === 'error'
-          ? `query failed · ${state.message}`
-          : 'press ↵ to query the second brain';
+          ? `검색 실패 · ${state.message}`
+          : '↵ 를 누르면 세컨드 브레인을 검색합니다';
 
   return (
     <div className="flex min-h-[220px] flex-1 flex-col rounded-lg-t border border-os-border bg-os-surface p-1">
@@ -48,7 +48,7 @@ export function BrainQuery({ fallbackActive }: { fallbackActive: boolean }) {
           onKeyDown={(e) => e.key === 'Enter' && run()}
           // the pop-out's whole point is the prompt — land the caret in it
           autoFocus
-          placeholder="query the second brain…"
+          placeholder="세컨드 브레인 검색…"
           className="flex-1 bg-transparent font-mono text-xs text-os-text outline-none placeholder:text-os-dim"
         />
         <kbd className="rounded-sm-t border border-os-border-strong border-b-2 bg-os-surface px-1.5 py-0.5 font-mono text-[10px] text-os-muted">
@@ -76,7 +76,7 @@ export function BrainQuery({ fallbackActive }: { fallbackActive: boolean }) {
           ))}
         {state.phase === 'done' && state.hits.length === 0 && (
           <div className="px-[11px] py-2 text-[11px] text-os-dim">
-            nothing matched — try a broader phrase, or check the store with <code className="font-mono">gbrain doctor</code>
+            일치하는 결과가 없습니다 — 더 넓은 표현으로 검색하거나 다음 명령으로 저장소를 확인하세요 <code className="font-mono">gbrain doctor</code>
           </div>
         )}
       </div>

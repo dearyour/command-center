@@ -6,8 +6,8 @@
 export type Personnel = { id: string; name: string; role: string; departmentId: string };
 
 export const DEPARTMENT_HEADS: Record<string, { name: string; role: string }> = {
-  'dept-sales': { name: 'Marco', role: 'Head of Sales' },
-  'dept-marketing-growth': { name: 'Nadia', role: 'Head of Growth & Marketing' },
+  'dept-sales': { name: 'Marco', role: '영업 총괄' },
+  'dept-marketing-growth': { name: 'Nadia', role: '성장 & 마케팅 총괄' },
 };
 
 export function headForDepartment(departmentId: string): Personnel | null {

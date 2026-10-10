@@ -12,6 +12,7 @@ import { SparkIcon } from '@/components/SparkIcon';
 import { PageHeader } from '@/components/PageHeader';
 import { Rise } from '@/components/motion';
 import type { AgentStatus } from '@/lib/schemas';
+import { statusKo } from '@/lib/status-labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,11 +65,11 @@ function SystemCard({ href, title, caption }: { href: string; title: string; cap
 function LiveChip({ agent }: { agent: PaperclipAgent }) {
   return (
     <span
-      title={`Paperclip board: ${agent.name} is ${agent.status}${agent.model ? ` on ${agent.model}` : ''}`}
+      title={`Paperclip 보드: ${agent.name} 상태 ${statusKo(agent.status)}${agent.model ? ` · ${agent.model}` : ''}`}
       className="flex items-center gap-1 rounded-full border border-os-border bg-os-bg px-1.5 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.08em] text-os-muted"
     >
       <span className={`h-1.5 w-1.5 rounded-full ${LIVE_DOT[agent.status]}`} />
-      {agent.status}
+      {statusKo(agent.status)}
       {agent.model && <span className="text-os-dim normal-case">· {agent.model}</span>}
     </span>
   );
@@ -98,7 +99,7 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
   return (
     <div>
       <PageHeader
-        title="Agent Hierarchy"
+        title="에이전트 조직도"
       />
 
       {/* Live board strip — the REAL org (Paperclip over the private network). Only
@@ -108,7 +109,7 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
         <Rise i={1} className="mb-3 flex flex-wrap items-center gap-2 rounded-panel border border-os-border bg-os-surface px-3 py-2">
           <span className="flex items-center gap-1.5 text-[9px] uppercase tracking-[0.2em] text-os-muted">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-os-ok" />
-            Board live
+            보드 실시간
           </span>
           {liveOrg.extras.map((extra) => (
             <span key={extra.id} className="flex items-center gap-1.5 font-mono text-[10px] text-os-muted">
@@ -128,7 +129,7 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
             !venture ? 'border-os-text bg-os-text text-os-bg' : 'border-os-border bg-os-surface text-os-muted hover:text-os-text'
           }`}
         >
-          All ventures
+          전체 사업
         </Link>
         {VENTURES.map((v) => {
           const active = venture?.id === v.id;
@@ -156,7 +157,7 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
           style={{ borderColor: `${venture.color}66`, boxShadow: `inset 3px 0 0 ${venture.color}` }}
         >
           <div className="text-[9px] uppercase tracking-[0.2em]" style={{ color: venture.color }}>
-            {venture.label} — executive focus
+            {venture.label} — 경영 우선순위
           </div>
           <ul className="mt-1.5 space-y-1">
             {venture.focus.map((f) => (
@@ -167,14 +168,14 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
             ))}
           </ul>
           <div className="mt-2 font-mono text-[10px] text-os-dim">
-            G-Brain tag: #{venture.brainTag} · {ventureSet?.size} agents on this venture
+            G-Brain 태그: #{venture.brainTag} · 이 사업의 에이전트 {ventureSet?.size}개
           </div>
         </Rise>
       )}
 
       {/* Life-area legend: every crew below is tinted by the part of life it serves */}
       <Rise i={4} className="mb-6 flex flex-wrap items-center gap-4 rounded-panel border border-os-border bg-os-surface px-3 py-2">
-        <span className="text-[9px] uppercase tracking-[0.2em] text-os-dim">Life areas</span>
+        <span className="text-[9px] uppercase tracking-[0.2em] text-os-dim">삶의 영역</span>
         {LIFE_AREAS.map((area) => (
           <span key={area.id} className="flex items-center gap-1.5 text-[10px] text-os-muted">
             <span className="h-2 w-2 rounded-full" style={{ background: area.color }} />
@@ -187,10 +188,10 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
       <Rise i={5} className="flex flex-col items-center">
         <Users className="h-7 w-7 text-os-text" />
         <div className="mt-1 text-base font-bold tracking-wide">Alex</div>
-        <div className="text-[10px] uppercase tracking-[0.3em] text-os-dim">Operator</div>
+        <div className="text-[10px] uppercase tracking-[0.3em] text-os-dim">운영자</div>
         <div className="mt-2 h-6 w-px bg-os-border-bright" />
         <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-os-muted">Conductor (Super Agent)</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-os-muted">컨덕터 (슈퍼 에이전트)</span>
           {liveOrg.conductor && <LiveChip agent={liveOrg.conductor} />}
         </div>
         <div className="h-3 w-px bg-os-border-bright" />
@@ -198,17 +199,17 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
 
       {/* AI Head row: G-Brain ── Conductor ── Comms Feed */}
       <Rise i={6} className="flex items-center justify-center gap-0">
-        <SystemCard href="/brain" title="G-Brain" caption="markdown + pgvector knowledge store" />
+        <SystemCard href="/brain" title="G-Brain" caption="markdown + pgvector 지식 저장소" />
         <div className="hidden h-px w-10 bg-os-border-bright md:block" />
         {conductor ? (
           <ConductorCard conductor={conductor} agentNames={agentNames} initialBroadcast={lastBroadcast} />
         ) : (
           <div className="rounded-ctl border border-dashed border-os-border px-6 py-4 text-xs text-os-dim">
-            conductor missing — run npm run seed
+            컨덕터 없음 — npm run seed 를 실행하세요
           </div>
         )}
         <div className="hidden h-px w-10 bg-os-border-bright md:block" />
-        <SystemCard href="/comms" title="Comms Feed" caption="Gmail · WhatsApp · Slack, unified" />
+        <SystemCard href="/comms" title="커뮤니케이션 피드" caption="Gmail · WhatsApp · Slack 통합" />
       </Rise>
 
       {/* Trunk down to the department rail */}
@@ -302,14 +303,14 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
 
               {all.length === 0 && (
                 <div className="w-full rounded-ctl border border-dashed border-os-border px-3 py-5 text-center text-[10px] text-os-dim">
-                  Agents land here as this department goes live
+                  이 부서가 가동되면 에이전트가 여기에 표시됩니다
                 </div>
               )}
 
               {deptTools.length > 0 && (
                 <div className="w-full">
                   <div className="rounded-md bg-os-raised px-2 py-1 text-center text-[8px] uppercase tracking-[0.2em] text-os-muted">
-                    Agent Tools
+                    에이전트 도구
                   </div>
                   <div className="mt-1.5 flex flex-wrap justify-center gap-1">
                     {deptTools.map((tool) => (

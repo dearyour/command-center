@@ -100,8 +100,8 @@ export function BrainSatellites() {
   );
 
   const mounted = data?.mounted ?? false;
-  const statusWord = phase === 'retrieve' ? 'retrieving' : phase === 'answer' ? 'answered' : mounted ? 'ready' : data ? 'not mounted' : 'loading';
-  const answer = hits[0]?.snippet ?? (phase === 'answer' ? 'Nothing in the store answers that.' : '');
+  const statusWord = phase === 'retrieve' ? '검색 중' : phase === 'answer' ? '답변함' : mounted ? '준비됨' : data ? '연결 안 됨' : '불러오는 중';
+  const answer = hits[0]?.snippet ?? (phase === 'answer' ? '저장소에 그 질문에 답할 내용이 없습니다.' : '');
 
   return (
     <>
@@ -119,20 +119,20 @@ export function BrainSatellites() {
 
       {/* identity + counter: one row of chips in the graph's own tab style, beside its Fullscreen tab */}
       <div className="rise pointer-events-none absolute right-[124px] top-3 z-20 flex items-center gap-1.5" style={risePos(1)}>
-        <span className={CHIP} title={data?.statusLine ?? 'reading the store'}>
+        <span className={CHIP} title={data?.statusLine ?? '저장소 읽는 중'}>
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: mounted ? 'var(--accent)' : 'var(--warn)' }} />
           G-Brain
-          <span className="text-os-dim">{data ? (mounted ? 'connected' : 'not mounted') : 'reading'}</span>
+          <span className="text-os-dim">{data ? (mounted ? '연결됨' : '연결 안 됨') : '읽는 중'}</span>
         </span>
         {data && mounted && (
           <>
             <span className={CHIP}>
               <span className="tabular-nums text-os-text">{data.pages.toLocaleString('en-US')}</span>
-              <span className="text-os-dim">pages</span>
+              <span className="text-os-dim">페이지</span>
             </span>
             <span className={CHIP}>
               <span className="tabular-nums text-os-text">{data.folders}</span>
-              <span className="text-os-dim">folders</span>
+              <span className="text-os-dim">폴더</span>
             </span>
           </>
         )}
@@ -153,11 +153,11 @@ export function BrainSatellites() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             disabled={data !== null && !mounted}
-            placeholder={mounted || !data ? 'ask the brain' : 'brain-store not mounted'}
+            placeholder={mounted || !data ? '브레인에게 묻기' : '브레인 저장소 연결 안 됨'}
             spellCheck={false}
             className="min-h-[16px] w-full flex-1 border-0 bg-transparent font-mono text-[10.5px] text-os-text outline-none placeholder:text-os-dim"
             style={{ caretColor: 'var(--accent)' }}
-            aria-label="Ask the brain"
+            aria-label="브레인에게 묻기"
           />
           <span className="shrink-0 font-mono text-[9.5px] text-os-dim">{statusWord}</span>
         </div>
@@ -182,7 +182,7 @@ export function BrainSatellites() {
             <>
               <div className="flex items-baseline gap-2">
                 <span className="h-1.5 w-1.5 shrink-0 translate-y-[-2px] rounded-full bg-os-accent" />
-                <span className="shrink-0 font-mono text-[10px] text-os-muted">{hits.length > 0 ? `retrieved from ${hits.length} notes` : 'retrieval'}</span>
+                <span className="shrink-0 font-mono text-[10px] text-os-muted">{hits.length > 0 ? `메모 ${hits.length}개에서 검색` : '검색'}</span>
                 <span className="min-w-0 flex-1 truncate text-[12px] text-os-text">{answer}</span>
               </div>
               {hits.length > 0 && (
@@ -201,7 +201,7 @@ export function BrainSatellites() {
       </form>
 
       {/* footer ticker, bottom right of the canvas */}
-      <div className="pointer-events-none absolute bottom-2 right-7 z-20 font-mono text-[9px] text-os-dim">live retrieval</div>
+      <div className="pointer-events-none absolute bottom-2 right-7 z-20 font-mono text-[9px] text-os-dim">실시간 검색</div>
       </div>
     </>
   );

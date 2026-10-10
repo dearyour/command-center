@@ -70,15 +70,15 @@ export function OrgWorkerPill({ agent, dim = false }: { agent: Agent; dim?: bool
         >
           {agent.role}
           <div className="mt-1.5 flex items-center gap-1.5">
-            <AsyncButton run={run} tone="secondary" busyLabel="running" doneLabel="ok" showElapsed>
-              ▸ run
+            <AsyncButton run={run} tone="secondary" busyLabel="실행 중" doneLabel="완료" showElapsed>
+              ▸ 실행
             </AsyncButton>
             <Link
               href="/agents"
               data-lens="c"
               className="pressable is-dark inline-flex h-[20px] items-center rounded-ctl border border-os-border bg-os-bg px-2 font-mono text-[9.5px] font-semibold text-os-muted"
             >
-              chat
+              채팅
             </Link>
           </div>
         </div>

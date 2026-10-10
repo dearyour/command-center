@@ -50,8 +50,8 @@ export function BrainGraphView({ fill, ...props }: ComponentProps<typeof Knowled
       <div className="mb-2 flex shrink-0 items-center gap-1">
         <SlidingTabs<'radial' | 'neural'>
           tabs={[
-            { id: 'radial', label: 'Radial' },
-            { id: 'neural', label: 'Neural' },
+            { id: 'radial', label: '방사형' },
+            { id: 'neural', label: '신경망' },
           ]}
           value={view}
           onChange={setView}
@@ -69,7 +69,7 @@ export function BrainGraphView({ fill, ...props }: ComponentProps<typeof Knowled
                   key={d.id}
                   on={activePillars.includes(d.id)}
                   onClick={() => toggle(d.id)}
-                  title={`Filter ${d.name}`}
+                  title={`${d.name} 필터`}
                 >
                   {d.name}
                 </Chip>

@@ -22,11 +22,11 @@ function relativeTime(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
   if (!Number.isFinite(ms) || ms < 0) return iso;
   const minutes = Math.floor(ms / 60_000);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 1) return '방금';
+  if (minutes < 60) return `${minutes}분 전`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
+  if (hours < 24) return `${hours}시간 전`;
+  return `${Math.floor(hours / 24)}일 전`;
 }
 
 /** The Brand Deals status pill, in the layer's honest status color. */
@@ -123,13 +123,13 @@ export default async function DoctorPage() {
     <DoctorRunProvider>
       <Slab>
         <SlabTitle
-          eyebrow="engine health"
-          title="Doctor"
-          meta={`${storeShort} · ${store.totalFiles} pages · ${lastBrainRun ? `last run ${relativeTime(lastBrainRun.finishedAt)} · data-agent` : 'no agent runs yet'}`}
+          eyebrow="엔진 상태"
+          title="진단"
+          meta={`${storeShort} · ${store.totalFiles} 페이지 · ${lastBrainRun ? `마지막 실행 ${relativeTime(lastBrainRun.finishedAt)} · data-agent` : '아직 에이전트 실행 없음'}`}
           right={
             <>
               <Chip tone={statusTone}>
-                {doctor.connected ? (warnings > 0 ? `${warnings} warnings` : 'all green') : 'unreachable'}
+                {doctor.connected ? (warnings > 0 ? `경고 ${warnings}개` : '모두 정상') : '연결 불가'}
               </Chip>
               <Link href="/brain" className={PILL}>
                 G-Brain
@@ -141,13 +141,13 @@ export default async function DoctorPage() {
 
         {/* Hero row, Brand Deals' shape: the pillar radar + the volume card */}
         <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
-          <SlabCard i={1} title="Pillar Health" sub="live roster + runs + SOP coverage" className="flex flex-col overflow-hidden">
-            <div data-lens="r" aria-label="pillar health radar" className="flex min-h-[440px] flex-1 flex-col">
+          <SlabCard i={1} title="축별 상태" sub="실시간 명단 + 실행 + SOP 커버리지" className="flex flex-col overflow-hidden">
+            <div data-lens="r" aria-label="축별 상태 레이더" className="flex min-h-[440px] flex-1 flex-col">
               <PillarRadar axes={axes} health={doctor.healthScore} warnings={warnings} />
             </div>
           </SlabCard>
 
-          <SlabCard i={2} title="Health Volume" sub="out of 100" className="flex flex-col">
+          <SlabCard i={2} title="상태 규모" sub="100점 만점" className="flex flex-col">
             <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
               <BigStat
                 value={v.headline ?? undefined}
@@ -163,26 +163,26 @@ export default async function DoctorPage() {
 
         {/* Second row: brain runs, the store's shape, THE gradient card */}
         <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-          <SlabCard i={3} title="Brain Runs" sub={`data-agent · last ${WINDOW_DAYS} days`} className="pb-2">
+          <SlabCard i={3} title="브레인 실행" sub={`data-agent · 최근 ${WINDOW_DAYS}일`} className="pb-2">
             <div className="px-6 pb-2 pt-3">
               <BigStat
                 size={30}
                 value={v.runsInWindow}
-                chips={v.failedInWindow > 0 ? [{ tone: 'err', text: `${v.failedInWindow} failed` }] : []}
-                caption={lastBrainRun ? `last run ${relativeTime(lastBrainRun.finishedAt)}` : 'no agent runs yet'}
+                chips={v.failedInWindow > 0 ? [{ tone: 'err', text: `실패 ${v.failedInWindow}` }] : []}
+                caption={lastBrainRun ? `마지막 실행 ${relativeTime(lastBrainRun.finishedAt)}` : '아직 에이전트 실행 없음'}
               />
             </div>
-            <StepLine series={v.series} hue="var(--send-activity)" unit=" runs" empty={`No data-agent runs in the last ${WINDOW_DAYS} days.`} />
+            <StepLine series={v.series} hue="var(--send-activity)" unit="회" empty={`최근 ${WINDOW_DAYS}일간 data-agent 실행이 없습니다.`} />
           </SlabCard>
 
-          <SlabCard i={4} title="Brain Store" sub={`${store.folders.length} folders`}>
+          <SlabCard i={4} title="브레인 저장소" sub={`폴더 ${store.folders.length}개`}>
             {/* folder names run long, so the number sits above the matrix */}
             <div className="flex flex-col gap-5 px-6 pb-6 pt-3">
               <BigStat
                 size={30}
                 value={v.store.total}
-                unit="pages"
-                caption={v.store.top ? `largest · ${v.store.top.name} · ${v.store.top.files} pages` : 'no markdown on disk yet'}
+                unit="페이지"
+                caption={v.store.top ? `가장 큼 · ${v.store.top.name} · ${v.store.top.files} 페이지` : '아직 디스크에 마크다운이 없습니다'}
               />
               <DotMatrix cols={v.store.cols} hue="var(--brain-2)" />
             </div>
@@ -190,7 +190,7 @@ export default async function DoctorPage() {
 
           <InsightCard
             i={5}
-            badge="Needs you"
+            badge="확인 필요"
             value={v.insight.value ?? undefined}
             display={v.insight.value == null ? ' - ' : undefined}
             headline={v.insight.headline}
@@ -201,15 +201,15 @@ export default async function DoctorPage() {
 
         {/* Third row: the doctor core beside the storage layers */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <SlabCard i={6} title="Doctor Core" sub={doctor.connected ? (warnings > 0 ? 'warnings' : 'ok') : 'unreachable'} className="flex flex-col overflow-hidden">
+          <SlabCard i={6} title="진단 코어" sub={doctor.connected ? (warnings > 0 ? '경고' : '정상') : '연결 불가'} className="flex flex-col overflow-hidden">
             <div data-lens="r" className="brain-stage relative mt-4 flex min-h-[440px] flex-1 flex-col">
               <div className="flex items-start justify-between px-6 pt-3.5 font-mono text-[10px] leading-normal text-os-dim">
-                <span>{lastBrainRun ? `last run ${relativeTime(lastBrainRun.finishedAt)} · data-agent` : 'no agent runs yet'}</span>
+                <span>{lastBrainRun ? `마지막 실행 ${relativeTime(lastBrainRun.finishedAt)} · data-agent` : '아직 에이전트 실행 없음'}</span>
                 <div className="flex flex-col gap-1 text-right">
                   <span>
-                    <b className="font-medium text-os-muted">hybrid search</b> {doctor.connected ? 'verified' : 'degraded'}
+                    <b className="font-medium text-os-muted">하이브리드 검색</b> {doctor.connected ? '확인됨' : '성능 저하'}
                   </span>
-                  <span>{fallbackActive ? 'local fallback active' : 'supabase reachable'}</span>
+                  <span>{fallbackActive ? '로컬 대체 검색 사용 중' : 'supabase 연결 가능'}</span>
                 </div>
               </div>
               <div className="grid flex-1 place-items-center">
@@ -221,7 +221,7 @@ export default async function DoctorPage() {
           </SlabCard>
 
           {/* Core status: storage layers + doctor-health footer */}
-          <SlabCard i={7} title="Storage layers" sub={`${layersLive}/${layers.length} live`} className="flex flex-col">
+          <SlabCard i={7} title="저장 계층" sub={`${layersLive}/${layers.length} 가동 중`} className="flex flex-col">
             <div className="mt-4 flex flex-1 flex-col border-t border-os-border">
               {layers.map((layer) => (
                 <div
@@ -245,23 +245,23 @@ export default async function DoctorPage() {
             </div>
             <div className="flex items-center justify-between border-t border-os-border px-6 py-3.5 font-mono text-[11px]">
               <span className="text-os-dim">
-                <b className="font-medium text-os-muted">doctor</b> · health {doctor.healthScore ?? ' - '}/100
+                <b className="font-medium text-os-muted">진단</b> · 상태 {doctor.healthScore ?? ' - '}/100
               </span>
               <span className={warnings > 0 ? 'text-os-warn' : doctor.connected ? 'text-os-ok' : 'text-os-err'}>
-                {doctor.connected ? (warnings > 0 ? `${warnings} warnings` : 'all green') : 'offline'}
+                {doctor.connected ? (warnings > 0 ? `경고 ${warnings}개` : '모두 정상') : '오프라인'}
               </span>
             </div>
           </SlabCard>
         </div>
 
         {/* The pipeline: where knowledge lives and how it becomes searchable */}
-        <SlabCard i={8} title="Pipeline" sub={`${store.totalFiles} pages on disk`} className="mt-6">
+        <SlabCard i={8} title="파이프라인" sub={`디스크의 페이지 ${store.totalFiles}개`} className="mt-6">
           <div className="flex flex-col gap-2 px-6 pb-6 pt-4 xl:flex-row xl:items-stretch">
-            <Stage step="1" title="Markdown brain-store" caption={storeShort}>
+            <Stage step="1" title="마크다운 브레인 저장소" caption={storeShort}>
               <div className="text-xs text-os-muted">
-                {store.totalFiles} pages on disk, plain <span className="font-semibold text-os-text">.md</span> files,
-                the source of truth. <code className="font-mono text-[11px]">gbrain sync</code> walks the git repo and
-                pushes changed pages up.
+                디스크에 있는 페이지 {store.totalFiles}개, 평범한 <span className="font-semibold text-os-text">.md</span> 파일이
+                원본입니다. <code className="font-mono text-[11px]">gbrain sync</code> 가 git 저장소를 훑어서
+                바뀐 페이지를 올립니다.
               </div>
               <ul className="mt-3 space-y-1.5">
                 {store.folders.map((folder) => (
@@ -280,9 +280,9 @@ export default async function DoctorPage() {
               </ul>
             </Stage>
 
-            <Arrow label="sync · import" />
+            <Arrow label="동기화 · 가져오기" />
 
-            <Stage step="2" title="gbrain CLI" caption="chunk · embed · route, the engine between disk and database">
+            <Stage step="2" title="gbrain CLI" caption="청크 분할 · 임베딩 · 라우팅, 디스크와 데이터베이스 사이의 엔진">
               <DoctorChecks
                 checks={doctor.checks}
                 healthScore={doctor.healthScore}
@@ -298,28 +298,28 @@ export default async function DoctorPage() {
               </div>
             </Stage>
 
-            <Arrow label="embed · upsert" />
+            <Arrow label="임베딩 · 저장" />
 
-            <Stage step="3" title="Supabase Postgres + pgvector" caption='"Second Brain" · Ollama bge-m3 embeddings'>
+            <Stage step="3" title="Supabase Postgres + pgvector" caption='"세컨드 브레인" · Ollama bge-m3 임베딩'>
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-panel border border-os-border bg-os-surface px-3 py-2.5">
                   <div className="text-[30px] font-semibold leading-none tracking-[-0.03em] tabular-nums">918</div>
-                  <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-os-dim">pages · last known</div>
+                  <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-os-dim">페이지 · 마지막 확인</div>
                 </div>
                 <div className="rounded-panel border border-os-border bg-os-surface px-3 py-2.5">
                   <div className="text-[30px] font-semibold leading-none tracking-[-0.03em] tabular-nums">11k</div>
-                  <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-os-dim">chunks · last known</div>
+                  <div className="mt-1.5 font-mono text-[10px] uppercase tracking-wider text-os-dim">청크 · 마지막 확인</div>
                 </div>
               </div>
               <div className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-os-muted">
                 <p>
-                  Each page is split into chunks; every chunk gets a local bge-m3 embedding stored in a{' '}
-                  <code className="font-mono">vector</code> column. Postgres holds both the text (tsvector) and the
-                  vectors, so one database answers keyword and semantic queries.
+                  각 페이지는 청크로 나뉘고, 청크마다 로컬 bge-m3 임베딩이{' '}
+                  <code className="font-mono">vector</code> 컬럼에 저장됩니다. Postgres가 텍스트(tsvector)와
+                  벡터를 모두 가지고 있어서 하나의 데이터베이스로 키워드 검색과 의미 검색을 모두 처리합니다.
                 </p>
                 <p className="text-os-dim">
-                  Free tier pauses on idle  -  when hybrid queries fail, unpause from the Supabase dashboard. The
-                  brain-store on disk keeps working regardless.
+                  무료 플랜은 사용하지 않으면 일시정지됩니다  -  하이브리드 검색이 실패하면 Supabase 대시보드에서 다시 켜세요.
+                  디스크의 브레인 저장소는 그와 상관없이 계속 동작합니다.
                 </p>
               </div>
             </Stage>
@@ -327,31 +327,31 @@ export default async function DoctorPage() {
         </SlabCard>
 
         {/* How a query actually resolves */}
-        <SlabCard i={9} title="Query path" sub="hybrid retrieval, honest fallback" className="mt-6">
+        <SlabCard i={9} title="검색 경로" sub="하이브리드 검색, 정직한 대체 경로" className="mt-6">
           <div className="px-6 pb-6 pt-3">
             <p className="mb-4 text-[13px] text-os-dim">
-              What happens when an agent calls <code className="font-mono">gbrain query</code>, hybrid retrieval with an
-              honest fallback.
+              에이전트가 <code className="font-mono">gbrain query</code> 를 호출하면 일어나는 일: 하이브리드 검색과
+              정직한 대체 경로.
             </p>
             <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
-              <FlowStep title="Question" detail="Natural-language query from you or an agent run." />
-              <Arrow label="expand" />
-              <FlowStep title="Query expansion" detail="The CLI rewrites the question into search variants (skip with --no-expand)." />
-              <Arrow label="fan out" />
+              <FlowStep title="질문" detail="당신이나 에이전트 실행이 던지는 자연어 질문." />
+              <Arrow label="확장" />
+              <FlowStep title="질문 확장" detail="CLI가 질문을 여러 검색 변형으로 바꿔 씁니다 (--no-expand 로 생략 가능)." />
+              <Arrow label="분산" />
               <div className="flex flex-1 flex-col gap-2">
-                <FlowStep title="Keyword search" detail="Postgres tsvector full-text match over chunk text." />
-                <FlowStep title="Vector search" detail="pgvector nearest-neighbor over Ollama bge-m3 embeddings (1024d)." />
+                <FlowStep title="키워드 검색" detail="청크 텍스트에 대한 Postgres tsvector 전문 검색." />
+                <FlowStep title="벡터 검색" detail="Ollama bge-m3 임베딩(1024차원)에 대한 pgvector 최근접 이웃 검색." />
               </div>
-              <Arrow label="merge" />
-              <FlowStep title="RRF fusion" detail="Reciprocal-rank fusion merges both result lists into one ranking." />
-              <Arrow label="answer" />
-              <FlowStep title="Ranked snippets" detail="Top pages with snippets, returned to the agent." />
+              <Arrow label="병합" />
+              <FlowStep title="RRF 융합" detail="상호 순위 융합(RRF)으로 두 결과 목록을 하나의 순위로 합칩니다." />
+              <Arrow label="답변" />
+              <FlowStep title="순위별 발췌" detail="상위 페이지와 발췌문을 에이전트에게 돌려줍니다." />
             </div>
             <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-stretch">
               <FlowStep
                 dashed
-                title="Fallback: local grep"
-                detail="If Supabase is paused or unreachable, COMMAND CENTER greps the markdown brain-store directly  -  fewer smarts, zero downtime."
+                title="대체 경로: 로컬 grep"
+                detail="Supabase가 일시정지되거나 연결할 수 없으면 커맨드 센터가 마크다운 브레인 저장소를 직접 grep 합니다  -  덜 똑똑하지만 멈추지 않습니다."
               />
             </div>
           </div>

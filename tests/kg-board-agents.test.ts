@@ -96,7 +96,7 @@ describe('agent icons: white Vantage mark + the OS emblem', () => {
   test('AI agents wear the Vantage mark; board seats wear the OS emblem', () => {
     const kg = read('components/KnowledgeGraph.tsx');
     expect(kg).toContain("employee: { color: 'var(--kg-employee, var(--accent))', Icon: VantageMark");
-    expect(kg).toContain("Icon: OsMarkGlyph, label: 'Board agents'");
+    expect(kg).toContain("Icon: OsMarkGlyph, label: '보드 에이전트'");
     expect(read('components/GraphDirectory.tsx')).toContain('employee: VantageMark');
     expect(read('components/OsMark.tsx')).toContain('/os-emblem.png');
   });

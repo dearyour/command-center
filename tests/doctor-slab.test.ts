@@ -22,8 +22,8 @@ describe('/doctor in the Brand Deals look', () => {
 
   test('the hero row is the 2fr/1fr split: the radar beside the Health Volume card', () => {
     expect(src).toContain('grid-cols-[2fr_1fr]');
-    expect(src).toContain('title="Health Volume"');
-    const hero = src.slice(src.indexOf('grid-cols-[2fr_1fr]'), src.indexOf('title="Health Volume"'));
+    expect(src).toContain('title="상태 규모"');
+    const hero = src.slice(src.indexOf('grid-cols-[2fr_1fr]'), src.indexOf('title="상태 규모"'));
     expect(hero).toContain('<PillarRadar');
   });
 
@@ -60,7 +60,7 @@ describe('/doctor in the Brand Deals look', () => {
 
 describe('nothing was removed in the rework', () => {
   test('rerun, run provider, checks, both visuals, pipeline and query path stay', () => {
-    for (const k of ['<DoctorRunProvider', '<DoctorRerun', '<DoctorChecks', '<BrainCore', '<PillarRadar', 'Storage layers', 'Pipeline', 'Query path', 'Fallback: local grep']) {
+    for (const k of ['<DoctorRunProvider', '<DoctorRerun', '<DoctorChecks', '<BrainCore', '<PillarRadar', '저장 계층', '파이프라인', '검색 경로', '대체 경로: 로컬 grep']) {
       expect(src, k).toContain(k);
     }
   });

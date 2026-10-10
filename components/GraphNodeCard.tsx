@@ -49,18 +49,18 @@ export function GraphNodeCard({
     <div className="enter w-60 rounded-panel border border-os-border-strong bg-os-bg px-3 py-2.5">
       <div className="flex items-start gap-2">
         <div className="min-w-0 flex-1">
-          <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-os-dim">node · hover card</div>
+          <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-os-dim">노드 · 미리보기 카드</div>
           <div className="mt-1 truncate text-[12px] font-bold text-os-text">{label}</div>
           <div className="mt-0.5 truncate font-mono text-[10px] text-os-dim">
             {sub ? `${sub} · ` : ''}
-            {kind} · {links} link{links === 1 ? '' : 's'}
+            {kind} · 연결 {links}개
           </div>
         </div>
         <button
           type="button"
           onClick={onDismiss}
-          title="Dismiss"
-          aria-label="Dismiss node card"
+          title="닫기"
+          aria-label="노드 카드 닫기"
           data-lens="c"
           className="pressable is-dark -mr-1 -mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-ctl text-os-dim"
         >
@@ -75,25 +75,25 @@ export function GraphNodeCard({
           data-lens="c"
           className="pressable is-dark inline-flex h-[22px] items-center rounded-ctl border border-os-border bg-os-bg px-2 font-mono text-[10px] font-semibold text-os-muted"
         >
-          open note
+          메모 열기
         </button>
         <AsyncButton
           run={query}
           tone="secondary"
-          busyLabel="querying"
-          doneLabel="hits"
-          failLabel="failed"
+          busyLabel="검색 중"
+          doneLabel="결과"
+          failLabel="실패"
           failed={failed}
           className="!h-[22px] !px-2 !text-[10px]"
         >
-          gbrain › query
+          gbrain › 검색
         </AsyncButton>
       </div>
 
       {hits && (
         <div className="mt-2 border-t border-os-border pt-2">
           {hits.length === 0 ? (
-            <p className="font-mono text-[10px] text-os-dim">no hits in the brain-store</p>
+            <p className="font-mono text-[10px] text-os-dim">브레인 저장소에 결과가 없습니다</p>
           ) : (
             <ul className="space-y-1">
               {hits.slice(0, 3).map((h) => (

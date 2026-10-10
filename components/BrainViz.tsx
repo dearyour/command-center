@@ -34,7 +34,7 @@ export function BrainViz({
   }
 
   return (
-    <svg viewBox="0 0 520 520" role="img" aria-label="G-Brain knowledge core">
+    <svg viewBox="0 0 520 520" role="img" aria-label="G-Brain 지식 코어">
       <defs>
         <radialGradient id="coreGrad">
           <stop offset="0%" stopColor="var(--brain-1)" stopOpacity="0.22" />
@@ -142,7 +142,7 @@ export function BrainViz({
           {health ?? ' - '}
         </text>
         <text x="260" y="272" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="8" letterSpacing="2.5" fill="var(--text-3)">
-          HEALTH / 100
+          상태 / 100
         </text>
         <text x="260" y="288" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="7.5" letterSpacing="1.5" fill="var(--brain-2)">
           GBRAIN {version.toUpperCase()}
@@ -153,13 +153,13 @@ export function BrainViz({
       {!compact && (
         <g fontFamily="var(--font-mono)" fontSize="8.5" letterSpacing="1.2">
           <text x="260" y="146" textAnchor="middle" fill="var(--brain-1)">
-            BRAIN-STORE · {totalPages} PAGES
+            브레인 저장소 · {totalPages} 페이지
           </text>
           <text x="260" y="96" textAnchor="middle" fill="var(--brain-2)">
             OLLAMA · BGE-M3 · 1024d
           </text>
           <text x="260" y="44" textAnchor="middle" fill="var(--text-3)">
-            SUPABASE · {supabasePages} PAGES · PAUSED
+            SUPABASE · {supabasePages} 페이지 · 일시정지
           </text>
         </g>
       )}

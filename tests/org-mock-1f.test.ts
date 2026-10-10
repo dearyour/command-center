@@ -33,8 +33,8 @@ describe('/org mock-1f: worker pills expand on click', () => {
   test('the expanded body reveals the role and the run / chat controls', () => {
     expect(pill).toContain('agent.role');
     expect(pill).toContain('animate-enter');
-    expect(pill).toContain('▸ run');
-    expect(pill).toContain('chat');
+    expect(pill).toContain('▸ 실행');
+    expect(pill).toContain('채팅');
     // run hits the real agent route, chat navigates to the roster
     expect(pill).toContain('/api/agents/');
     expect(pill).toContain("method: 'POST'");

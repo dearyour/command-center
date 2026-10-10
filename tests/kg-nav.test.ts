@@ -13,8 +13,8 @@ const read = (p: string) => readFileSync(join(process.cwd(), p), 'utf8');
 describe('knowledge-graph wheel navigation', () => {
   test('inline view: department nav is pinned bottom-center, always reachable', () => {
     const src = read('components/KnowledgeGraph.tsx');
-    expect(src).toContain('Turn to the previous pillar');
-    expect(src).toContain('Turn to the next pillar');
+    expect(src).toContain('이전 축으로 돌리기');
+    expect(src).toContain('다음 축으로 돌리기');
     // one control at the bottom-center of the field (the operator), never a hidden edge paddle
     expect(src).toMatch(/absolute bottom-4 left-1\/2 z-20 flex -translate-x-1\/2/);
   });
@@ -22,7 +22,7 @@ describe('knowledge-graph wheel navigation', () => {
   test('inline detail card walks back up the trail to the pillar/directory', () => {
     const src = read('components/KnowledgeGraph.tsx');
     // the shared top bar backs out to the focused pillar, or the directory at rest
-    expect(src).toMatch(/Back to the \$\{focusedTeam\?\.label \?\? 'directory'\}/);
+    expect(src).toMatch(/\$\{focusedTeam\?\.label \?\? '목록'\}\(으\)로 돌아가기/);
   });
 
   test('fullscreen: department nav is pinned bottom-center, always visible', () => {
@@ -48,7 +48,7 @@ describe('knowledge-graph wheel navigation', () => {
 
   test('fullscreen detail aside carries the same back-trail', () => {
     const src = read('components/KnowledgeGraphFullscreen.tsx');
-    expect(src).toMatch(/Back to the \$\{currentDept\?\.name \?\? 'graph'\} pillar/);
+    expect(src).toMatch(/\$\{currentDept\?\.name \?\? '그래프'\} 축으로 돌아가기/);
   });
 
   test('focus mode projects the rest of the graph onto the lowered wheel', () => {

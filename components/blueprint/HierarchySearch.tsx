@@ -73,18 +73,18 @@ export function HierarchySearch({
     <div ref={rootRef} className={`bh-search ${open ? 'is-open' : ''}`}>
       <button type="button" className="pressable bh-search-pill" onClick={onOpen}>
         <Search />
-        <span>Search the system</span>
+        <span>시스템 검색</span>
         <kbd>⌘K</kbd>
       </button>
       <div className="bh-search-panel" aria-hidden={!open}>
         <div className="bh-search-row">
           <Search />
-          <input ref={inputRef} type="text" value={query} placeholder="Agents, connectors, skills, daemons, stores, pages, models…" autoComplete="off" spellCheck={false} onChange={(e) => onQuery(e.target.value)} onKeyDown={onKey} />
+          <input ref={inputRef} type="text" value={query} placeholder="에이전트, 커넥터, 스킬, 데몬, 저장소, 페이지, 모델…" autoComplete="off" spellCheck={false} onChange={(e) => onQuery(e.target.value)} onKeyDown={onKey} />
           <kbd>esc</kbd>
         </div>
         <div className="bh-search-results">
           {hits.length === 0 ? (
-            <div className="bh-sr-empty">Nothing in the system matches that.</div>
+            <div className="bh-sr-empty">시스템에서 일치하는 항목이 없습니다.</div>
           ) : (
             groups.map(([kind, list]) => (
               <div key={kind}>

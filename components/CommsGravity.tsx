@@ -296,7 +296,7 @@ function SelectedMessage({
               <button
                 key={t.tier}
                 onClick={() => onPriority(t.tier)}
-                title={`${t.label} — ${t.respond} 내 답장`}
+                title={`${t.label} — ${t.respond} 답장`}
                 className={`pressable h-6 w-6 rounded font-mono text-[11px] font-bold ${
                   active ? 'text-black' : 'text-os-muted'
                 }`}

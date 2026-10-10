@@ -48,12 +48,12 @@ const sparkPts = (id: string, x: number, y: number) => {
 
 /** short kind tag for the hover readout (from the node-id prefix) */
 const hoverKind = (id: string): string => {
-  if (id.startsWith('emp:')) return 'AI agent';
-  if (id.startsWith('person:')) return 'human';
-  if (id.startsWith('task:')) return 'SOP task';
-  if (id.startsWith('tool:')) return 'tool';
-  if (id.startsWith('team:')) return 'pillar';
-  return 'memory core';
+  if (id.startsWith('emp:')) return 'AI 에이전트';
+  if (id.startsWith('person:')) return '사람';
+  if (id.startsWith('task:')) return 'SOP 작업';
+  if (id.startsWith('tool:')) return '도구';
+  if (id.startsWith('team:')) return '축';
+  return '기억 코어';
 };
 
 export function NeuralGraph({
@@ -130,7 +130,7 @@ export function NeuralGraph({
       style={{ background: NAVY_BG }}
       onMouseLeave={() => setHoverId(null)}
     >
-      <svg viewBox={`0 0 ${NEURAL_W} ${NEURAL_H}`} className="block w-full" role="img" aria-label="G-Brain neural view">
+      <svg viewBox={`0 0 ${NEURAL_W} ${NEURAL_H}`} className="block w-full" role="img" aria-label="G-Brain 신경망 보기">
         <defs>
           <radialGradient id="ngGlow" cx="50%" cy="50%" r="62%">
             <stop offset="0%" stopColor="#1b2a56" stopOpacity="0.9" />

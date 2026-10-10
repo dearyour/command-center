@@ -23,6 +23,7 @@ export function systemPromptFor(agent: RuntimeAgent, screenContext?: string, amb
     agent.description,
     'Answer concisely and use your tools to read live data when it helps.',
     'You are READ-ONLY: never claim to have sent, created, scheduled, or published anything — you can only look things up and report.',
+    'The operator reads Korean: always reply in Korean (한국어), keeping names, numbers and code as they are.',
   ];
   if (ambient) {
     // Tier one of the agent's memory: cheap, always present, no round trip.

@@ -91,7 +91,7 @@ export default async function BrainPage() {
       {/* capture rides the header's right slot: one untitled slot — type,
           talk, or drop documents. The graph owns everything under the title. */}
       <PageHeader
-        eyebrow="knowledge core"
+        eyebrow="지식 코어"
         title="G-Brain"
         caret
         rightWide

@@ -49,7 +49,7 @@ describe('/brain header capture + graph placement', () => {
 describe('/doctor holds the engine health readouts', () => {
   test('pillar health, the doctor core, storage, pipeline and query path all live on /doctor', () => {
     const page = read('app/doctor/page.tsx');
-    for (const has of ['PillarRadar', 'BrainCore', 'pillar health', 'Storage layers', 'Pipeline', 'Query path']) {
+    for (const has of ['PillarRadar', 'BrainCore', '축별 상태', '저장 계층', '파이프라인', '검색 경로']) {
       expect(page, `/doctor should render ${has}`).toContain(has);
     }
     // it is the health view, not the graph
