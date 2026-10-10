@@ -90,7 +90,7 @@ export async function trakyoStatus(fetchImpl: typeof fetch = fetch): Promise<Con
       ...base,
       state: 'not_configured',
       detail:
-        'Organic attribution (content → leads → booked calls → revenue). Set TRAKYO_API_KEY.',
+        '오가닉 귀속(콘텐츠 → 리드 → 예약된 통화 → 매출). TRAKYO_API_KEY를 설정하세요.',
     };
   }
   try {

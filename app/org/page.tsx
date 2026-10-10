@@ -261,7 +261,7 @@ export default async function OrgChartPage({ searchParams }: { searchParams?: { 
               {instanceAgents.length > 0 && (
                 <div className="w-full space-y-1.5">
                   <div className="text-center text-[9px] uppercase tracking-[0.2em] text-os-dim">
-                    {department.name} crew
+                    {department.name} 팀
                   </div>
                   {/* Instance slots: each becomes an OpenClaw / Claude Code process on the host */}
                   {instanceAgents.map((agent) => (

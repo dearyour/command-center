@@ -80,7 +80,7 @@ export async function fathomStatus(fetchFn: Fetch = fetch): Promise<ConnectorSta
       ...base,
       state: 'not_configured',
       detail:
-        'Set FATHOM_API_KEY in .env.local to pull recorded calls, durations and transcripts. Create a key in Fathom under Settings → API.',
+        '녹화된 통화, 길이, 녹취록을 가져오려면 .env.local에 FATHOM_API_KEY를 설정하세요. 키는 Fathom의 Settings → API에서 만듭니다.',
     };
   }
   try {

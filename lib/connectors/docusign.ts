@@ -162,7 +162,7 @@ export async function docusignStatus(fetchFn: Fetch = fetch): Promise<ConnectorS
       ...base,
       state: 'not_configured',
       detail:
-        'Set DOCUSIGN_INTEGRATION_KEY, DOCUSIGN_USER_ID, DOCUSIGN_ACCOUNT_ID and DOCUSIGN_PRIVATE_KEY_B64 (base64 of the RSA private key) in .env.local. DOCUSIGN_ENV=demo for the developer sandbox.',
+        'DOCUSIGN_INTEGRATION_KEY, DOCUSIGN_USER_ID, DOCUSIGN_ACCOUNT_ID, DOCUSIGN_PRIVATE_KEY_B64(RSA 개인 키의 base64)를 .env.local에 설정하세요. 개발자 샌드박스는 DOCUSIGN_ENV=demo로 씁니다.',
     };
   }
   try {

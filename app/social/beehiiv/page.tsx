@@ -34,7 +34,7 @@ export default async function BeehiivDashboardPage() {
               <ArrowLeft className="h-3.5 w-3.5" /> 모든 플랫폼
             </Link>
             <a href="https://app.beehiiv.com" target="_blank" rel="noreferrer" data-lens="c" className={PILL_ACCENT}>
-              Open Beehiiv <ExternalLink className="h-3.5 w-3.5" />
+              Beehiiv 열기 <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </>
         }

@@ -201,7 +201,7 @@ export function PostComposer({ initialPosts }: { initialPosts: SocialPost[] }) {
         </div>
         <div className="mt-3 flex items-center justify-between gap-3">
           <span className="font-mono text-[10px] text-os-dim">
-            Publishes for real via Zernio — scheduled posts go out at their time.
+            Zernio로 실제 게시합니다. 예약된 게시물은 정해진 시간에 나갑니다.
           </span>
           <button
             onClick={submit}

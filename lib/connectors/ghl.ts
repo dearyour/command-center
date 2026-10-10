@@ -18,7 +18,7 @@ export async function ghlStatus(): Promise<ConnectorStatus> {
       ...base,
       state: 'not_configured',
       detail:
-        'Launchpad Cohort pipeline (alex@launchpadcohort.example.com). Set GHL_API_KEY (Private Integration token) + GHL_LOCATION_ID in .env.local.',
+        'Launchpad Cohort 파이프라인 (alex@launchpadcohort.example.com). .env.local에 GHL_API_KEY(Private Integration 토큰)와 GHL_LOCATION_ID를 설정하세요.',
     };
   }
   return {

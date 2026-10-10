@@ -19,7 +19,7 @@ export async function metaAdsStatus(): Promise<ConnectorStatus> {
       ...base,
       state: 'not_configured',
       detail:
-        'Paid-funnel attribution (ad → opt-in → purchase) for Vantage + Launchpad Cohort. Set META_ADS_ACCESS_TOKEN to wire the Meta Ads MCP.',
+        '유료 퍼널 귀속(광고 → opt-in → 구매), Vantage와 Launchpad Cohort 대상. Meta Ads MCP를 연결하려면 META_ADS_ACCESS_TOKEN을 설정하세요.',
     };
   }
   return {

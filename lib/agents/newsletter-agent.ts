@@ -51,7 +51,7 @@ async function run(): Promise<AgentRunResult> {
   if (posts === null) {
     return {
       ok: false,
-      summary: 'Beehiiv is not connected (BEEHIIV_API_KEY / BEEHIIV_PUBLICATION_ID missing), so there is no send history to write against.',
+      summary: 'Beehiiv가 연결되지 않아 (BEEHIIV_API_KEY / BEEHIIV_PUBLICATION_ID 없음) 기준으로 삼을 발송 기록이 없습니다.',
     };
   }
 
