@@ -41,29 +41,29 @@ describe('newsletterVolume: the Newsletter Volume card', () => {
   test('headline is the live subscriber count, chips carry issues and the average open', () => {
     expect(v.headline).toBe(5400);
     expect(v.chips).toEqual([
-      { tone: 'accent', text: '2 issues' },
-      { tone: 'ok', text: '25.1% avg open' },
+      { tone: 'accent', text: '2호' },
+      { tone: 'ok', text: '평균 오픈율 25.1%' },
     ]);
-    expect(v.caption).toBe('subscribers, live via Beehiiv');
+    expect(v.caption).toBe('구독자 수, Beehiiv 실시간 연동');
   });
 
   test('meters are the send funnel as ratios of summed stats', () => {
-    expect(v.meters.map((m) => m.label)).toEqual(['Delivered', 'Opened', 'Clicked', 'Unsubscribed']);
-    expect(v.meters[0]).toMatchObject({ frac: 2000 / 2100, display: '95.2% of sends', hue: 'var(--ok)' });
-    expect(v.meters[1]).toMatchObject({ frac: 0.25, display: '25.0% of delivered', hue: 'var(--ramp-1)' });
-    expect(v.meters[2]).toMatchObject({ frac: 0.1, display: '10.0% of opens', hue: 'var(--ramp-3)' });
-    expect(v.meters[3]).toMatchObject({ frac: 0.005, display: '0.50% of delivered', hue: 'var(--warn)' });
-    expect(v.foot).toBe('2 issues · 2,100 sends');
+    expect(v.meters.map((m) => m.label)).toEqual(['전달됨', '열람', '클릭', '구독 해지']);
+    expect(v.meters[0]).toMatchObject({ frac: 2000 / 2100, display: '발송 대비 95.2%', hue: 'var(--ok)' });
+    expect(v.meters[1]).toMatchObject({ frac: 0.25, display: '전달 대비 25.0%', hue: 'var(--ramp-1)' });
+    expect(v.meters[2]).toMatchObject({ frac: 0.1, display: '열람 대비 10.0%', hue: 'var(--ramp-3)' });
+    expect(v.meters[3]).toMatchObject({ frac: 0.005, display: '전달 대비 0.50%', hue: 'var(--warn)' });
+    expect(v.foot).toBe('2호 · 2,100건 발송');
   });
 
   test('sends and open rates run oldest first', () => {
     expect(v.sends).toEqual([
-      { label: 'Jul 7', count: 1000 },
-      { label: 'Jul 14', count: 1100 },
+      { label: '7월 7일', count: 1000 },
+      { label: '7월 14일', count: 1100 },
     ]);
     expect(v.openRates).toEqual([
-      { label: 'Jul 7', count: 30 },
-      { label: 'Jul 14', count: 20.2 },
+      { label: '7월 7일', count: 30 },
+      { label: '7월 14일', count: 20.2 },
     ]);
     expect(v).toMatchObject({ totalRecipients: 2100, totalClicks: 50, unsubscribes: 10, spamReports: 1, avgOpenRate: 25.1 });
   });
@@ -71,8 +71,8 @@ describe('newsletterVolume: the Newsletter Volume card', () => {
   test('the one insight card is the best-opened issue', () => {
     expect(v.insight).toEqual({
       display: '30.0%',
-      headline: 'Best open rate: First.',
-      body: '25.1% average across 2 issues · Jul 7',
+      headline: '최고 오픈율: First.',
+      body: '2호 평균 25.1% · 7월 7일',
       frac: 0.3,
     });
   });
@@ -83,15 +83,15 @@ describe('newsletterVolume: the Newsletter Volume card', () => {
     ).reverse();
     const m = newsletterVolume({ newsletters: many, subscribers: null });
     expect(m.openRates).toHaveLength(6);
-    expect(m.openRates.at(-1)).toEqual({ label: 'Aug 17', count: 27 });
+    expect(m.openRates.at(-1)).toEqual({ label: '8월 17일', count: 27 });
     expect(m.sends).toHaveLength(8);
   });
 
   test('seeded issues are labelled as a preview, a missing count is not a zero', () => {
     const s = newsletterVolume({ newsletters: [issue({ id: 'seed-1', recipients: 10, delivered: 10 })], subscribers: null });
     expect(s.headline).toBeNull();
-    expect(s.caption).toBe('no live subscriber count · add BEEHIIV_API_KEY');
-    expect(s.foot).toBe('1 issue · 10 sends · seeded preview');
+    expect(s.caption).toBe('실시간 구독자 수 없음 · BEEHIIV_API_KEY 추가 필요');
+    expect(s.foot).toBe('1호 · 10건 발송 · 샘플 미리보기');
   });
 });
 
@@ -104,7 +104,7 @@ describe('newsletterVolume with nothing sent', () => {
     expect(e.meters).toEqual([]);
     expect(e.sends).toEqual([]);
     expect(e.openRates).toEqual([]);
-    expect(e.foot).toBe('no issues yet');
-    expect(e.insight).toMatchObject({ display: 'none', headline: 'No issues sent yet.', frac: 0 });
+    expect(e.foot).toBe('아직 발송한 호가 없습니다');
+    expect(e.insight).toMatchObject({ display: '없음', headline: '아직 발송한 호가 없습니다.', frac: 0 });
   });
 });

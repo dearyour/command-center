@@ -7,16 +7,30 @@ import { OsMark } from '@/components/OsMark';
 import { CONDUCTOR_OPEN_EVENT } from '@/components/ConductorPanel';
 
 const SEGMENT_LABELS: Record<string, string> = {
-  '': 'home',
-  social: 'social',
-  comms: 'comms',
-  agents: 'agents',
-  org: 'org-chart',
+  '': '홈',
+  comms: '커뮤니케이션',
+  funnel: '퍼널',
+  workflows: '워크플로',
+  social: '소셜',
+  content: '콘텐츠',
+  'brand-deals': '브랜드-협찬',
+  finances: '재무',
+  trading: '트레이딩',
+  adpilot: '광고-파일럿',
+  agents: '에이전트',
+  chats: '채팅',
+  tasks: '작업',
+  skills: '스킬',
+  org: '조직도',
+  blueprint: '설계도',
   brain: 'g-brain',
-  integrations: 'connections',
-  roadmap: 'roadmap',
-  analytics: 'analytics',
-  reference: 'reference-model',
+  doctor: '진단',
+  integrations: '연결',
+  usage: '사용량',
+  roadmap: '로드맵',
+  analytics: '분석',
+  reference: '참조-모델',
+  personas: '페르소나',
 };
 
 export function openPalette() {
@@ -39,7 +53,7 @@ export function Topbar() {
         <ThemeToggle />
         <button
           onClick={openPalette}
-          title="Command palette (⌘K)"
+          title="명령 팔레트 (⌘K)"
           data-lens="c"
           className="pressable is-dark grid h-[30px] w-[30px] place-items-center rounded-ctl border border-os-border bg-os-surface text-os-muted hover:text-os-text"
         >
@@ -49,8 +63,8 @@ export function Topbar() {
             Conductor answers about whatever screen you're on */}
         <button
           onClick={() => window.dispatchEvent(new CustomEvent(CONDUCTOR_OPEN_EVENT))}
-          title="Ask the Conductor about this screen"
-          aria-label="Open the Conductor agent panel"
+          title="이 화면에 대해 컨덕터에게 물어보기"
+          aria-label="컨덕터 에이전트 패널 열기"
           data-lens="c"
           className="pressable is-dark grid h-[30px] w-[30px] place-items-center rounded-ctl border border-os-border bg-os-surface text-os-muted hover:text-os-accent"
         >

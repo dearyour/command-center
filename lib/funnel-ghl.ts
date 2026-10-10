@@ -109,10 +109,10 @@ export function mapGhlOpportunities(
       channel: i === hubIdx && won ? 'checkout' : 'crm',
       label:
         i === 0
-          ? `Opportunity created in GHL${via.length ? ` · via: ${via.join(', ')}` : ''}`
+          ? `GHL에서 영업 기회 생성${via.length ? ` · 경유: ${via.join(', ')}` : ''}`
           : i === hubIdx
-            ? `GHL stage: ${stage.name}${won ? ' (won)' : ''}`
-            : `Progressed to ${s.label}`,
+            ? `GHL 단계: ${stage.name}${won ? ' (성사)' : ''}`
+            : `${s.label} 단계로 진행`,
       source: 'ghl' as const,
       at: i === hubIdx ? lastAt : createdAt,
     }));
@@ -121,7 +121,7 @@ export function mapGhlOpportunities(
       journeys.push(
         FunnelJourneySchema.parse({
           id,
-          name: o.contact?.name || o.name || 'Unnamed opportunity',
+          name: o.contact?.name || o.name || '이름 없는 영업 기회',
           venture: 'launchpad-cohort', // GHL is the LC machine
           status: canonical,
           product: won ? `GHL: ${stage.name}` : null,

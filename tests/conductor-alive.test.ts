@@ -61,7 +61,7 @@ describe('the shared Conductor composer carries the Claude-bar capabilities', ()
   test('mic dictation + read-aloud are real browser APIs, not demo', () => {
     expect(composer).toContain('SpeechRecognition');
     expect(composer).toContain('speechSynthesis');
-    expect(composer).toContain('Voice input is not available in this browser.');
+    expect(composer).toContain('이 브라우저에서는 음성 입력을 사용할 수 없습니다.');
   });
 
   test('BOTH Conductor surfaces mount the same composer (chat + side panel)', () => {

@@ -90,43 +90,43 @@ describe('workflowsVolume', () => {
 
   test('dot chips carry the states in status colors, zero states left out', () => {
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '2 healthy' },
-      { tone: 'warn', text: '1 overdue' },
-      { tone: 'err', text: '2 failing' },
-      { text: '1 paused' },
+      { tone: 'ok', text: '정상 2' },
+      { tone: 'warn', text: '지연 1' },
+      { tone: 'err', text: '실패 중 2' },
+      { text: '일시정지 1' },
     ]);
-    expect(v.caption).toBe('5 enabled · 15 runs recorded');
+    expect(v.caption).toBe('활성 5개 · 실행 기록 15회');
   });
 
   test('four meters, each a real fraction of its own whole', () => {
     expect(v.meters.map((m) => m.label)).toEqual([
-      'Crons healthy (2/5)',
-      'Runs OK (11/15)',
-      'Hours carried by agents (4/20h per wk)',
-      'Leak recovered ($250/$1,000 mo)',
+      '정상 크론 (2/5)',
+      '성공한 실행 (11/15)',
+      '에이전트가 담당하는 시간 (주당 4/20시간)',
+      '회수한 누수 금액 (월 $250/$1,000)',
     ]);
     expect(v.meters[0]).toMatchObject({ frac: 0.4, display: '40%', hue: 'var(--warn)' });
-    expect(v.meters[1]).toMatchObject({ display: '11 ok · 4 failed' });
+    expect(v.meters[1]).toMatchObject({ display: '성공 11 · 실패 4' });
     expect(v.meters[1].frac).toBeCloseTo(11 / 15);
     expect(v.meters[2]).toMatchObject({ frac: 0.2, display: '20%' });
     expect(v.meters[3]).toMatchObject({ frac: 0.25, display: '25%' });
-    expect(v.foot).toBe('2 workflows · 3 steps · 3 tools');
+    expect(v.foot).toBe('워크플로 2개 · 단계 3개 · 도구 3개');
   });
 
   test('the step line is one point per day, oldest first, ending today', () => {
     expect(v.series).toHaveLength(14);
-    expect(v.series.at(-1)).toEqual({ label: 'Sep 24', count: 2 });
-    expect(v.series.at(-2)).toEqual({ label: 'Sep 23', count: 1 });
-    expect(v.series[0].label).toBe('Sep 11');
+    expect(v.series.at(-1)).toEqual({ label: '9월 24일', count: 2 });
+    expect(v.series.at(-2)).toEqual({ label: '9월 23일', count: 1 });
+    expect(v.series[0].label).toBe('9월 11일');
     expect(v.runsInWindow).toBe(3);
     expect(v.failedInWindow).toBe(1);
   });
 
   test('the weekday rhythm counts runs in the window, Monday first', () => {
-    expect(v.rhythm.map((r) => r.label)).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    expect(v.rhythm.map((r) => r.label)).toEqual(['월', '화', '수', '목', '금', '토', '일']);
     // Sep 23 2026 is a Wednesday, Sep 24 a Thursday
-    expect(v.rhythm.find((r) => r.label === 'Wed')?.count).toBe(1);
-    expect(v.rhythm.find((r) => r.label === 'Thu')?.count).toBe(2);
+    expect(v.rhythm.find((r) => r.label === '수')?.count).toBe(1);
+    expect(v.rhythm.find((r) => r.label === '목')?.count).toBe(2);
   });
 
   test('process load: human hours per workflow, with unique short labels', () => {
@@ -140,7 +140,7 @@ describe('workflowsVolume', () => {
 
   test('the one insight card is what needs Alex: overdue plus failing', () => {
     expect(v.insight.value).toBe(3);
-    expect(v.insight.headline).toBe('1 overdue · 2 failing.');
+    expect(v.insight.headline).toBe('지연 1 · 실패 중 2.');
     expect(v.insight.body).toBe('Late heartbeat · Broken ingest · Ghost agent');
     expect(v.insight.frac).toBeCloseTo(3 / 5);
   });
@@ -153,16 +153,16 @@ describe('workflowsVolume with nothing to show', () => {
     expect(e.headline).toBe(0);
     expect(e.chips).toEqual([]);
     expect(e.meters.every((m) => m.frac === 0)).toBe(true);
-    expect(e.meters.map((m) => m.display)).toEqual(['none enabled', 'no runs yet', 'no steps mapped', 'no leaks mapped']);
+    expect(e.meters.map((m) => m.display)).toEqual(['활성화된 항목 없음', '아직 실행 없음', '매핑된 단계 없음', '매핑된 누수 없음']);
     expect(e.series.every((s) => s.count === 0)).toBe(true);
     expect(e.insight.value).toBe(0);
     expect(e.insight.frac).toBe(0);
-    expect(e.insight.body).toBe('No scheduled tasks yet.');
+    expect(e.insight.body).toBe('아직 예약된 작업이 없습니다.');
   });
 
   test('all green reads as all green', () => {
     const g = workflowsVolume({ jobs: [job({ runs: 2, ok: 2 })], workflows: [], runs: [], now: NOW });
     expect(g.meters[0]).toMatchObject({ frac: 1, hue: 'var(--ok)' });
-    expect(g.insight.headline).toBe('Every enabled task ran on its slot.');
+    expect(g.insight.headline).toBe('활성화된 모든 작업이 제시간에 실행됐습니다.');
   });
 });

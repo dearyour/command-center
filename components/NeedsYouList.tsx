@@ -41,22 +41,22 @@ const GLYPH_TONE: Record<Classified['glyphTone'], string> = {
 
 /** What the white button says, per kind. "Approve" is not a verb he uses. */
 const PRIMARY: Record<ApprovalKind, { label: string; busy: string; done: string }> = {
-  staged: { label: 'send it', busy: 'sending', done: 'sent' },
-  decision: { label: 'go ahead', busy: 'recording', done: 'called' },
-  gate: { label: 'unblock', busy: 'opening', done: 'open' },
-  request: { label: 'approve', busy: 'recording', done: 'approved' },
-  draft: { label: 'publish', busy: 'publishing', done: 'published' },
-  done: { label: 'ok', busy: 'saving', done: 'ok' },
-  output: { label: 'ok', busy: 'saving', done: 'ok' },
+  staged: { label: '보내기', busy: '보내는 중', done: '보냄' },
+  decision: { label: '진행하기', busy: '기록 중', done: '결정됨' },
+  gate: { label: '차단 해제', busy: '여는 중', done: '열림' },
+  request: { label: '승인', busy: '기록 중', done: '승인됨' },
+  draft: { label: '게시', busy: '게시 중', done: '게시됨' },
+  done: { label: '확인', busy: '저장 중', done: '확인' },
+  output: { label: '확인', busy: '저장 중', done: '확인' },
 };
 
 const when = (iso: string): string => {
   const ms = Date.now() - Date.parse(iso);
   if (!Number.isFinite(ms)) return '';
   const m = Math.floor(ms / 60000);
-  if (m < 60) return `${m}m ago`;
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  return h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`;
+  return h < 24 ? `${h}시간 전` : `${Math.floor(h / 24)}일 전`;
 };
 
 /** Strip the agent's bookkeeping so the row reads as a subject, not a filename. */
@@ -86,8 +86,8 @@ function UnseenDot({ state }: { state: UnseenState }) {
   if (!state) return null;
   return (
     <span
-      title={state === 'new' ? 'New since you last looked' : 'Rewritten since you read it'}
-      aria-label={state === 'new' ? 'new' : 'updated'}
+      title={state === 'new' ? '마지막으로 본 이후 새로 생김' : '읽은 이후 다시 작성됨'}
+      aria-label={state === 'new' ? '새 항목' : '업데이트됨'}
       className={`h-1.5 w-1.5 shrink-0 animate-pulse ${
         state === 'new' ? 'bg-os-accent' : 'bg-os-warn'
       }`}
@@ -149,7 +149,7 @@ function Row({
       <div className="min-w-0">
         <div className="flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.1em] text-os-dim">
           <UnseenDot state={unseen} />
-          <span className="truncate">{c.meta || 'board'}</span>
+          <span className="truncate">{c.meta || '보드'}</span>
           <span className="ml-auto shrink-0">{when(c.modifiedAt)}</span>
         </div>
 
@@ -165,10 +165,10 @@ function Row({
 
         {/* Mock 3a: the Conductor shows its working. */}
         <p className="mt-1 font-mono text-[10px] text-os-dim">
-          why here · {c.why}
+          표시 이유 · {c.why}
           {c.deadline && (
             <span className={c.overdue ? ' font-bold text-os-err' : ' text-os-warn'}>
-              {c.overdue ? ' · past due ' : ' · due '}
+              {c.overdue ? ' · 기한 지남 ' : ' · 기한 '}
               {new Date(c.deadline).toISOString().slice(11, 16)}Z
             </span>
           )}
@@ -191,27 +191,27 @@ function Row({
             {words.label}
           </AsyncButton>
           <AsyncButton
-            run={() => settle('dismissed', 'dismissed')}
+            run={() => settle('dismissed', '넘김')}
             tone="secondary"
-            busyLabel="dismissing"
-            doneLabel="dismissed"
+            busyLabel="넘기는 중"
+            doneLabel="넘김"
           >
-            dismiss
+            넘기기
           </AsyncButton>
           <button
             onClick={() => {
               onSnooze(c);
-              toast.ok(`snoozed 2h · ${text}`, () => onWake(c));
+              toast.ok(`2시간 미룸 · ${text}`, () => onWake(c));
             }}
-            title="Hold it for two hours. Nothing is sent and no agent is told."
+            title="2시간 동안 보류합니다. 아무것도 전송되지 않고 에이전트에게도 알리지 않습니다."
             data-lens="c"
             className="pressable is-dark inline-flex h-[26px] items-center rounded-ctl border border-os-border bg-os-bg px-2.5 font-mono text-[10.5px] font-semibold text-os-muted"
           >
-            snooze
+            미루기
           </button>
           <span className="ml-auto font-mono text-[9.5px] uppercase tracking-[0.1em] text-os-dim">
             {c.label}
-            {c.alsoAs && c.alsoAs.length > 0 && ` · also .${c.alsoAs.join(', .')}`}
+            {c.alsoAs && c.alsoAs.length > 0 && ` · 추가 형식 .${c.alsoAs.join(', .')}`}
           </span>
         </div>
       </div>
@@ -248,7 +248,7 @@ export function NeedsYouList({
 }) {
   const [confirming, setConfirming] = useState(false);
   if (groups === null) {
-    return <p className="font-mono text-[10.5px] text-os-dim">reading the board…</p>;
+    return <p className="font-mono text-[10.5px] text-os-dim">보드를 읽는 중…</p>;
   }
 
   const files = groups.flatMap((g) => g.items).filter((i) => i.kind === 'file');
@@ -264,13 +264,13 @@ export function NeedsYouList({
   return (
     <section data-part="card" className="rounded-panel border border-os-border bg-os-surface">
       <div data-part="card-head" className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-os-border px-4 py-2.5">
-        <Label>Needs you</Label>
+        <Label>확인 필요</Label>
         <span className="font-mono text-[10px] text-os-dim">
-          {queue.length} of {files.length} agent files are waiting on you
-          {overdue > 0 && <span className="text-os-err"> · {overdue} past due</span>}
-          {unread > 0 && <span className="text-os-accent"> · {unread} unread</span>}
-          {held > 0 && <span className="text-os-dim"> · {held} snoozed</span>}
-          {decided.length > 0 && <span className="text-os-dim"> · {decided.length} handled</span>}
+          에이전트 파일 {files.length}개 중 {queue.length}개가 확인을 기다리는 중
+          {overdue > 0 && <span className="text-os-err"> · 기한 지남 {overdue}</span>}
+          {unread > 0 && <span className="text-os-accent"> · 안 읽음 {unread}</span>}
+          {held > 0 && <span className="text-os-dim"> · 미룸 {held}</span>}
+          {decided.length > 0 && <span className="text-os-dim"> · 처리함 {decided.length}</span>}
         </span>
         {boardUrl && (
           <a
@@ -279,7 +279,7 @@ export function NeedsYouList({
             rel="noreferrer"
             className="ml-auto flex items-center gap-1 font-mono text-[10px] text-os-dim linky"
           >
-            open board <ExternalLink className="h-3 w-3" />
+            보드 열기 <ExternalLink className="h-3 w-3" />
           </a>
         )}
         {/* Bulk clear (Alex, 2026-08-22: "bulk clear as well"). DISMISS only:
@@ -296,22 +296,22 @@ export function NeedsYouList({
                 }}
                 className="pressable flex items-center gap-1 rounded-ctl border border-os-err/50 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-os-err hover:bg-os-err/10"
               >
-                <X className="h-3 w-3" /> dismiss all {queue.length}
+                <X className="h-3 w-3" /> {queue.length}개 모두 넘기기
               </button>
               <button
                 onClick={() => setConfirming(false)}
                 className="pressable font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim hover:text-os-text"
               >
-                cancel
+                취소
               </button>
             </span>
           ) : (
             <button
               onClick={() => setConfirming(true)}
-              title="Dismiss everything shown. Nothing is sent."
+              title="표시된 항목을 모두 넘깁니다. 아무것도 전송되지 않습니다."
               className="pressable flex shrink-0 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim hover:text-os-text"
             >
-              <X className="h-3 w-3" /> clear all
+              <X className="h-3 w-3" /> 모두 비우기
             </button>
           ))}
         <button
@@ -319,7 +319,7 @@ export function NeedsYouList({
           disabled={refreshing}
           className="pressable flex shrink-0 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim hover:text-os-text disabled:opacity-40"
         >
-          <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} /> refresh
+          <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} /> 새로고침
         </button>
       </div>
 
@@ -327,7 +327,7 @@ export function NeedsYouList({
       <div className="flex items-center gap-2 px-4 pt-2">
         <span className="h-px flex-1 bg-os-border" />
         <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-os-dim">
-          ranked by the Conductor · people first, then deadlines
+          컨덕터가 정렬 · 사람 먼저, 그다음 마감일 순
         </span>
         <span className="h-px flex-1 bg-os-border" />
       </div>
@@ -335,11 +335,11 @@ export function NeedsYouList({
       {queue.length === 0 ? (
         <div className="m-4 grid place-items-center gap-1 rounded-panel border border-dashed border-os-border px-4 py-8 text-center">
           <span className="text-[18px] text-os-ok">✓</span>
-          <p className="text-[12.5px] font-semibold text-os-text">Nothing needs you.</p>
+          <p className="text-[12.5px] font-semibold text-os-text">확인할 항목이 없습니다.</p>
           <p className="font-mono text-[10px] text-os-dim">
-            the Conductor will surface the next thing here
-            {held > 0 && ` · ${held} snoozed`}
-            {decided.length > 0 && ` · you handled ${decided.length}`}
+            다음 항목이 생기면 컨덕터가 여기에 띄워 줍니다
+            {held > 0 && ` · 미룸 ${held}`}
+            {decided.length > 0 && ` · 처리함 ${decided.length}`}
           </p>
         </div>
       ) : (

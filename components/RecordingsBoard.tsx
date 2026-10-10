@@ -17,7 +17,7 @@ export function RecordingsBoard({ recordings, sources, nowISO }: { recordings: R
             <div className="min-w-0">
               <div className="font-mono text-[11.5px] font-semibold">
                 {s.name}
-                <span className="ml-2 text-[9.5px] uppercase tracking-[0.15em] text-os-dim">{s.id === 'plaud' ? 'in the room' : 'on calls'}</span>
+                <span className="ml-2 text-[9.5px] uppercase tracking-[0.15em] text-os-dim">{s.id === 'plaud' ? '대면 녹음' : '통화 녹음'}</span>
               </div>
               <p className="mt-0.5 truncate text-[10px] leading-snug text-os-dim" title={s.detail}>
                 {s.detail}
@@ -54,18 +54,18 @@ export function RecordingsBoard({ recordings, sources, nowISO }: { recordings: R
                     }`}
                     title={
                       r.brain
-                        ? `filed in the knowledge base via ${r.brain}`
+                        ? `${r.brain}을(를) 통해 지식 베이스에 저장됨`
                         : isPlaudSample(r.title)
-                          ? "one of Plaud's bundled sample recordings; never filed"
-                          : 'not in the knowledge base yet (waiting for Plaud to transcribe, or for the next ingest pass)'
+                          ? 'Plaud에 기본 포함된 샘플 녹음입니다. 저장되지 않습니다'
+                          : '아직 지식 베이스에 없습니다 (Plaud 전사 대기 중이거나 다음 수집 대기 중)'
                     }
                   >
-                    {r.brain ? 'in brain' : isPlaudSample(r.title) ? 'sample' : 'not filed'}
+                    {r.brain ? '브레인에 있음' : isPlaudSample(r.title) ? '샘플' : '미저장'}
                   </span>
                 ) : null}
                 <span className="shrink-0 font-mono text-[10.5px] text-os-muted">{formatDuration(r.durationMinutes)}</span>
                 {r.url ? (
-                  <a href={r.url} target="_blank" rel="noreferrer" className="shrink-0 text-os-dim hover:text-os-accent" aria-label="open recording">
+                  <a href={r.url} target="_blank" rel="noreferrer" className="shrink-0 text-os-dim hover:text-os-accent" aria-label="녹음 열기">
                     <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.7} />
                   </a>
                 ) : null}
@@ -81,8 +81,8 @@ export function RecordingsBoard({ recordings, sources, nowISO }: { recordings: R
 function relative(ms: number): string {
   if (!Number.isFinite(ms) || ms < 0) return '';
   const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${m}m ago`;
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  if (h < 48) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 48) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
 }

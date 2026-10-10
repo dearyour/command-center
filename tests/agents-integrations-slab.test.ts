@@ -28,7 +28,7 @@ describe('/agents in the Brand Deals look', () => {
     expect(panel).toContain("'use client'");
     expect(panel).toMatch(/from '@\/components\/slab'/);
     expect(panel).toContain('grid-cols-[2fr_1fr]');
-    expect(panel).toContain('title="Agent Volume"');
+    expect(panel).toContain('title="에이전트 규모"');
     for (const piece of ['<BigStat', '<MeterStack', '<StepLine', '<DotMatrix']) expect(panel, piece).toContain(piece);
     expect((panel.match(/<InsightCard/g) ?? []).length).toBe(1);
     expect(panel).toMatch(/from '@\/lib\/agents-volume'/);

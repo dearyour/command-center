@@ -6,7 +6,7 @@ import { ArrowUpRight, Maximize2, X } from 'lucide-react';
 
 type Range = 7 | 30 | 60 | 'all';
 const RANGES: Range[] = [7, 30, 60, 'all'];
-const RANGE_LABEL: Record<string, string> = { '7': '7d', '30': '30d', '60': '60d', all: 'All' };
+const RANGE_LABEL: Record<string, string> = { '7': '7일', '30': '30일', '60': '60일', all: '전체' };
 
 type SeriesPoint = { date: string; value: number };
 type LabelledSeries = { key: string; label: string; color: string; points: SeriesPoint[] };
@@ -142,7 +142,7 @@ function AudienceChart({
       )}
       {allPts.length === 0 && (
         <text x={W / 2} y={H / 2} textAnchor="middle" fill="var(--text-3)" fontFamily="var(--font-mono)" fontSize="13">
-          select a channel to plot
+          표시할 채널을 선택하세요
         </text>
       )}
     </svg>
@@ -256,8 +256,8 @@ function AnalyticsModal({
         {/* header */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-os-border px-5 py-3.5">
           <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">social analytics</div>
-            <div className="mt-0.5 text-[15px] font-semibold">Audience &amp; posting consistency</div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">소셜 분석</div>
+            <div className="mt-0.5 text-[15px] font-semibold">오디언스 &amp; 게시 꾸준함</div>
           </div>
           <div className="flex items-center gap-3">
             <RangeChips value={range} onChange={setRange} />
@@ -267,7 +267,7 @@ function AnalyticsModal({
             <button
               onClick={onClose}
               className="pressable flex h-7 w-7 items-center justify-center rounded-sm-t border border-os-border text-os-dim hover:border-os-border-strong hover:text-os-text"
-              aria-label="Close"
+              aria-label="닫기"
             >
               <X className="h-4 w-4" />
             </button>
@@ -283,7 +283,7 @@ function AnalyticsModal({
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {/* combined audience */}
           <div className="mb-2 flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">Combined audience</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">통합 오디언스</span>
             <span className="font-mono text-[10px] text-os-dim">{RANGE_LABEL[String(range)]}</span>
           </div>
           <AudienceChart series={audience} range={range} active={active} className="h-[clamp(220px,34vh,360px)]" />
@@ -307,9 +307,9 @@ function AnalyticsModal({
 
           {/* posting consistency */}
           <div className="mb-2 flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">Posting consistency</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">게시 꾸준함</span>
             <span className="font-mono text-[11px] text-os-muted">
-              {postTotal} posts · {RANGE_LABEL[String(range)]}
+              게시물 {postTotal}개 · {RANGE_LABEL[String(range)]}
             </span>
           </div>
           <PostingChart posting={posting} range={range} active={active} className="h-[clamp(150px,24vh,240px)]" />
@@ -323,7 +323,7 @@ function AnalyticsModal({
                   <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: s.color }} />
                   <span className="min-w-0 flex-1 truncate">{s.label}</span>
                   <span className="font-mono text-os-muted">{total}</span>
-                  <span className="w-16 text-right font-mono text-os-dim">{days}d active</span>
+                  <span className="w-16 text-right font-mono text-os-dim">{days}일 활동</span>
                 </div>
               );
             })}
@@ -357,12 +357,12 @@ export function HomeSocialGraph({ series, posting = [] }: { series: LabelledSeri
     <section className="rounded-lg-t border border-os-border bg-os-surface p-5">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">Social media · audience over time</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">소셜 미디어 · 시간별 오디언스</span>
           <button
             onClick={() => setOpen(true)}
             className="pressable flex items-center gap-1 font-mono text-[11px] text-os-dim hover:text-os-accent"
           >
-            <Maximize2 className="h-3 w-3" /> Expand
+            <Maximize2 className="h-3 w-3" /> 펼치기
           </button>
         </div>
         <RangeChips value={range} onChange={setRange} />
@@ -373,7 +373,7 @@ export function HomeSocialGraph({ series, posting = [] }: { series: LabelledSeri
         <ToggleChips items={chipItems} active={active} onToggle={toggle} />
       </div>
 
-      <button data-lens="r" onClick={() => setOpen(true)} className="pressable block w-full cursor-zoom-in" aria-label="Expand social analytics">
+      <button data-lens="r" onClick={() => setOpen(true)} className="pressable block w-full cursor-zoom-in" aria-label="소셜 분석 펼치기">
         <AudienceChart series={series} range={range} active={active} />
       </button>
 

@@ -24,12 +24,12 @@ const PRIORITY_VAR: Record<number, string> = { 1: 'var(--err)', 2: 'var(--warn)'
 function ago(iso: string, nowISO: string): string {
   const ms = Date.parse(nowISO) - Date.parse(iso);
   if (!Number.isFinite(ms)) return '';
-  if (ms < 60_000) return 'now';
+  if (ms < 60_000) return '방금';
   const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${m}m`;
+  if (m < 60) return `${m}분`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.floor(h / 24)}d`;
+  if (h < 24) return `${h}시간`;
+  return `${Math.floor(h / 24)}일`;
 }
 
 const SOURCE_ICON: Record<SourceKind, typeof Mail> = {
@@ -68,7 +68,7 @@ export function CommsThreePane({
   const selected = rows.find((r) => r.id === selId) ?? null;
 
   /** Optimistic removal — archive and snooze. `prev` is the undo state. */
-  const dismiss = (row: PaneRow, verb: 'Archived' | 'Snoozed') => {
+  const dismiss = (row: PaneRow, verb: '보관함' | '미룸') => {
     const prev = laneState;
     const idx = rows.findIndex((r) => r.id === row.id);
     setLaneState(removeItem(prev, row.id));
@@ -80,7 +80,7 @@ export function CommsThreePane({
   };
 
   const delegate = (row: PaneRow) => {
-    toast.ok(`Delegated to Comms lead — ${row.sender}`);
+    toast.ok(`커뮤니케이션 담당에게 위임 — ${row.sender}`);
   };
 
   const move = (delta: 1 | -1) => {
@@ -93,8 +93,8 @@ export function CommsThreePane({
   const onListKey = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); move(1); }
     else if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); move(-1); }
-    else if (e.key === 'e' && selected) { e.preventDefault(); dismiss(selected, 'Archived'); }
-    else if (e.key === 's' && selected) { e.preventDefault(); dismiss(selected, 'Snoozed'); }
+    else if (e.key === 'e' && selected) { e.preventDefault(); dismiss(selected, '보관함'); }
+    else if (e.key === 's' && selected) { e.preventDefault(); dismiss(selected, '미룸'); }
     else if (e.key === 'd' && selected) { e.preventDefault(); delegate(selected); }
     else if (e.key === 'r' && selected) { e.preventDefault(); setReplyNonce((n) => n + 1); }
     else if (e.key === 'z') { e.preventDefault(); lastUndo.current?.(); }
@@ -138,10 +138,10 @@ export function CommsThreePane({
           })}
           <div className="mt-2 hidden border-t border-os-border pt-2.5 lg:block">
             <p className="font-mono text-[9px] text-os-dim">
-              <kbd className="kbd">1</kbd>-<kbd className="kbd">6</kbd> switch source
+              <kbd className="kbd">1</kbd>-<kbd className="kbd">6</kbd> 소스 전환
             </p>
             <p className="mt-2 font-mono text-[9px] leading-relaxed text-os-dim">
-              Slack · channels moved under the Slack source. Recordings has its own tab.
+              Slack · 채널은 Slack 소스 아래로 옮겼습니다. 녹음은 별도 탭에 있습니다.
             </p>
           </div>
         </div>
@@ -165,25 +165,25 @@ export function CommsThreePane({
             >
               <div className="sticky top-0 z-[1] flex items-baseline justify-between border-b border-os-border bg-os-surface px-3 py-2">
                 <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.18em] text-os-muted">
-                  {source?.name ?? 'All sources'}
+                  {source?.name ?? '모든 소스'}
                 </span>
-                <span className="font-mono text-[9px] text-os-dim">newest first</span>
+                <span className="font-mono text-[9px] text-os-dim">최신순</span>
               </div>
               {rows.length === 0 ? (
                 <div className="px-4 py-5 font-mono text-[10.5px] leading-relaxed text-os-dim">
                   {source && source.state && source.state !== 'connected' ? (
-                    <p>{source.name} is not connected. Check /integrations.</p>
+                    <p>{source.name}이(가) 연결되지 않았습니다. /integrations 에서 확인하세요.</p>
                   ) : (
                     <>
-                      <p className="text-os-muted">{source?.name ?? 'This source'} is clear.</p>
-                      <p className="mt-1">Everything here was archived, snoozed or delegated away.</p>
+                      <p className="text-os-muted">{source?.name ?? '이 소스'}는 비어 있습니다.</p>
+                      <p className="mt-1">모든 항목이 보관, 미룸 또는 위임 처리되었습니다.</p>
                       <div className="mt-3 flex items-center gap-2">
                         {lastUndo.current ? (
                           <button
                             onClick={() => lastUndo.current?.()}
                             className="pressable rounded-ctl border border-os-border px-2 py-1 text-[10px] text-os-muted"
                           >
-                            undo last
+                            마지막 작업 취소
                           </button>
                         ) : null}
                         {sourceId !== 'all' ? (
@@ -191,7 +191,7 @@ export function CommsThreePane({
                             onClick={() => { setSourceId('all'); setSelId(null); }}
                             className="pressable rounded-ctl border border-os-border px-2 py-1 text-[10px] text-os-muted"
                           >
-                            all sources →
+                            모든 소스 →
                           </button>
                         ) : null}
                       </div>
@@ -232,7 +232,7 @@ export function CommsThreePane({
             </div>
 
             {/* Reader */}
-            <Reader row={selected} laneState={laneState} replyNonce={replyNonce} nowISO={nowISO} onArchive={(r) => dismiss(r, 'Archived')} onSnooze={(r) => dismiss(r, 'Snoozed')} onDelegate={delegate} />
+            <Reader row={selected} laneState={laneState} replyNonce={replyNonce} nowISO={nowISO} onArchive={(r) => dismiss(r, '보관함')} onSnooze={(r) => dismiss(r, '미룸')} onDelegate={delegate} />
           </>
         )}
       </div>
@@ -244,7 +244,7 @@ function ChannelGrid({ channels }: { channels: SlackChannel[] }) {
   if (channels.length === 0) {
     return (
       <p className="rounded-tile border border-dashed border-os-border px-3 py-3 font-mono text-[10.5px] text-os-dim">
-        No channels imported — connect the Slack bot token to pull every current channel.
+        가져온 채널이 없습니다 — Slack 봇 토큰을 연결하면 현재 채널을 모두 불러옵니다.
       </p>
     );
   }
@@ -265,7 +265,7 @@ function ChannelGrid({ channels }: { channels: SlackChannel[] }) {
             </span>
           </div>
           <p className="mt-1 truncate text-[10px] leading-snug text-os-dim">
-            {c.topic || (c.isMember ? 'member' : 'not a member')}
+            {c.topic || (c.isMember ? '참여 중' : '참여 안 함')}
           </p>
         </div>
       ))}
@@ -325,7 +325,7 @@ function Reader({
       if (res.ok && parsed.ok !== false) setSendState({ phase: 'sent' });
       else setSendState({ phase: 'error', detail: parsed.error ?? `HTTP ${res.status}` });
     } catch {
-      setSendState({ phase: 'error', detail: 'network error' });
+      setSendState({ phase: 'error', detail: '네트워크 오류' });
     }
   };
 
@@ -333,16 +333,16 @@ function Reader({
     return (
       <div className="flex min-h-[320px] flex-col items-center justify-center rounded-tile border border-os-border bg-os-surface px-6 py-8 text-center">
         <Inbox className="mb-2 h-5 w-5 text-os-dim" strokeWidth={1.5} />
-        <p className="font-mono text-[10.5px] leading-relaxed text-os-dim">Select a message to read it here.</p>
+        <p className="font-mono text-[10.5px] leading-relaxed text-os-dim">메시지를 선택하면 여기서 읽을 수 있습니다.</p>
         <div className="mt-3 flex max-w-[280px] flex-wrap items-center justify-center gap-x-3 gap-y-1.5 font-mono text-[9.5px] text-os-dim">
-          <span><kbd className="kbd">j</kbd> <kbd className="kbd">k</kbd> move</span>
-          <span><kbd className="kbd">e</kbd> archive</span>
-          <span><kbd className="kbd">s</kbd> snooze</span>
-          <span><kbd className="kbd">d</kbd> delegate</span>
-          <span><kbd className="kbd">r</kbd> reply</span>
-          <span><kbd className="kbd">z</kbd> undo</span>
-          <span><kbd className="kbd">1</kbd>-<kbd className="kbd">6</kbd> source</span>
-          <span><kbd className="kbd">esc</kbd> clear</span>
+          <span><kbd className="kbd">j</kbd> <kbd className="kbd">k</kbd> 이동</span>
+          <span><kbd className="kbd">e</kbd> 보관</span>
+          <span><kbd className="kbd">s</kbd> 미루기</span>
+          <span><kbd className="kbd">d</kbd> 위임</span>
+          <span><kbd className="kbd">r</kbd> 답장</span>
+          <span><kbd className="kbd">z</kbd> 실행 취소</span>
+          <span><kbd className="kbd">1</kbd>-<kbd className="kbd">6</kbd> 소스</span>
+          <span><kbd className="kbd">esc</kbd> 선택 해제</span>
         </div>
       </div>
     );
@@ -359,7 +359,7 @@ function Reader({
         </div>
         <p className="mt-1 truncate text-[13px] font-semibold">{row.sender}</p>
         <p className="mt-0.5 truncate font-mono text-[9.5px] text-os-dim">
-          from {row.laneName}
+          보낸 곳 {row.laneName}
           {row.replyTo ? ` · ${row.replyTo}` : ''}
         </p>
       </div>
@@ -369,14 +369,14 @@ function Reader({
         {composing ? (
           <div className="mt-3 rounded-tile border border-os-border bg-os-bg p-2.5">
             <p className="mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.15em] text-os-dim">
-              to {row.replyTo} · re: {row.preview.slice(0, 60)}
+              받는 사람 {row.replyTo} · 답장: {row.preview.slice(0, 60)}
             </p>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={5}
               autoFocus
-              placeholder="Write the reply…"
+              placeholder="답장을 작성하세요…"
               className="w-full resize-y rounded-ctl border border-os-border bg-os-surface px-2.5 py-2 text-[12px] leading-relaxed text-os-text outline-none placeholder:text-os-dim focus:border-os-border-strong"
             />
             <div className="mt-2 flex items-center gap-2">
@@ -386,16 +386,16 @@ function Reader({
                 className="pressable flex items-center gap-1.5 rounded-ctl border border-os-border bg-os-surface px-3 py-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-os-accent hover:border-os-border-strong disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Send className="h-3 w-3" />
-                {sendState?.phase === 'sending' ? 'sending…' : 'send'}
+                {sendState?.phase === 'sending' ? '보내는 중…' : '보내기'}
               </button>
               <button
                 onClick={() => setComposing(false)}
                 className="pressable font-mono text-[10.5px] uppercase tracking-widest text-os-dim hover:text-os-text"
               >
-                cancel
+                취소
               </button>
-              {sendState?.phase === 'sent' && <Badge tone="ok">sent</Badge>}
-              {sendState?.phase === 'error' && <Badge tone="err">{sendState.detail ?? 'failed'}</Badge>}
+              {sendState?.phase === 'sent' && <Badge tone="ok">보냄</Badge>}
+              {sendState?.phase === 'error' && <Badge tone="err">{sendState.detail ?? '실패'}</Badge>}
             </div>
           </div>
         ) : null}
@@ -405,34 +405,34 @@ function Reader({
         <button
           onClick={() => setComposing(true)}
           disabled={!canReply}
-          title={canReply ? `Reply to ${row.replyTo}` : 'No reply address on this message'}
+          title={canReply ? `${row.replyTo}에게 답장` : '이 메시지에는 답장 주소가 없습니다'}
           className="pressable flex items-center gap-1.5 rounded-ctl bg-os-text text-os-ink px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <CornerUpLeft className="h-3 w-3" />
-          Reply
+          답장
         </button>
         <button
           onClick={() => onArchive(row)}
           className="pressable flex items-center gap-1.5 rounded-ctl px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest text-os-dim hover:text-os-text"
         >
           <Archive className="h-3 w-3" />
-          archive
+          보관
         </button>
         <button
           onClick={() => onDelegate(row)}
           className="pressable flex items-center gap-1.5 rounded-ctl px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest text-os-dim hover:text-os-text"
         >
           <UserPlus className="h-3 w-3" />
-          delegate
+          위임
         </button>
         <button
           onClick={() => onSnooze(row)}
           className="pressable flex items-center gap-1.5 rounded-ctl px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest text-os-dim hover:text-os-text"
         >
           <Clock className="h-3 w-3" />
-          snooze
+          미루기
         </button>
-        {row.unread ? <Badge tone="accent">unread</Badge> : null}
+        {row.unread ? <Badge tone="accent">안 읽음</Badge> : null}
       </div>
     </div>
   );

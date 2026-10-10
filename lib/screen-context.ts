@@ -34,11 +34,11 @@ export type FunnelContextInput = {
 /** Pure formatter — what the Conductor reads about the funnel screen. */
 export function describeFunnelContext(d: FunnelContextInput): string {
   return [
-    `Funnel: ${d.clients} active leads across ${d.sources}; ${d.converted} converted ($${Math.round(d.revenueUsd).toLocaleString('en-US')}); ${d.archived} archived (>90d quiet).`,
-    `Current stage counts — ${d.stageCounts.map(([label, n]) => `${label}: ${n}`).join(' · ')}.`,
-    `${d.decaying} fading toward the 90-day archive (quiet >21d).`,
+    `퍼널: ${d.sources} 기준 활성 리드 ${d.clients}명, 전환 ${d.converted}명 ($${Math.round(d.revenueUsd).toLocaleString('en-US')}), 보관 ${d.archived}명 (90일 넘게 조용함).`,
+    `현재 단계별 인원 — ${d.stageCounts.map(([label, n]) => `${label}: ${n}`).join(' · ')}.`,
+    `${d.decaying}명이 90일 보관함 쪽으로 사라지는 중 (21일 넘게 조용함).`,
     d.reddest.length > 0
-      ? `Most at risk: ${d.reddest.map((r) => `${r.name} (${r.days}d quiet)`).join(', ')}.`
+      ? `가장 위험: ${d.reddest.map((r) => `${r.name} (${r.days}일 조용함)`).join(', ')}.`
       : '',
   ]
     .filter(Boolean)
@@ -71,8 +71,8 @@ async function funnelContext(): Promise<string> {
           ghlLive?.journeys.length ? `GHL ${ghlLive.total}` : null,
         ]
           .filter(Boolean)
-          .join(' + ') + ' (live)'
-      : 'seeded demo data';
+          .join(' + ') + ' (실시간)'
+      : '샘플 데모 데이터';
   return describeFunnelContext({
     clients: summary.clients,
     converted: summary.converted,
@@ -97,96 +97,96 @@ export type QuickAction = { label: string; prompt: string };
  */
 const QUICK_BY_ROUTE: [string, QuickAction[]][] = [
   ['/funnel', [
-    { label: 'Who is going cold?', prompt: 'Which leads in the funnel are fading toward the 90-day archive, and what is the next touch for each?' },
-    { label: 'Stage bottleneck', prompt: 'Which funnel stage is holding the most clients right now, and why are they stuck there?' },
-    { label: 'Revenue this month', prompt: 'What has the funnel converted this month, and how does that compare to the pipeline still open?' },
-    { label: 'Draft a follow-up', prompt: 'Draft a follow-up message for the quietest lead in the funnel. Do not send it, show it to me first.' },
+    { label: '식어 가는 리드는?', prompt: '퍼널에서 90일 보관함 쪽으로 사라져 가는 리드는 누구이고, 각각 다음에 어떤 연락을 하면 좋을까?' },
+    { label: '단계 병목', prompt: '지금 고객이 가장 많이 몰려 있는 퍼널 단계는 어디고, 왜 거기서 막혀 있어?' },
+    { label: '이번 달 매출', prompt: '이번 달 퍼널에서 전환된 매출은 얼마고, 아직 열려 있는 파이프라인과 비교하면 어때?' },
+    { label: '후속 메시지 초안', prompt: '퍼널에서 가장 조용한 리드에게 보낼 후속 메시지 초안을 써 줘. 보내지 말고 먼저 보여 줘.' },
   ]],
   ['/brain', [
-    { label: 'What do you know?', prompt: 'Summarize what G-Brain currently knows about my business: the biggest clusters and where the coverage is thin.' },
-    { label: 'Query the brain', prompt: 'Run a G-Brain query and show me the top hits with their sources.' },
-    { label: 'Gaps in the store', prompt: 'Which pillars have the fewest brain pages, and what should I capture to fill them?' },
-    { label: 'Capture a note', prompt: 'Capture a note into G-Brain for me. Ask me what it should say first.' },
+    { label: '뭘 알고 있어?', prompt: 'G-Brain이 지금 내 사업에 대해 알고 있는 것을 요약해 줘: 가장 큰 묶음과 정보가 부족한 곳.' },
+    { label: '브레인 검색', prompt: 'G-Brain 검색을 실행해서 상위 결과를 출처와 함께 보여 줘.' },
+    { label: '저장소 빈틈', prompt: '브레인 페이지가 가장 적은 축은 어디고, 그걸 채우려면 뭘 기록해야 해?' },
+    { label: '메모 저장', prompt: 'G-Brain에 메모를 저장해 줘. 먼저 어떤 내용인지 물어봐.' },
   ]],
   ['/agents', [
-    { label: 'What is running?', prompt: 'Which agents are running right now, which are blocked, and which have not run today?' },
-    { label: 'Last run failures', prompt: 'Show me every agent whose last run failed, with the error and what it would take to fix.' },
-    { label: 'Create board task', prompt: 'Create a board task for the work I am about to describe. Ask me for the title first.' },
-    { label: 'Delegate to a pillar', prompt: 'Delegate this screen’s open work to the right pillar and tell me who picked it up.' },
+    { label: '뭐가 돌고 있어?', prompt: '지금 실행 중인 에이전트, 막힌 에이전트, 오늘 한 번도 안 돈 에이전트를 알려 줘.' },
+    { label: '최근 실행 실패', prompt: '마지막 실행이 실패한 에이전트를 모두 오류 내용과 고치는 방법과 함께 보여 줘.' },
+    { label: '보드 작업 만들기', prompt: '내가 설명할 일로 보드 작업을 만들어 줘. 먼저 제목을 물어봐.' },
+    { label: '축에 위임', prompt: '이 화면의 남은 일을 알맞은 축에 위임하고 누가 맡았는지 알려 줘.' },
   ]],
   ['/org', [
-    { label: 'Who owns what?', prompt: 'Walk the org: which pillar owns which workers, and where is a seat doing nothing?' },
-    { label: 'Broadcast draft', prompt: 'Draft a broadcast to every pillar about today’s priority. Show it to me before sending.' },
-    { label: 'Idle seats', prompt: 'Which agent seats have been idle longest, and what should they be pointed at?' },
-    { label: 'Delegate to a pillar', prompt: 'Delegate a task to one pillar and tell me which agent took it.' },
+    { label: '누가 뭘 맡아?', prompt: '조직을 훑어 줘: 어느 축이 어떤 작업자를 맡고 있고, 아무것도 안 하는 자리는 어디야?' },
+    { label: '일괄 전송 초안', prompt: '오늘의 우선순위에 대해 모든 축에 보낼 일괄 메시지 초안을 써 줘. 보내기 전에 보여 줘.' },
+    { label: '놀고 있는 자리', prompt: '가장 오래 놀고 있는 에이전트 자리는 어디고, 무슨 일을 맡기면 좋을까?' },
+    { label: '축에 위임', prompt: '한 축에 작업을 위임하고 어떤 에이전트가 맡았는지 알려 줘.' },
   ]],
   ['/comms', [
-    { label: 'What needs a reply?', prompt: 'Across every inbox and Slack lane, what is waiting on a reply from me?' },
-    { label: 'Today’s digest', prompt: 'Summarize today’s comms: who reached out, what they wanted, what is unanswered.' },
-    { label: 'Draft the hardest one', prompt: 'Draft a reply to the message that needs the most thought. Show it to me, do not send it.' },
-    { label: 'Recording action items', prompt: 'Pull the action items out of the most recent call recordings.' },
+    { label: '답장할 것은?', prompt: '모든 받은편지함과 Slack 레인에서 내 답장을 기다리는 게 뭐야?' },
+    { label: '오늘 요약', prompt: '오늘의 커뮤니케이션을 요약해 줘: 누가 연락했고, 뭘 원했고, 뭐가 답장 안 됐는지.' },
+    { label: '가장 어려운 답장 초안', prompt: '가장 고민이 필요한 메시지에 대한 답장 초안을 써 줘. 보내지 말고 보여 줘.' },
+    { label: '녹음 실행 항목', prompt: '가장 최근 통화 녹음에서 해야 할 일들을 뽑아 줘.' },
   ]],
   ['/social', [
-    { label: 'What is working?', prompt: 'Which posts drove the most growth in the last 30 days, and what do they have in common?' },
-    { label: 'Follower delta', prompt: 'How did each account’s follower count move this month?' },
-    { label: 'Unanswered DMs', prompt: 'Which DMs are still waiting on a reply?' },
-    { label: 'Draft the next post', prompt: 'Draft the next post in my format based on what performed best recently.' },
+    { label: '뭐가 잘 돼?', prompt: '최근 30일간 성장을 가장 많이 이끈 게시물은 뭐고, 공통점은 뭐야?' },
+    { label: '팔로워 변화', prompt: '이번 달 각 계정의 팔로워 수는 어떻게 변했어?' },
+    { label: '답 안 한 DM', prompt: '아직 답장을 기다리는 DM은 뭐야?' },
+    { label: '다음 게시물 초안', prompt: '최근 가장 성과가 좋았던 것을 바탕으로 내 형식에 맞춰 다음 게시물 초안을 써 줘.' },
   ]],
   ['/finances', [
-    { label: 'Cash this month', prompt: 'What came in this month across every processor, and how does it compare to last month?' },
-    { label: 'Outstanding invoices', prompt: 'What is invoiced and unpaid right now, and how old is each one?' },
-    { label: 'Where is it going?', prompt: 'Break down this month’s spend by category and flag anything unusual.' },
-    { label: 'Create a payment link', prompt: 'Create a Stripe payment link. Ask me the amount and what it is for first.' },
+    { label: '이번 달 현금', prompt: '이번 달 모든 결제 수단으로 들어온 돈은 얼마고, 지난달과 비교하면 어때?' },
+    { label: '미수금 청구서', prompt: '지금 청구했는데 아직 안 들어온 건 뭐고, 각각 얼마나 지났어?' },
+    { label: '돈이 어디로 가?', prompt: '이번 달 지출을 카테고리별로 나누고 이상한 게 있으면 표시해 줘.' },
+    { label: '결제 링크 만들기', prompt: 'Stripe 결제 링크를 만들어 줘. 먼저 금액과 용도를 물어봐.' },
   ]],
   ['/trading', [
-    { label: 'How is the sleeve?', prompt: 'How is the agentic sleeve doing today, and what did the Markets Agent reason about it?' },
-    { label: 'Open orders', prompt: 'What orders are open right now, and are any of them stale?' },
-    { label: 'Biggest movers', prompt: 'Which positions moved most today and why?' },
-    { label: 'Explain a trade', prompt: 'Explain the most recent trade in the log: the thesis and whether it played out.' },
+    { label: '슬리브 상황은?', prompt: '오늘 에이전트 운용 슬리브는 어떻고, 마켓 에이전트는 어떻게 판단했어?' },
+    { label: '미체결 주문', prompt: '지금 열려 있는 주문은 뭐고, 오래 방치된 건 있어?' },
+    { label: '가장 크게 움직인 종목', prompt: '오늘 가장 크게 움직인 포지션은 뭐고 이유는 뭐야?' },
+    { label: '거래 설명', prompt: '로그의 가장 최근 거래를 설명해 줘: 근거와 결과가 맞았는지.' },
   ]],
   ['/integrations', [
-    { label: 'What is down?', prompt: 'Which connections are not connected right now, and what does each one need?' },
-    { label: 'Explain a failure', prompt: 'Take the most broken connector and explain exactly why it is failing.' },
-    { label: 'Freshest data', prompt: 'Which connectors have the stalest data, and how stale?' },
-    { label: 'Create board task', prompt: 'Create a board task to fix the connector that is most worth fixing.' },
+    { label: '뭐가 끊겼어?', prompt: '지금 연결 안 된 연결은 뭐고, 각각 뭐가 필요해?' },
+    { label: '실패 원인 설명', prompt: '가장 심하게 고장 난 커넥터를 골라서 정확히 왜 실패하는지 설명해 줘.' },
+    { label: '데이터 신선도', prompt: '데이터가 가장 오래된 커넥터는 어디고, 얼마나 오래됐어?' },
+    { label: '보드 작업 만들기', prompt: '가장 고칠 가치가 있는 커넥터를 고치는 보드 작업을 만들어 줘.' },
   ]],
   ['/roadmap', [
-    { label: 'What is next?', prompt: 'What is the next item on the roadmap that is actually unblocked?' },
-    { label: 'Slipping items', prompt: 'Which roadmap items have slipped their quarter, and what is holding each one?' },
-    { label: 'This quarter', prompt: 'Summarize this quarter: shipped, in flight, and at risk.' },
-    { label: 'Create board task', prompt: 'Turn a roadmap item into a board task. Ask me which one first.' },
+    { label: '다음은 뭐야?', prompt: '로드맵에서 실제로 막힘 없이 진행 가능한 다음 항목은 뭐야?' },
+    { label: '밀리는 항목', prompt: '분기를 넘긴 로드맵 항목은 뭐고, 각각 뭐 때문에 막혀 있어?' },
+    { label: '이번 분기', prompt: '이번 분기를 요약해 줘: 출시한 것, 진행 중인 것, 위험한 것.' },
+    { label: '보드 작업 만들기', prompt: '로드맵 항목 하나를 보드 작업으로 만들어 줘. 먼저 어떤 걸로 할지 물어봐.' },
   ]],
   ['/content', [
-    { label: 'What should I post?', prompt: 'Based on what has performed, what should the next piece of content be?' },
-    { label: 'Open drafts', prompt: 'Which content pieces are drafted but never shipped?' },
-    { label: 'Lead magnet pull', prompt: 'Which lead magnets are actually converting, and which are dead weight?' },
-    { label: 'Draft a caption', prompt: 'Draft a caption in my format with three hashtags. Ask me the topic first.' },
+    { label: '뭘 올릴까?', prompt: '성과가 좋았던 것을 바탕으로 다음 콘텐츠는 뭐가 좋을까?' },
+    { label: '남은 초안', prompt: '초안만 쓰고 발행하지 않은 콘텐츠는 뭐야?' },
+    { label: '리드 마그넷 성과', prompt: '실제로 전환되는 리드 마그넷은 뭐고, 쓸모없는 건 뭐야?' },
+    { label: '캡션 초안', prompt: '해시태그 3개를 넣어서 내 형식으로 캡션 초안을 써 줘. 먼저 주제를 물어봐.' },
   ]],
   ['/workflows', [
-    { label: 'What fires next?', prompt: 'Which scheduled workflow fires next, and what does it do?' },
-    { label: 'Recent failures', prompt: 'Which workflow runs failed recently, and what was the error?' },
-    { label: 'Run one now', prompt: 'Which workflow is worth running right now, and why?' },
-    { label: 'Create board task', prompt: 'Create a board task for a workflow that needs fixing.' },
+    { label: '다음 실행은?', prompt: '다음에 실행될 예약 워크플로는 뭐고, 무슨 일을 해?' },
+    { label: '최근 실패', prompt: '최근 실패한 워크플로 실행은 뭐고, 오류는 뭐였어?' },
+    { label: '지금 하나 실행', prompt: '지금 실행할 가치가 있는 워크플로는 뭐고, 왜?' },
+    { label: '보드 작업 만들기', prompt: '고쳐야 하는 워크플로에 대한 보드 작업을 만들어 줘.' },
   ]],
   ['/tasks', [
-    { label: 'What needs me?', prompt: 'Which tasks are actually waiting on me rather than on an agent?' },
-    { label: 'Blocked lane', prompt: 'What is blocked, and what is each one blocked on?' },
-    { label: 'Create board task', prompt: 'Create a board task. Ask me the title and the owner first.' },
-    { label: 'Delegate to a pillar', prompt: 'Take the oldest open task and delegate it to the right pillar.' },
+    { label: '내가 할 일은?', prompt: '에이전트가 아니라 실제로 나를 기다리는 작업은 뭐야?' },
+    { label: '막힌 레인', prompt: '뭐가 막혀 있고, 각각 뭐 때문에 막혀 있어?' },
+    { label: '보드 작업 만들기', prompt: '보드 작업을 만들어 줘. 먼저 제목과 담당자를 물어봐.' },
+    { label: '축에 위임', prompt: '가장 오래된 열린 작업을 알맞은 축에 위임해 줘.' },
   ]],
   ['/doctor', [
-    { label: 'What is broken?', prompt: 'Walk the doctor checks and tell me what is genuinely broken versus merely noisy.' },
-    { label: 'Explain a check', prompt: 'Explain the worst failing check: what it measures and what fixes it.' },
-    { label: 'Since when?', prompt: 'How long has each failing check been failing?' },
-    { label: 'Create board task', prompt: 'Create a board task for the failure most worth fixing today.' },
+    { label: '뭐가 고장 났어?', prompt: '진단 항목을 훑어보고 진짜 고장 난 것과 그냥 시끄러운 것을 구분해 줘.' },
+    { label: '진단 항목 설명', prompt: '가장 심하게 실패하는 진단 항목을 설명해 줘: 무엇을 측정하고 어떻게 고치는지.' },
+    { label: '언제부터?', prompt: '실패 중인 각 진단 항목은 얼마나 오래 실패하고 있어?' },
+    { label: '보드 작업 만들기', prompt: '오늘 가장 고칠 가치가 있는 실패에 대한 보드 작업을 만들어 줘.' },
   ]],
 ];
 
 const QUICK_DEFAULT: QuickAction[] = [
-  { label: 'Summarize this screen', prompt: 'Summarize what I am looking at on this screen and what stands out.' },
-  { label: 'What needs me?', prompt: 'What needs my attention right now across the OS?' },
-  { label: 'Create board task', prompt: 'Create a board task for the work on this screen. Ask me the title first.' },
-  { label: 'Delegate to a pillar', prompt: 'Delegate the work on this screen to the right pillar and tell me who picked it up.' },
+  { label: '이 화면 요약', prompt: '지금 보고 있는 이 화면을 요약하고 눈에 띄는 점을 알려 줘.' },
+  { label: '확인할 일은?', prompt: '지금 OS 전체에서 내가 신경 써야 할 일이 뭐야?' },
+  { label: '보드 작업 만들기', prompt: '이 화면의 일로 보드 작업을 만들어 줘. 먼저 제목을 물어봐.' },
+  { label: '축에 위임', prompt: '이 화면의 일을 알맞은 축에 위임하고 누가 맡았는지 알려 줘.' },
 ];
 
 /** Four openers for the screen at `path`; unknown routes get the generic set. */
@@ -214,7 +214,7 @@ export async function screenContextFor(
       return {
         title,
         quickActions,
-        context: `${title}: agent roster — ${agents.length} agents (${active} active) across ${db.departments.all().length} pillars.`,
+        context: `${title}: 에이전트 명단 — 축 ${db.departments.all().length}개에 에이전트 ${agents.length}개 (가동 중 ${active}개).`,
       };
     }
     if (clean.startsWith('/integrations')) {
@@ -222,14 +222,14 @@ export async function screenContextFor(
       return {
         title,
         quickActions,
-        context: `${title}: connections board — ${tools.length} integrations tracked (${tools.filter((t) => t.status === 'connected').length} connected).`,
+        context: `${title}: 연결 보드 — 추적 중인 연동 ${tools.length}개 (연결됨 ${tools.filter((t) => t.status === 'connected').length}개).`,
       };
     }
     if (clean.startsWith('/roadmap')) {
-      return { title, context: `${title}: ${db.roadmap.all().length} roadmap items across quarters.`, quickActions };
+      return { title, context: `${title}: 분기별 로드맵 항목 ${db.roadmap.all().length}개.`, quickActions };
     }
-    return { title, context: `${title} view of Command Center.`, quickActions };
+    return { title, context: `커맨드 센터의 ${title} 화면.`, quickActions };
   } catch {
-    return { title, context: `${title} view of Command Center.`, quickActions };
+    return { title, context: `커맨드 센터의 ${title} 화면.`, quickActions };
   }
 }

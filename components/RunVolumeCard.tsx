@@ -11,7 +11,7 @@ const HUE = 'var(--send-activity)';
 
 const fmtShort = (iso: string) =>
   new Date(`${iso}T00:00:00Z`)
-    .toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+    .toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' })
     .toLowerCase();
 
 /** Agent-run volume from the real run log, as the Brand Deals hero card
@@ -31,12 +31,12 @@ export function RunVolumeCard({ data, i = 1 }: { data: DayPoint[]; i?: number })
   return (
     <SlabCard
       i={i}
-      title="Agent Run Volume"
-      sub={`${range}d`}
+      title="에이전트 실행 규모"
+      sub={`${range}일`}
       className="flex flex-col"
       action={RANGES.map((r) => (
         <button key={r} className={chipClass(range === r)} onClick={() => setRange(r)} aria-pressed={range === r}>
-          {r}d
+          {r}일
         </button>
       ))}
     >
@@ -44,8 +44,8 @@ export function RunVolumeCard({ data, i = 1 }: { data: DayPoint[]; i?: number })
         <BigStat
           key={range}
           value={windowRuns}
-          chips={[{ tone: 'accent', text: `${activeDays} of ${shown.length} days active` }]}
-          caption={`agent runs in the last ${range} days, from the real run log`}
+          chips={[{ tone: 'accent', text: `${shown.length}일 중 ${activeDays}일 활동` }]}
+          caption={`실제 실행 로그 기준 최근 ${range}일간 에이전트 실행`}
         />
         <div className="mt-5 flex flex-1 items-end gap-[3px] border-t border-os-border pt-5" style={{ minHeight: 190 }}>
           {shown.map((p, k) => {
@@ -76,8 +76,8 @@ export function RunVolumeCard({ data, i = 1 }: { data: DayPoint[]; i?: number })
 
         <div className="mt-2 flex justify-between font-mono text-[10.5px] text-os-dim">
           <span>{fmtShort(shown[0].date)}</span>
-          <span className={hot ? 'text-os-text' : ''}>{hot ? `${hot.count} runs · ${fmtShort(hot.date)}` : 'hover a day'}</span>
-          <span>today</span>
+          <span className={hot ? 'text-os-text' : ''}>{hot ? `${hot.count}회 · ${fmtShort(hot.date)}` : '날짜에 마우스를 올려 보세요'}</span>
+          <span>오늘</span>
         </div>
       </div>
     </SlabCard>

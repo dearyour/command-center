@@ -77,7 +77,7 @@ describe('the trading slab', () => {
     expect(board).toMatch(/grid-cols-\[2fr_1fr\]/);
     const panel = read('components/AgentReasoning.tsx');
     expect(panel).toMatch(/overflow-y-auto/);
-    expect(panel).toMatch(/No analysis pushed yet/);
+    expect(panel).toMatch(/아직 올라온 분석이 없습니다/);
   });
 
   test('the reasoning panel filters rows by verdict chips derived from the run', () => {
@@ -86,7 +86,7 @@ describe('the trading slab', () => {
     expect(panel).toMatch(/Chip/);
     expect(panel).toMatch(/'all'/);
     expect(panel).toMatch(/new Set|verdicts/);
-    expect(panel).toMatch(/No .* rows|nothing marked/i);
+    expect(panel).toMatch(/항목이 없습니다/);
   });
 
   test('open orders say who placed them, agent vs you, in the same badge language as the sleeve', () => {

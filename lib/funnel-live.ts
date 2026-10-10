@@ -116,7 +116,7 @@ export function mapAttioDeals(
     if (!canonical) continue; // future/renamed stages must never crash the space
 
     const id = `attio-${deal.id.record_id}`;
-    const name = deal.values.name?.[0]?.value ?? 'Unnamed deal';
+    const name = deal.values.name?.[0]?.value ?? '이름 없는 거래';
     const createdAt = day(deal.created_at, '1970-01-01');
     const stageSince = day(deal.values.stage?.[0]?.active_from, deal.created_at);
     const hubIdx = FUNNEL_STAGES.findIndex((s) => s.id === canonical);
@@ -135,10 +135,10 @@ export function mapAttioDeals(
       channel: i === hubIdx && converted ? 'checkout' : 'crm',
       label:
         i === 0
-          ? 'Deal created in Attio'
+          ? 'Attio에서 거래 생성'
           : i === hubIdx
-            ? `Attio stage: ${title}`
-            : `Progressed to ${s.label}`,
+            ? `Attio 단계: ${title}`
+            : `${s.label} 단계로 진행`,
       source: 'attio' as const,
       at: i === hubIdx ? stageSince : createdAt,
     }));

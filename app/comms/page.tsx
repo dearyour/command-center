@@ -58,14 +58,14 @@ export default async function CommsPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="by source · inboxes · whatsapp · slack · calendar · recorder"
-        title="Comms"
+        eyebrow="채널별 · 받은편지함 · whatsapp · slack · 캘린더 · 녹음기"
+        title="커뮤니케이션"
         meta={vol.meta}
         right={
           <>
-            <Badge tone="accent">{vol.headline} unread</Badge>
+            <Badge tone="accent">안 읽음 {vol.headline}</Badge>
             <a href="#inbox" className={PILL}>
-              Open inbox
+              받은편지함 열기
             </a>
           </>
         }
@@ -73,7 +73,7 @@ export default async function CommsPage() {
 
       {/* Hero row: the sources + the Deal Volume card worn by comms numbers */}
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={1} title="Sources" sub={`${connectedSources}/${sources.length} connected`} className="pb-6">
+        <SlabCard i={1} title="소스" sub={`${connectedSources}/${sources.length} 연결됨`} className="pb-6">
           <div className="mt-4 grid gap-3 px-6 sm:grid-cols-2 xl:grid-cols-3">
             {sources.map((source) => {
               const Icon = SOURCE_ICON[source.id] ?? Mail;
@@ -86,7 +86,7 @@ export default async function CommsPage() {
                     <span className="ml-auto flex items-center gap-2">
                       {ok && <Dot state="connected" pulse />}
                       <Badge tone={ok ? 'ok' : source.state === 'error' ? 'err' : 'default'} ghost={source.state === 'not_configured'}>
-                        {ok ? 'Connected' : source.state === 'error' ? 'Error' : 'Not configured'}
+                        {ok ? '연결됨' : source.state === 'error' ? '오류' : '설정 안 됨'}
                       </Badge>
                     </span>
                   </div>
@@ -97,7 +97,7 @@ export default async function CommsPage() {
           </div>
         </SlabCard>
 
-        <SlabCard i={2} title="Message Volume" className="flex flex-col">
+        <SlabCard i={2} title="메시지 규모" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat value={vol.headline} chips={vol.chips} caption={vol.caption} />
             <MeterStack meters={vol.meters} foot={vol.foot} />
@@ -107,22 +107,22 @@ export default async function CommsPage() {
 
       {/* Second row: message activity, the week's meetings, THE insight card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Message Activity">
+        <SlabCard i={3} title="메시지 활동">
           <div className="px-6 pt-3">
             <span className="text-[30px] font-semibold tabular-nums tracking-[-0.03em]">
               <CountUp value={vol.seriesTotal} />
             </span>
-            <span className="ml-2 text-[13px] text-os-dim">threads in view, last 14 days</span>
+            <span className="ml-2 text-[13px] text-os-dim">최근 14일간 표시된 스레드</span>
           </div>
-          <StepLine series={vol.series} hue="var(--send-activity)" empty="No messages in this window." />
+          <StepLine series={vol.series} hue="var(--send-activity)" empty="이 기간에는 메시지가 없습니다." />
         </SlabCard>
 
-        <SlabCard i={4} title="Meetings This Week">
+        <SlabCard i={4} title="이번 주 회의">
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <div>
-              <BigStat value={vol.meetingsTotal} size={30} caption="meetings, next 7 days" />
+              <BigStat value={vol.meetingsTotal} size={30} caption="앞으로 7일간 회의" />
               <div className="mt-4 rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted">
-                Recordings: <span className="font-semibold tabular-nums">{recordings.recordings.length}</span>
+                녹음: <span className="font-semibold tabular-nums">{recordings.recordings.length}</span>
               </div>
             </div>
             <DotMatrix cols={vol.meetings} hue="var(--ramp-1)" />
@@ -131,7 +131,7 @@ export default async function CommsPage() {
 
         <InsightCard
           i={5}
-          badge="Waiting on you"
+          badge="확인 대기 중"
           value={vol.insight.value}
           headline={vol.insight.headline}
           body={vol.insight.body}
@@ -149,7 +149,7 @@ export default async function CommsPage() {
       </Rise>
 
       {/* Swappable front: the messaging board (source lanes + Slack) or the 7-day meetings calendar */}
-      <SlabCard i={7} title="Inbox" sub={`${vol.headline} unread`}>
+      <SlabCard i={7} title="받은편지함" sub={`안 읽음 ${vol.headline}`}>
         <div id="inbox" className="scroll-mt-6 px-6 pb-6 pt-4">
           <CommsTabs
             lanes={lanes}
@@ -164,7 +164,7 @@ export default async function CommsPage() {
       </SlabCard>
 
       <Rise as="p" i={8} className="mt-6 rounded-full border border-dashed border-os-border-strong px-4 py-3 text-center font-mono text-[10.5px] text-os-dim">
-        Four inboxes (expand to read + reply) and WhatsApp as lanes · Slack per client + every current channel · meetings via CalDAV · recordings from Plaud + Fathom
+        받은편지함 4개(펼쳐서 읽기 + 답장)와 WhatsApp을 레인으로 · 고객별 Slack + 모든 현재 채널 · CalDAV 회의 · Plaud + Fathom 녹음
       </Rise>
     </Slab>
   );

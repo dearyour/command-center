@@ -199,7 +199,7 @@ export function audienceSeries(db: FounderDb): { channels: LabelledSeries[]; all
     })),
     {
       key: 'email',
-      label: 'Email List',
+      label: '이메일 리스트',
       color: EMAIL_COLOR,
       points: db.emailList.snapshots().map((s) => ({ date: s.capturedAt, value: s.subscribers })),
     },
@@ -207,7 +207,7 @@ export function audienceSeries(db: FounderDb): { channels: LabelledSeries[]; all
 
   const all: LabelledSeries = {
     key: 'all',
-    label: 'All audience',
+    label: '전체 오디언스',
     color: ALL_AUDIENCE_COLOR,
     points: toSeriesPoints(mergeSeriesSum(audienceChannelPoints(db))),
   };

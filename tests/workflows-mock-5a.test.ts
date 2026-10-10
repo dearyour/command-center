@@ -63,12 +63,12 @@ describe('/workflows mock-5a: scheduled tasks panel', () => {
   });
 
   test('run now is a labelled text button, not a bare icon', () => {
-    expect(panel).toContain('▸ run now');
+    expect(panel).toContain('▸ 지금 실행');
   });
 
   test('a failed row surfaces the run summary', () => {
     expect(panel).toContain('lastSummary');
-    expect(panel).toMatch(/failed ·/);
+    expect(panel).toMatch(/실패 ·/);
   });
 
   test('no em dashes anywhere in the file', () => {
@@ -81,7 +81,7 @@ describe('/workflows mock-5a: page header pill', () => {
 
   test('the header carries the crons + healthy pill from real rows', () => {
     expect(page).toMatch(/right=\{/);
-    expect(page).toMatch(/crons ·/);
+    expect(page).toMatch(/크론 \{jobs\.length\}개 ·/);
     expect(page).toContain('healthy');
   });
 
@@ -92,7 +92,7 @@ describe('/workflows mock-5a: page header pill', () => {
 
 describe('/workflows mock-5a: process map section header', () => {
   test('the map half announces itself like the mock (the Slab tree replaced the chain map, 2026-09-17)', () => {
-    expect(read('app/workflows/page.tsx')).toContain('Process map');
+    expect(read('app/workflows/page.tsx')).toContain('프로세스 맵');
     expect(read('app/workflows/page.tsx')).toContain('<WorkflowTree');
   });
 });

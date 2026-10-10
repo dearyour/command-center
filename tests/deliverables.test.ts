@@ -86,8 +86,8 @@ describe('the /agents surface', () => {
     // The empty-state copy changed when proposals joined as folders (2026-08-17):
     // it must still explain the board-host caveat, since a dev machine seeing
     // nothing is expected rather than broken.
-    expect(list).toMatch(/Nothing in review yet/);
-    expect(list).toMatch(/board host/);
+    expect(list).toMatch(/아직 검토할 것이 없습니다/);
+    expect(list).toMatch(/보드 호스트/);
     // proposals render as their own folders, above the agent files
     expect(list).toContain('group.name');
     expect(list).toMatch(/kind === 'link'/);

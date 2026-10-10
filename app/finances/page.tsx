@@ -126,7 +126,7 @@ export default async function FinancesPage() {
   }
   // "2026-06" → "Jun 2026" for an honest period label on the uploaded figures.
   const monthLabel = ledgerMonth
-    ? new Date(`${ledgerMonth}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+    ? new Date(`${ledgerMonth}-01T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', year: 'numeric', timeZone: 'UTC' })
     : null;
   const expenses = expensesLive ? ledgerSpend.reduce((s, c) => s + c.total, 0) : totalExpenses(DECLARED_EXPENSES);
   const netMonthly = net(incomeMtd, expenses);

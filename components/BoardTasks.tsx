@@ -23,6 +23,7 @@ const STATUS_TONE: Record<string, string> = {
 
 const ROUTES = ['Conductor routes', 'TECH', 'Sales'] as const;
 type Route = (typeof ROUTES)[number];
+const ROUTE_LABEL: Record<Route, string> = { 'Conductor routes': '컨덕터가 배정', TECH: 'TECH', Sales: '영업' };
 
 function ago(iso: string | null): string {
   if (!iso) return '';
@@ -77,12 +78,12 @@ export function BoardTasks({ initialIssues, boardUrl, i = 7 }: { initialIssues: 
     <SlabCard
       i={i}
       className="mt-6"
-      title="Board queue"
-      sub={`${issues.length} open issues`}
+      title="보드 대기열"
+      sub={`열린 이슈 ${issues.length}개`}
       action={
         boardUrl && (
           <a href={boardUrl} target="_blank" rel="noreferrer" className={PILL}>
-            open board <ArrowUpRight className="h-3.5 w-3.5" />
+            보드 열기 <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         )
       }
@@ -94,7 +95,7 @@ export function BoardTasks({ initialIssues, boardUrl, i = 7 }: { initialIssues: 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && create()}
-            placeholder="Hand the company work · one line · the Conductor routes it"
+            placeholder="회사에 일 맡기기 · 한 줄로 · 컨덕터가 배정합니다"
             className="min-w-0 flex-1 rounded-full border border-os-border bg-os-bg px-4 py-2 text-[13px] text-os-text placeholder:text-os-dim focus:border-os-border-strong focus:outline-none"
           />
           <button
@@ -103,21 +104,21 @@ export function BoardTasks({ initialIssues, boardUrl, i = 7 }: { initialIssues: 
             className="pressable flex shrink-0 items-center gap-1.5 rounded-full bg-os-accent px-4 py-2 text-[13px] font-semibold text-os-ink disabled:opacity-40"
           >
             {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
-            Create issue
+            이슈 만들기
           </button>
         </div>
         <div className="mb-4 flex flex-wrap items-center gap-2">
           {ROUTES.map((r) => (
             <button key={r} onClick={() => setRoute(r)} className={chipClass(route === r)}>
-              {r}
+              {ROUTE_LABEL[r]}
             </button>
           ))}
         </div>
-        {error && <div className="mb-3 text-[12px] text-os-err">Board rejected it: {error}</div>}
+        {error && <div className="mb-3 text-[12px] text-os-err">보드가 거부했습니다: {error}</div>}
       </div>
 
       {issues.length === 0 ? (
-        <div className="border-t border-os-border px-6 py-8 text-center text-[12.5px] text-os-dim">Board unreachable or empty · the live queue shows here.</div>
+        <div className="border-t border-os-border px-6 py-8 text-center text-[12.5px] text-os-dim">보드에 연결할 수 없거나 비어 있습니다 · 실시간 대기열이 여기에 표시됩니다.</div>
       ) : (
         <ul className="border-t border-os-border">
           {issues.slice(0, 10).map((issue) => (

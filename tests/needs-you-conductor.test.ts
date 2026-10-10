@@ -73,7 +73,7 @@ describe('why here', () => {
       f('STAGED-a-DELIVER-BEFORE-0900Z.json', { modifiedAt: '2026-09-08T05:00:00.000Z' }),
       Date.parse('2026-09-08T12:00:00.000Z'),
     );
-    expect(c.why).toContain('deadline');
+    expect(c.why).toContain('마감');
   });
 });
 

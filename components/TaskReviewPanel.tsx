@@ -114,7 +114,7 @@ export function TaskReviewPanel({
       >
         <header className="flex shrink-0 items-start gap-3 border-b border-os-border px-4 py-3">
           <div className="min-w-0 flex-1">
-            <Label>Review</Label>
+            <Label>검토</Label>
             {/* The document's own title, not the filename. */}
             <div className="mt-1 break-words text-[13.5px] font-semibold leading-snug text-os-text">
               {item.title || item.name}
@@ -124,14 +124,14 @@ export function TaskReviewPanel({
               {decision && (
                 <span className={decision.decision === 'approved' ? 'text-os-ok' : 'text-os-muted'}>
                   {' · '}
-                  {decision.decision}
+                  {decision.decision === 'approved' ? '승인됨' : '넘김'}
                 </span>
               )}
             </div>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close review"
+            aria-label="검토 닫기"
             className="pressable shrink-0 rounded-lg border border-os-border p-1 text-os-dim hover:border-os-dim hover:text-os-text"
           >
             <X className="h-3.5 w-3.5" />
@@ -145,11 +145,11 @@ export function TaskReviewPanel({
         )}
 
         <div className="min-h-0 flex-1 overflow-auto">
-          {loading && <p className="px-4 py-3 font-mono text-[10.5px] text-os-dim">reading…</p>}
+          {loading && <p className="px-4 py-3 font-mono text-[10.5px] text-os-dim">읽는 중…</p>}
 
           {failed && (
             <p className="px-4 py-3 font-mono text-[10.5px] text-os-err">
-              Could not read this file. It may have been moved or the board host is unreachable.
+              이 파일을 읽을 수 없습니다. 파일이 이동됐거나 보드 호스트에 연결할 수 없습니다.
             </p>
           )}
 
@@ -157,7 +157,7 @@ export function TaskReviewPanel({
             <>
               {preview?.truncated && (
                 <p className="border-b border-os-border bg-os-warn/[0.08] px-4 py-1.5 font-mono text-[9.5px] text-os-warn">
-                  Showing the first part only. Download for the whole file.
+                  앞부분만 표시합니다. 전체 파일은 다운로드해서 보세요.
                 </p>
               )}
               <div className="px-4 py-3">
@@ -180,17 +180,17 @@ export function TaskReviewPanel({
 
           {!loading && !failed && kind === 'binary' && (
             <p className="px-4 py-3 font-mono text-[10.5px] text-os-dim">
-              This format can&apos;t be shown here. Download it to review.
+              이 형식은 여기서 볼 수 없습니다. 다운로드해서 검토하세요.
             </p>
           )}
 
           {kind === 'link' && (
             <div className="px-4 py-3 font-mono text-[10.5px] text-os-dim">
-              This is a live proposal page rather than a file on the board.
+              보드의 파일이 아니라 실시간 제안서 페이지입니다.
               {item.accessCode && (
                 <>
                   {' '}
-                  Gate code <span className="text-os-text">{item.accessCode}</span>.
+                  접근 코드 <span className="text-os-text">{item.accessCode}</span>.
                 </>
               )}
             </div>
@@ -203,7 +203,7 @@ export function TaskReviewPanel({
               onClick={() => onDecide(item.id, null, rev)}
               className="pressable flex items-center gap-1.5 rounded-lg border border-os-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-os-muted hover:border-os-dim hover:text-os-text"
             >
-              <Undo2 className="h-3 w-3" /> undo {decision.decision}
+              <Undo2 className="h-3 w-3" /> {decision.decision === 'approved' ? '승인' : '넘기기'} 취소
             </button>
           ) : (
             <>
@@ -211,13 +211,13 @@ export function TaskReviewPanel({
                 onClick={() => onDecide(item.id, 'approved', rev)}
                 className="pressable flex items-center gap-1.5 rounded-lg border border-os-ok/50 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-os-ok hover:bg-os-ok/10"
               >
-                <Check className="h-3 w-3" /> approve
+                <Check className="h-3 w-3" /> 승인
               </button>
               <button
                 onClick={() => onDecide(item.id, 'dismissed', rev)}
                 className="pressable flex items-center gap-1.5 rounded-lg border border-os-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-os-muted hover:border-os-dim hover:text-os-text"
               >
-                <X className="h-3 w-3" /> dismiss
+                <X className="h-3 w-3" /> 넘기기
               </button>
             </>
           )}
@@ -230,19 +230,19 @@ export function TaskReviewPanel({
           >
             {item.kind === 'link' ? (
               <>
-                open page <ExternalLink className="h-3 w-3" />
+                페이지 열기 <ExternalLink className="h-3 w-3" />
               </>
             ) : (
               <>
-                download <Download className="h-3 w-3" />
+                다운로드 <Download className="h-3 w-3" />
               </>
             )}
           </a>
         </footer>
 
         <p className="shrink-0 border-t border-os-border px-4 py-1.5 font-mono text-[9px] text-os-dim">
-          Your call is recorded in the OS and clears this from the queue. If the agent rewrites the
-          file, it comes back.
+          결정은 OS에 기록되고 이 항목은 대기열에서 사라집니다. 에이전트가 파일을 다시 쓰면
+          다시 나타납니다.
         </p>
       </aside>
     </div>

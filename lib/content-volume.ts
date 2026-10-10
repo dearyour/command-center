@@ -44,8 +44,7 @@ const DAY_MS = 86_400_000;
 const CREW_COLS = 6;
 const frac = (n: number, d: number) => (d > 0 ? Math.max(0, Math.min(1, n / d)) : 0);
 const pct = (f: number) => `${Math.round(f * 100)}%`;
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-const utcLabel = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const utcLabel = (d: Date) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 
 
 export function contentVolume(x: ContentVolumeInput): ContentVolume {
@@ -95,27 +94,27 @@ export function contentVolume(x: ContentVolumeInput): ContentVolume {
   const activeCrew = x.crew.filter((a) => a.status === 'active').length;
 
   const chips: ContentVolume['chips'] = [];
-  if (activeDays) chips.push({ tone: 'accent', text: plural(activeDays, 'active day') });
-  if (live) chips.push({ tone: 'ok', text: `${live} magnet${live === 1 ? '' : 's'} live` });
+  if (activeDays) chips.push({ tone: 'accent', text: `활동 ${activeDays}일` });
+  if (live) chips.push({ tone: 'ok', text: `운영 중인 마그넷 ${live}` });
 
   const meters: Meter[] = [];
   if (postsInWindow > 0) {
     const f = frac(activeDays, days);
-    meters.push({ label: `Active posting days (${activeDays}/${days})`, frac: f, display: pct(f), hue: 'var(--accent)' });
+    meters.push({ label: `게시한 날 (${activeDays}/${days})`, frac: f, display: pct(f), hue: 'var(--accent)' });
   }
   if (x.leadMagnets.length > 0) {
     const f = frac(live, x.leadMagnets.length);
-    meters.push({ label: `Lead magnets live (${live}/${x.leadMagnets.length})`, frac: f, display: `${live} of ${x.leadMagnets.length}`, hue: 'var(--ok)' });
+    meters.push({ label: `운영 중인 리드 마그넷 (${live}/${x.leadMagnets.length})`, frac: f, display: `${x.leadMagnets.length}개 중 ${live}개`, hue: 'var(--ok)' });
   }
   if (x.crew.length > 0) {
     const f = frac(activeCrew, x.crew.length);
-    meters.push({ label: `Crew active (${activeCrew}/${x.crew.length})`, frac: f, display: pct(f), hue: 'var(--ramp-1)' });
+    meters.push({ label: `가동 중인 팀원 (${activeCrew}/${x.crew.length})`, frac: f, display: pct(f), hue: 'var(--ramp-1)' });
   }
   if (runsInWindow > 0) {
     meters.push({
-      label: `Crew runs OK (${runsOk}/${runsInWindow})`,
+      label: `성공한 팀 실행 (${runsOk}/${runsInWindow})`,
       frac: frac(runsOk, runsInWindow),
-      display: `${runsOk} ok · ${runsInWindow - runsOk} failed`,
+      display: `성공 ${runsOk} · 실패 ${runsInWindow - runsOk}`,
       hue: 'var(--ramp-4)',
     });
   }
@@ -123,15 +122,15 @@ export function contentVolume(x: ContentVolumeInput): ContentVolume {
   // The one gradient card: how long the feed has been quiet.
   let insight: ContentVolume['insight'];
   if (x.postsKnown === false) {
-    insight = { value: 0, display: ' - ', headline: 'Posting history unavailable.', body: 'Zernio did not answer, so days since the last post are unknown.', frac: 0 };
+    insight = { value: 0, display: ' - ', headline: '게시 기록을 불러올 수 없습니다.', body: 'Zernio가 응답하지 않아 마지막 게시 이후 며칠이 지났는지 알 수 없습니다.', frac: 0 };
   } else if (lastPost === null) {
-    insight = { value: 0, display: 'none', headline: 'Nothing posted on record yet.', body: 'Posts show here once Zernio reports its history.', frac: 0 };
+    insight = { value: 0, display: '없음', headline: '아직 기록된 게시물이 없습니다.', body: 'Zernio가 기록을 보고하면 여기에 게시물이 표시됩니다.', frac: 0 };
   } else {
     const quiet = Math.max(0, Math.round((end.getTime() - new Date(`${lastPost}T00:00:00Z`).getTime()) / DAY_MS));
     insight = {
       value: quiet,
-      headline: quiet === 0 ? 'Posted today.' : `${plural(quiet, 'day')} since the last post went out.`,
-      body: `${plural(activeDays, 'active day')} in the last ${days} · ticks light with posting consistency.`,
+      headline: quiet === 0 ? '오늘 게시했습니다.' : `마지막 게시 이후 ${quiet}일 지났습니다.`,
+      body: `최근 ${days}일 중 ${activeDays}일 활동 · 꾸준히 게시할수록 눈금이 켜집니다.`,
       frac: frac(activeDays, days),
     };
   }
@@ -141,12 +140,12 @@ export function contentVolume(x: ContentVolumeInput): ContentVolume {
     chips,
     caption:
       x.postsKnown === false
-        ? 'posting history unavailable · Zernio not answering'
+        ? '게시 기록 사용 불가 · Zernio 응답 없음'
         : postsInWindow > 0
-          ? `posts out through Zernio, last ${days} days`
-          : `no posts on record in the last ${days} days`,
+          ? `최근 ${days}일간 Zernio로 발행한 게시물`
+          : `최근 ${days}일간 기록된 게시물 없음`,
     meters,
-    foot: `${plural(x.crew.length, 'agent')} · ${plural(x.leadMagnets.length, 'lead magnet')} · ${plural(x.recent.length, 'recent post')} pulled`,
+    foot: `에이전트 ${x.crew.length}개 · 리드 마그넷 ${x.leadMagnets.length}개 · 최근 게시물 ${x.recent.length}개 수집`,
     series,
     postsInWindow,
     activeDays,

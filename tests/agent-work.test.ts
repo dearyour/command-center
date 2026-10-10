@@ -64,11 +64,11 @@ describe('agentCrons repo', () => {
 
 describe('describeCron', () => {
   test('humanizes common schedules', () => {
-    expect(describeCron('0 9 * * 1-5')).toBe('at 09:00, Mon-Fri');
-    expect(describeCron('*/15 * * * *')).toBe('every 15 min');
-    expect(describeCron('0 * * * *')).toBe('hourly at :00');
-    expect(describeCron('0 0 * * 0')).toBe('at 00:00, Sun');
-    expect(describeCron('30 8 * * *')).toBe('at 08:30, daily');
+    expect(describeCron('0 9 * * 1-5')).toBe('월-금 09:00');
+    expect(describeCron('*/15 * * * *')).toBe('15분마다');
+    expect(describeCron('0 * * * *')).toBe('매시 00분');
+    expect(describeCron('0 0 * * 0')).toBe('일 00:00');
+    expect(describeCron('30 8 * * *')).toBe('매일 08:30');
   });
 
   test('validates field count', () => {

@@ -144,8 +144,8 @@ describe('spendSeries', () => {
       row('2026-08-05', 5000, { direction: 'in' }),
     ]);
     expect(s).toEqual([
-      { label: 'Jul 2026', count: 150 },
-      { label: 'Aug 2026', count: 900 },
+      { label: '2026년 7월', count: 150 },
+      { label: '2026년 8월', count: 900 },
     ]);
   });
   test('an empty ledger is an empty series', () => {

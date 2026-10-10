@@ -110,7 +110,7 @@ export function moneyVolume(x: {
 }
 
 const monthName = (month: string): string =>
-  new Date(`${month}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  new Date(`${month}-01T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 /** Spend per ledger month, oldest first, in whole dollars, for the step line. */
 export function spendSeries(rows: SpendRow[]): SizePoint[] {

@@ -22,8 +22,8 @@ describe('/ mock-3a: the queue is the Conductor queue', () => {
   const list = read('components/NeedsYouList.tsx');
 
   test('the section says who ranked it and how', () => {
-    expect(list).toContain('ranked by the Conductor');
-    expect(list).toContain('people first, then deadlines');
+    expect(list).toContain('컨덕터가 정렬');
+    expect(list).toContain('사람 먼저, 그다음 마감일 순');
   });
 
   test('a row leads with the kind glyph in its own box', () => {
@@ -32,14 +32,14 @@ describe('/ mock-3a: the queue is the Conductor queue', () => {
   });
 
   test('a row says where it came from and why it is here', () => {
-    expect(list).toContain('why here ·');
+    expect(list).toContain('표시 이유 ·');
     expect(list).toContain('c.why');
   });
 
   test('the empty state is the mock line, not the old paragraph', () => {
-    expect(list).toContain('Nothing needs you.');
-    expect(list).toContain('the Conductor will surface the next thing here');
-    expect(list).not.toContain('Nothing is waiting on you.');
+    expect(list).toContain('확인할 항목이 없습니다.');
+    expect(list).toContain('다음 항목이 생기면 컨덕터가 여기에 띄워 줍니다');
+    expect(list).not.toContain('기다리고 있는 일이 없습니다.');
   });
 
   test('it still derives from the deliverables payload rather than polling', () => {
@@ -141,7 +141,7 @@ describe('mock-3a: the pulse tiles are bar cells, not line sparks', () => {
   test('agents and comms use the bar-cell foot, not the line Spark', () => {
     expect(home).toContain('<SparkBars');
     // the line spark is what the artboard does NOT use on these two tiles
-    const agentsTile = home.slice(home.indexOf('label="Agents live"'), home.indexOf('label="Communications"'));
+    const agentsTile = home.slice(home.indexOf('label="가동 중인 에이전트"'), home.indexOf('label="커뮤니케이션"'));
     expect(agentsTile).toContain('SparkBars');
     expect(agentsTile).not.toMatch(/<Spark\s/);
   });
@@ -177,7 +177,7 @@ describe('mock-3a: the state line carries the artboard facts, all of them real',
 
   test('the brain score shows at every health, not only when it is bad', () => {
     const fn = pulse.slice(pulse.indexOf('export function stateOfWorld'));
-    expect(fn).toMatch(/brain \$\{f\.health\}\/100|brain `|brain \$\{/);
+    expect(fn).toMatch(/브레인 \$\{f\.health\}\/100/);
   });
 });
 
@@ -186,13 +186,13 @@ describe('mock-3a: the composer names its destinations', () => {
 
   test('chips read as routes, the way the artboard labels them', () => {
     expect(ij).toContain('→ G-Brain');
-    expect(ij).toContain('→ Board');
-    expect(ij).toContain('→ Agent');
+    expect(ij).toContain('→ 보드');
+    expect(ij).toContain('→ 에이전트');
   });
 
   test('there is no "auto" chip: auto is the unpinned state, and the hint says so', () => {
     expect(ij).not.toMatch(/label: 'auto'/);
-    expect(ij).toContain('auto-routed · Enter sends');
+    expect(ij).toContain('자동 분류 · Enter 전송');
   });
 
   test('send is the round ↑, 26px, white fill', () => {
@@ -210,6 +210,6 @@ describe('mock-3a: the ledger uses the artboard glyphs', () => {
   });
 
   test('the eyebrow is the artboard\'s', () => {
-    expect(home).toContain('eyebrow="command center"');
+    expect(home).toContain('eyebrow="커맨드 센터"');
   });
 });

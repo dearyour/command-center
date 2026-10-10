@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
 import type { LeadMagnet } from '@/lib/schemas';
+import { statusKo } from '@/lib/status-labels';
 
 /**
  * Per-row controls for the lead magnet register: retire a page or drop the row
@@ -37,7 +38,7 @@ export function LeadMagnetRowActions({ id, status }: { id: string; status: LeadM
   return (
     <span className="flex items-center gap-1.5">
       <select
-        aria-label="Status"
+        aria-label="상태"
         disabled={busy}
         value={status}
         onChange={(e) => call({ method: 'PATCH', body: JSON.stringify({ status: e.target.value }) })}
@@ -45,7 +46,7 @@ export function LeadMagnetRowActions({ id, status }: { id: string; status: LeadM
       >
         {STATUSES.map((s) => (
           <option key={s} value={s}>
-            {s}
+            {statusKo(s)}
           </option>
         ))}
       </select>
@@ -56,20 +57,20 @@ export function LeadMagnetRowActions({ id, status }: { id: string; status: LeadM
             disabled={busy}
             className="pressable rounded-sm-t border border-os-border px-1.5 py-1 font-mono text-[10px] uppercase tracking-widest text-os-err hover:border-os-border-strong disabled:opacity-40"
           >
-            sure?
+            삭제할까요?
           </button>
           <button
             onClick={() => setConfirming(false)}
             className="pressable font-mono text-[10px] uppercase tracking-widest text-os-dim hover:text-os-text"
           >
-            no
+            아니요
           </button>
         </span>
       ) : (
         <button
           onClick={() => setConfirming(true)}
-          aria-label="Delete lead magnet"
-          title="Delete"
+          aria-label="리드 마그넷 삭제"
+          title="삭제"
           className="pressable text-os-dim opacity-0 transition-opacity hover:text-os-err group-hover:opacity-100"
         >
           <Trash2 className="h-3.5 w-3.5" />

@@ -13,8 +13,8 @@ import path from 'node:path';
 const read = (rel: string) => readFileSync(path.join(process.cwd(), rel), 'utf8');
 
 const PAGES = [
-  { file: 'app/workflows/page.tsx', volume: 'Cron Volume', model: 'workflowsVolume', lib: '@/lib/workflows-volume' },
-  { file: 'app/social/page.tsx', volume: 'Audience Volume', model: 'socialVolume', lib: '@/lib/social-volume' },
+  { file: 'app/workflows/page.tsx', volume: '크론 규모', model: 'workflowsVolume', lib: '@/lib/workflows-volume' },
+  { file: 'app/social/page.tsx', volume: '오디언스 규모', model: 'socialVolume', lib: '@/lib/social-volume' },
 ];
 
 describe.each(PAGES)('$file in the Brand Deals look', ({ file, volume, model, lib }) => {
@@ -58,12 +58,12 @@ describe.each(PAGES)('$file in the Brand Deals look', ({ file, volume, model, li
 describe('nothing was removed in the rework', () => {
   test('/workflows keeps the scheduled tasks panel and the process map tree', () => {
     const src = read('app/workflows/page.tsx');
-    for (const k of ['<ScheduledTasks', '<WorkflowTree', 'Process map', 'runsByOwner', 'avatarByOwner', 'toolLogos']) expect(src, k).toContain(k);
+    for (const k of ['<ScheduledTasks', '<WorkflowTree', '프로세스 맵', 'runsByOwner', 'avatarByOwner', 'toolLogos']) expect(src, k).toContain(k);
   });
 
   test('/social keeps accounts, the stat strip, the charts, recent posts and the composer', () => {
     const src = read('app/social/page.tsx');
-    for (const k of ['href={`/social/${p.platform}`}', 'href="/social/beehiiv"', '<SocialStatStrip', '<AudienceConsistencyLazy', '<AudiencePie', 'Recent posts', '<PostComposer']) {
+    for (const k of ['href={`/social/${p.platform}`}', 'href="/social/beehiiv"', '<SocialStatStrip', '<AudienceConsistencyLazy', '<AudiencePie', '최근 게시물', '<PostComposer']) {
       expect(src, k).toContain(k);
     }
   });

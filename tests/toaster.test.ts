@@ -34,9 +34,9 @@ describe('Toaster (interaction rebrand step 8)', () => {
 
 describe('CommandPalette rebuild (step 8)', () => {
   test('grouped one-box: Go to / Run / Ask with Tab scope cycling', () => {
-    expect(palette).toContain("'Go to'");
-    expect(palette).toContain("'Run'");
-    expect(palette).toContain("'Ask'");
+    expect(palette).toContain("'이동'");
+    expect(palette).toContain("'실행'");
+    expect(palette).toContain("'질문'");
     expect(palette).toContain("'Tab'");
   });
 

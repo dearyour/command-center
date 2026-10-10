@@ -178,13 +178,13 @@ describe('originOf — where they came from, in words (AC53)', () => {
 
   test('an untracked CRM entry is honestly word of mouth', () => {
     const j = journey({}, [touch({ label: 'Deal created in Attio', channel: 'crm', source: 'attio' })]);
-    expect(originOf(j).segment).toBe('Word of mouth');
+    expect(originOf(j).segment).toBe('입소문');
     expect(originOf(j).source).toBe('attio');
   });
 
   test('a journey with no touches still answers', () => {
     const o = originOf(journey({}, []));
-    expect(o.segment).toBe('Word of mouth');
+    expect(o.segment).toBe('입소문');
     expect(o.entry).toBeNull();
   });
 });

@@ -21,7 +21,7 @@ describe('/comms: the Brand Deals slab', () => {
   });
 
   test('a Message Volume card: the 50px headline over the sweeping meters, fed by commsVolume', () => {
-    expect(page).toContain('Message Volume');
+    expect(page).toContain('메시지 규모');
     expect(page).toContain('<BigStat');
     expect(page).toContain('<MeterStack');
     expect(page).toMatch(/from '@\/lib\/comms-volume'/);

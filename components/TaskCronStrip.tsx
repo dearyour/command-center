@@ -19,14 +19,14 @@ import type { AgentCron } from '@/lib/schemas';
  * 2026-09-24: the strip is a Brand Deals SlabCard; the page passes its stagger.
  */
 function ago(iso: string | null): string {
-  if (!iso) return 'never';
+  if (!iso) return '실행 기록 없음';
   const ms = Date.now() - Date.parse(iso);
-  if (!Number.isFinite(ms) || ms < 0) return 'just now';
+  if (!Number.isFinite(ms) || ms < 0) return '방금';
   const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${m}m ago`;
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
 }
 
 function inNext(iso: string | null): string | null {
@@ -34,10 +34,10 @@ function inNext(iso: string | null): string | null {
   const ms = Date.parse(iso) - Date.now();
   if (!Number.isFinite(ms) || ms < 0) return null;
   const m = Math.round(ms / 60_000);
-  if (m < 60) return `${m}m`;
+  if (m < 60) return `${m}분`;
   const h = Math.round(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.round(h / 24)}d`;
+  if (h < 24) return `${h}시간`;
+  return `${Math.round(h / 24)}일`;
 }
 
 export function TaskCronStrip({
@@ -59,11 +59,11 @@ export function TaskCronStrip({
     <SlabCard
       i={i}
       className="mt-6"
-      title="Scheduled jobs"
-      sub={`${enabled} of ${rows.length} enabled`}
+      title="예약된 작업"
+      sub={`${rows.length}개 중 ${enabled}개 활성`}
       action={
         <Link href="/workflows" className={PILL}>
-          full panel →
+          전체 패널 →
         </Link>
       }
     >
@@ -90,19 +90,19 @@ export function TaskCronStrip({
               </div>
               <div className="mt-2 flex items-center gap-2 font-mono text-[11px] text-os-dim">
                 <span className="min-w-0 truncate">{r.scheduleLabel}</span>
-                {next && <span className="shrink-0">· next {next}</span>}
-                {!r.enabled && <span className="shrink-0">· paused</span>}
+                {next && <span className="shrink-0">· 다음 {next} 후</span>}
+                {!r.enabled && <span className="shrink-0">· 일시정지</span>}
               </div>
               <div className="mt-1 flex items-center gap-1.5 font-mono text-[11px]">
                 <span className="min-w-0 truncate text-os-dim">{r.agentName}</span>
                 <span className={`ml-auto shrink-0 ${r.lastOk === false ? 'text-os-err' : 'text-os-dim'}`}>
-                  {r.lastOk === false ? `last failed · ${ago(r.lastRunAt)}` : ago(r.lastRunAt)}
+                  {r.lastOk === false ? `마지막 실패 · ${ago(r.lastRunAt)}` : ago(r.lastRunAt)}
                 </span>
               </div>
               {(r.overdue || r.unknownAgent) && (
                 <div className="mt-1.5 flex items-center gap-1 font-mono text-[9.5px] text-os-err">
                   <AlertTriangle className="h-3 w-3" />
-                  {r.unknownAgent ? 'agent missing from the runtime' : 'overdue · slot passed with no run'}
+                  {r.unknownAgent ? '런타임에 없는 에이전트' : '지연됨 · 예정 시간이 지났는데 실행 안 됨'}
                 </div>
               )}
             </div>

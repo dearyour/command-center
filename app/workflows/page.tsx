@@ -85,19 +85,19 @@ export default function WorkflowsPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="scheduled tasks + process map"
-        title="Workflows"
-        meta={`${workflows.length} workflows · ${v.runsInWindow} cron runs in ${WINDOW_DAYS} days · ${v.failedInWindow} failed`}
+        eyebrow="예약 작업 + 프로세스 맵"
+        title="워크플로"
+        meta={`워크플로 ${workflows.length}개 · ${WINDOW_DAYS}일간 크론 실행 ${v.runsInWindow}회 · 실패 ${v.failedInWindow}회`}
         right={
           <>
             <Chip tone={healthy === jobs.length ? 'ok' : 'warn'}>
-              {jobs.length} crons · {healthy} healthy
+              크론 {jobs.length}개 · 정상 {healthy}개
             </Chip>
             <Link href="/tasks" className={PILL}>
-              Tasks
+              작업
             </Link>
             <Link href="/agents" className={PILL}>
-              Agents
+              에이전트
             </Link>
           </>
         }
@@ -105,19 +105,19 @@ export default function WorkflowsPage() {
 
       {/* Hero row, Brand Deals' shape: the run line + the volume card */}
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={1} title="Run Activity" sub={`last ${WINDOW_DAYS} days`} className="pb-2">
+        <SlabCard i={1} title="실행 활동" sub={`최근 ${WINDOW_DAYS}일`} className="pb-2">
           <div className="px-6 pb-2 pt-3">
             <BigStat
               size={30}
               value={v.runsInWindow}
-              chips={v.failedInWindow > 0 ? [{ tone: 'err', text: `${v.failedInWindow} failed` }] : []}
-              caption="real cron runs, straight off cron_runs"
+              chips={v.failedInWindow > 0 ? [{ tone: 'err', text: `실패 ${v.failedInWindow}` }] : []}
+              caption="cron_runs에서 바로 가져온 실제 크론 실행 기록"
             />
           </div>
-          <StepLine series={v.series} hue="var(--send-activity)" unit=" runs" empty={`No cron runs in the last ${WINDOW_DAYS} days.`} />
+          <StepLine series={v.series} hue="var(--send-activity)" unit="회" empty={`최근 ${WINDOW_DAYS}일간 크론 실행 기록이 없습니다.`} />
         </SlabCard>
 
-        <SlabCard i={2} title="Cron Volume" className="flex flex-col">
+        <SlabCard i={2} title="크론 규모" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat value={v.headline} chips={v.chips} caption={v.caption} />
             <MeterStack meters={v.meters} foot={v.foot} />
@@ -127,25 +127,25 @@ export default function WorkflowsPage() {
 
       {/* Second row: weekday rhythm, process load, THE gradient card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Run Rhythm" sub="by weekday">
+        <SlabCard i={3} title="실행 리듬" sub="요일별">
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={busiest.count > 0 ? busiest.label : 'none'}
-              caption={busiest.count > 0 ? `busiest day · ${busiest.count} runs` : `no runs in ${WINDOW_DAYS} days`}
+              display={busiest.count > 0 ? busiest.label : '없음'}
+              caption={busiest.count > 0 ? `가장 바쁜 요일 · ${busiest.count}회` : `${WINDOW_DAYS}일간 실행 없음`}
             />
             <DotMatrix cols={v.rhythm} hue="var(--send-activity)" />
           </div>
         </SlabCard>
 
-        <SlabCard i={4} title="Process Load" sub="hours per week">
+        <SlabCard i={4} title="프로세스 부하" sub="주당 시간">
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <BigStat
               size={30}
               value={wholeHours ? v.load.manualHours : undefined}
               display={wholeHours ? undefined : String(v.load.manualHours)}
-              unit="h"
-              caption={`by hand · ${v.load.agentHours}h carried by agents`}
+              unit="시간"
+              caption={`직접 처리 · 에이전트가 ${v.load.agentHours}시간 담당`}
             />
             <DotMatrix cols={v.load.perWorkflow} hue="var(--ramp-1)" />
           </div>
@@ -153,7 +153,7 @@ export default function WorkflowsPage() {
 
         <InsightCard
           i={5}
-          badge="Needs you"
+          badge="확인 필요"
           value={v.insight.value}
           headline={v.insight.headline}
           body={v.insight.body}
@@ -167,7 +167,7 @@ export default function WorkflowsPage() {
       </SlabCard>
 
       {/* The process-map half: the tree, its step drawer and the builder */}
-      <SlabCard i={7} title="Process map" sub={`${workflows.length} workflows`} className="mt-6">
+      <SlabCard i={7} title="프로세스 맵" sub={`워크플로 ${workflows.length}개`} className="mt-6">
         <div className="px-6 pb-6 pt-4">
           <WorkflowTree
             workflows={workflows}

@@ -8,7 +8,7 @@ import { InstagramDmInbox } from '@/components/InstagramDmInbox';
 
 type Range = 7 | 30 | 60 | 'all';
 const RANGES: Range[] = [7, 30, 60, 'all'];
-const RANGE_LABEL: Record<string, string> = { '7': '7d', '30': '30d', '60': '60d', all: 'All' };
+const RANGE_LABEL: Record<string, string> = { '7': '7일', '30': '30일', '60': '60일', all: '전체' };
 const RANGE_KEY: Record<string, keyof SocialGrowth> = { '7': 'd7', '30': 'd30', '60': 'd60', all: 'allTime' };
 
 type SeriesPoint = { date: string; value: number };
@@ -24,10 +24,10 @@ function fmtNum(n: number | null): string {
 }
 function ageOf(ms: number): string {
   const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${Math.max(m, 1)}m`;
+  if (m < 60) return `${Math.max(m, 1)}분`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.floor(h / 24)}d`;
+  if (h < 24) return `${h}시간`;
+  return `${Math.floor(h / 24)}일`;
 }
 
 function pctClass(n: number | null): string {
@@ -80,7 +80,7 @@ function LineChart({ series, range }: { series: LabelledSeries[]; range: Range }
   const pad = { l: 8, r: 8, t: 14, b: 18 };
   const ranged = series.map((s) => ({ ...s, points: inRange(s.points, range) }));
   const allPts = ranged.flatMap((s) => s.points);
-  if (allPts.length === 0) return <div className="py-16 text-center font-mono text-xs text-os-dim">no history in range</div>;
+  if (allPts.length === 0) return <div className="py-16 text-center font-mono text-xs text-os-dim">이 기간에는 기록이 없습니다</div>;
 
   const dates = [...new Set(allPts.map((p) => p.date))].sort();
   const xByDate = new Map(dates.map((d, i) => [d, i]));
@@ -153,7 +153,7 @@ function StatPopout({
   }, [metric]);
 
   const shown = useMemo(() => (data ?? []).filter((s) => active.has(s.key)), [data, active]);
-  const title = metric === 'audience' ? 'Audience growth' : 'Total DMs';
+  const title = metric === 'audience' ? '오디언스 성장' : '전체 DM';
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-os-bg/70 p-6 backdrop-blur-sm" onClick={onClose}>
@@ -173,7 +173,7 @@ function StatPopout({
 
         <div className="p-5">
           {data === null ? (
-            <div className="py-20 text-center font-mono text-xs text-os-dim">loading history…</div>
+            <div className="py-20 text-center font-mono text-xs text-os-dim">기록 불러오는 중…</div>
           ) : (
             <>
               {metric === 'audience' && (
@@ -218,10 +218,10 @@ function StatPopout({
                     </div>
                   );
                 })}
-                {shown.length === 0 && <div className="font-mono text-[11px] text-os-dim">select a series to plot</div>}
+                {shown.length === 0 && <div className="font-mono text-[11px] text-os-dim">표시할 항목을 선택하세요</div>}
               </div>
               <p className="mt-4 font-mono text-[10px] text-os-dim">
-                {RANGE_LABEL[String(range)]} window · {metric === 'dms' ? 'DM totals are seeded dummy until a source is wired' : 'email tracks the real Beehiiv subscriber count for the connected newsletter'}
+                {RANGE_LABEL[String(range)]} 기간 · {metric === 'dms' ? 'DM 합계는 소스가 연결되기 전까지 샘플 데이터입니다' : '이메일은 연결된 뉴스레터의 실제 Beehiiv 구독자 수를 따라갑니다'}
               </p>
             </>
           )}
@@ -290,7 +290,7 @@ function DmInboxPopout({ threads, nowMs, onClose }: { threads: DmThread[]; nowMs
         <div className="flex items-center justify-between border-b border-os-border px-5 py-3.5">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-os-accent" />
-            <h2 className="text-sm font-bold">Instagram DMs</h2>
+            <h2 className="text-sm font-bold">Instagram DM</h2>
           </div>
           <button
             onClick={onClose}
@@ -330,19 +330,19 @@ function DmTile({
       data-lens="r" className="pressable is-row group flex cursor-pointer flex-col gap-1 rounded-lg-t border border-os-border bg-os-surface px-3 py-2 text-left"
     >
       <div className="flex items-center justify-between">
-        <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-os-dim">Needs reply</span>
+        <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-os-dim">답장 필요</span>
         <ArrowUpRight className="h-3 w-3 text-os-dim opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
       <div className="flex items-baseline justify-between gap-2">
         <span className={`font-mono text-[16px] font-semibold leading-none tracking-[-0.02em] ${unreplied > 0 ? 'text-os-warn' : ''}`}>
-          {unreplied > 0 ? `${unreplied} to reply` : `${total} threads`}
+          {unreplied > 0 ? `답장할 것 ${unreplied}` : `스레드 ${total}개`}
         </span>
         <span className="min-w-0 truncate font-mono text-[9.5px] text-os-dim">
-          {unreplied > 0 && oldest ? `oldest ${oldest}` : `${total} conversations`}
+          {unreplied > 0 && oldest ? `가장 오래된 것 ${oldest}` : `대화 ${total}개`}
         </span>
       </div>
       <span className="flex items-center gap-1.5 font-mono text-[9.5px] text-os-dim">
-        <MessageSquare className="h-3 w-3" /> open inbox · reply here
+        <MessageSquare className="h-3 w-3" /> 받은편지함 열기 · 여기서 답장
       </span>
     </div>
   );
@@ -383,19 +383,19 @@ export function SocialStatStrip({
       <div className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-4">
         {/* Total reach — static (design package) */}
         <div className="flex flex-col gap-1 rounded-lg-t border border-os-border bg-os-surface px-3 py-2">
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-os-dim">Total reach</span>
+          <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-os-dim">전체 도달</span>
           <div className="flex items-baseline justify-between gap-2">
             <span className="font-mono text-[20px] font-semibold leading-none tracking-[-0.02em]">{fmtNum(audienceTotal)}</span>
-            <span className="min-w-0 truncate font-mono text-[9.5px] text-os-dim">{platformsCount} platforms + email</span>
+            <span className="min-w-0 truncate font-mono text-[9.5px] text-os-dim">플랫폼 {platformsCount}개 + 이메일</span>
           </div>
         </div>
 
         {/* Audience growth — interactive (kept exactly) */}
         <MetricTile
-          label="Audience growth"
+          label="오디언스 성장"
           headline={fmtPct(audPct)}
           headlineClass={pctClass(audPct)}
-          sub={growthLeader ? `${growthLeader} leads · 7d` : `${fmtNum(audienceTotal)} total audience`}
+          sub={growthLeader ? `${growthLeader} 1위 · 7일` : `전체 오디언스 ${fmtNum(audienceTotal)}`}
           range={audRange}
           onRange={setAudRange}
           onOpen={() => setPopout('audience')}
@@ -403,7 +403,7 @@ export function SocialStatStrip({
 
         {/* Total DMs — interactive (kept exactly) */}
         <MetricTile
-          label="Total DMs"
+          label="전체 DM"
           headline={fmtNum(totalDms)}
           sub={
             <span className="flex items-center gap-1">

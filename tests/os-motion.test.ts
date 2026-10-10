@@ -110,7 +110,7 @@ describe('slab motion: Social carries the full treatment', () => {
   test('recent posts rise on a stagger too', () => {
     // Since the Brand Deals slab (2026-09-24) the kit's cards rise through Rise themselves.
     expect((page.match(/<(Rise|SlabCard|InsightCard)[\s>]/g) ?? []).length).toBeGreaterThanOrEqual(3);
-    expect(page).toMatch(/<SlabCard[\s\S]{0,40}i=\{\d+\}[\s\S]{0,40}title="Recent posts"/);
+    expect(page).toMatch(/<SlabCard[\s\S]{0,40}i=\{\d+\}[\s\S]{0,40}title="최근 게시물"/);
   });
 });
 

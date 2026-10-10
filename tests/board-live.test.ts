@@ -34,7 +34,7 @@ describe('modelSummary — what models hold seats right now', () => {
 
   test('a seat without a model shows its adapter type, never disappears', () => {
     expect(modelSummary([agent({ model: null, adapterType: 'codex' })])).toBe('codex x1');
-    expect(modelSummary([agent({ model: null, adapterType: null })])).toBe('unconfigured x1');
+    expect(modelSummary([agent({ model: null, adapterType: null })])).toBe('설정 안 됨 x1');
   });
 });
 
@@ -173,13 +173,13 @@ describe('BoardLive wiring contracts', () => {
     const src = read('components/BoardLive.tsx');
     expect(src).toContain('/api/board/agents/${agent.id}/run');
     expect(src).toContain('modelSummary(data.agents)');
-    expect(src).toContain("agent.model ?? agent.adapterType ?? 'unconfigured'");
+    expect(src).toContain("agent.model ?? agent.adapterType ?? '설정 안 됨'");
   });
 
   test('unreachable board renders an honest dead strip, no fake green', () => {
     const src = read('components/BoardLive.tsx');
-    expect(src).toContain('board unreachable');
-    expect(src).toContain('No fake data');
+    expect(src).toContain('보드 연결 불가');
+    expect(src).toContain('가짜 데이터는 없습니다');
   });
 
   test('/agents is de-demo: live board + real CEO chat only, no seeded roster', () => {
@@ -199,7 +199,7 @@ describe('BoardLive wiring contracts', () => {
   test('the stats row rides inside BoardLive so it polls live with everything else', () => {
     const src = read('components/BoardLive.tsx');
     expect(src).toContain('boardStats(data)');
-    for (const label of ['Seats', 'Running now', 'Open tasks', 'Runs · 24h', 'Heartbeats · 24h']) {
+    for (const label of ['자리', '지금 실행 중', '열린 작업', '실행 · 24시간', '하트비트 · 24시간']) {
       expect(src).toContain(label);
     }
   });
@@ -255,13 +255,13 @@ describe('BoardLive wiring contracts', () => {
 
     test('the lanes get the wide column and the run feed the narrow one', () => {
       expect(src).toMatch(/lg:grid-cols-\[minmax\(0,[\w.]+\)_minmax\(0,1fr\)\]/);
-      expect(src.indexOf('Run feed')).toBeLessThan(src.indexOf('Task lanes'));
+      expect(src.indexOf('실행 피드')).toBeLessThan(src.indexOf('작업 레인'));
     });
 
     test('the run feed spends its width on the agent name, not the word succeeded', () => {
       // narrowing the feed column to give the lanes room clipped 'Conductor'
       // to 'Cond…'; the tick glyph already says the run finished cleanly
-      expect(src).toContain('{!RUN_OK.has(r.status) && <span className={runColor(r.status)}>{r.status}</span>}');
+      expect(src).toContain('{!RUN_OK.has(r.status) && <span className={runColor(r.status)}>{statusKo(r.status)}</span>}');
     });
 
     test('an empty lane says so instead of vanishing', () => {
@@ -324,7 +324,7 @@ describe('per-seat run spinner', () => {
     // the model/adapter readout renders unconditionally — the operator, 2026-08-14:
     // "I want to be able to see the model still underneath the word of the
     // agent. I do not want that to disappear while it's running."
-    const modelLine = src.indexOf("agent.model ?? agent.adapterType ?? 'unconfigured'");
+    const modelLine = src.indexOf("agent.model ?? agent.adapterType ?? '설정 안 됨'");
     expect(modelLine).toBeGreaterThan(-1);
     // and it is not wrapped in the live ternary (the ternary now only owns the
     // right-hand Run/spinner column)

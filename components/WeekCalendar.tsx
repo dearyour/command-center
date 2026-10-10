@@ -21,7 +21,7 @@ function fmtHour(h: number): string {
   return `${hr} ${ampm}`;
 }
 function fmtTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  return new Date(iso).toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit' });
 }
 
 type Placed = { ev: CalEvent; startMin: number; endMin: number };
@@ -92,7 +92,7 @@ export function WeekCalendar({ events, accounts, nowISO }: { events: CalEvent[];
             return (
               <div key={c.key} className={`border-l border-os-border px-2 py-2 text-center ${today ? 'bg-[var(--accent-soft)]' : ''}`}>
                 <div className={`font-mono text-[9.5px] uppercase tracking-[0.12em] ${today ? 'text-os-accent' : 'text-os-dim'}`}>
-                  {c.date.toLocaleDateString([], { weekday: 'short' })}
+                  {c.date.toLocaleDateString('ko-KR', { weekday: 'short' })}
                 </div>
                 <div className={`text-[15px] font-semibold ${today ? 'text-os-accent' : 'text-os-text'}`}>{c.date.getDate()}</div>
               </div>
@@ -103,7 +103,7 @@ export function WeekCalendar({ events, accounts, nowISO }: { events: CalEvent[];
         {/* all-day band (only when present) */}
         {hasAllDay && (
           <div className="grid border-b border-os-border" style={{ gridTemplateColumns: gridCols }}>
-            <div className="flex items-center justify-end pr-2 font-mono text-[9px] uppercase tracking-[0.1em] text-os-dim">all-day</div>
+            <div className="flex items-center justify-end pr-2 font-mono text-[9px] uppercase tracking-[0.1em] text-os-dim">종일</div>
             {allDayByDay.map((list, i) => (
               <div key={i} className="flex flex-col gap-1 border-l border-os-border p-1">
                 {list.map((ev) => (

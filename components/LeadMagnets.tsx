@@ -2,6 +2,7 @@ import { ArrowUpRight, Mail, CalendarCheck, Minus } from 'lucide-react';
 import { CopyLink } from '@/components/CopyLink';
 import { LeadMagnetRowActions } from '@/components/LeadMagnetRowActions';
 import type { LeadMagnet } from '@/lib/schemas';
+import { statusKo } from '@/lib/status-labels';
 
 /**
  * Lead magnets, as a Notion-style database (Alex, 2026-08-13: he is
@@ -22,16 +23,16 @@ const statusPill = (s: LeadMagnet['status']) => ({
 });
 
 const CAPTURES = {
-  email: { Icon: Mail, label: 'Email' },
-  booking: { Icon: CalendarCheck, label: 'Booking' },
-  none: { Icon: Minus, label: 'None' },
+  email: { Icon: Mail, label: '이메일' },
+  booking: { Icon: CalendarCheck, label: '예약' },
+  none: { Icon: Minus, label: '없음' },
 } as const;
 
 const dateLabel = (iso: string): string => {
   const d = new Date(`${iso}T00:00:00Z`);
   return Number.isNaN(d.getTime())
     ? iso
-    : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+    : d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 };
 
 const host = (url: string): string => {
@@ -55,7 +56,7 @@ export function LeadMagnets({
   if (rows.length === 0) {
     return (
       <p className="border-t border-os-border px-6 py-8 text-center text-[12.5px] text-os-dim">
-        No lead magnets yet. Every landing page we ship lands here.
+        아직 리드 마그넷이 없습니다. 출시하는 모든 랜딩 페이지가 여기에 표시됩니다.
       </p>
     );
   }
@@ -65,14 +66,14 @@ export function LeadMagnets({
         <thead>
           <tr className="border-b border-os-border">
             {[
-              'Name',
-              'Status',
-              'Captures',
-              'Leads to',
-              'Source',
-              'Live',
-              ...(showCopy ? ['Link'] : []),
-              ...(manage ? ['Manage'] : []),
+              '이름',
+              '상태',
+              '수집 항목',
+              '리드 도착지',
+              '출처',
+              '출시일',
+              ...(showCopy ? ['링크'] : []),
+              ...(manage ? ['관리'] : []),
             ].map((h) => (
               <th
                 key={h}
@@ -103,7 +104,7 @@ export function LeadMagnets({
                 </td>
                 <td className="whitespace-nowrap px-4 py-4 align-top">
                   <span className="rounded-full px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.12em]" style={statusPill(m.status)}>
-                    {m.status}
+                    {statusKo(m.status)}
                   </span>
                 </td>
                 <td className="whitespace-nowrap px-4 py-4 align-top">

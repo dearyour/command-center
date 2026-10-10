@@ -76,21 +76,21 @@ function HealthMeter({ value }: { value: number | null }) {
 
 function greeting(): string {
   const hour = new Date().getHours();
-  if (hour < 5) return 'Late night';
-  if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (hour < 5) return '늦은 밤이네요';
+  if (hour < 12) return '좋은 아침이에요';
+  if (hour < 18) return '좋은 오후예요';
+  return '좋은 저녁이에요';
 }
 
 function relativeTime(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
-  if (!Number.isFinite(ms) || ms < 0) return 'just now';
+  if (!Number.isFinite(ms) || ms < 0) return '방금';
   const m = Math.floor(ms / 60_000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m`;
+  if (m < 1) return '방금';
+  if (m < 60) return `${m}분`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.floor(h / 24)}d`;
+  if (h < 24) return `${h}시간`;
+  return `${Math.floor(h / 24)}일`;
 }
 
 /** Clickable pulse tile that routes to its detail page. */
@@ -194,7 +194,7 @@ export default async function HomePage() {
       // August retainer": the glyph is the column, the money is in the line
       head: '$',
       headClass: 'text-os-accent',
-      body: `${(c.amount / 100).toLocaleString('en-US', { style: 'currency', currency: c.currency.toUpperCase(), maximumFractionDigits: 0 })} · ${c.description || 'charge'}`,
+      body: `${(c.amount / 100).toLocaleString('en-US', { style: 'currency', currency: c.currency.toUpperCase(), maximumFractionDigits: 0 })} · ${c.description || '결제'}`,
       when: relativeTime(new Date(c.created * 1000).toISOString()),
     }));
   const doneToday = [...doneCharges, ...doneRuns].sort((a, b) => b.time - a.time).slice(0, 8);
@@ -221,8 +221,8 @@ export default async function HomePage() {
   return (
     <div className="os-slab">
       <SlabTitle
-        eyebrow="command center"
-        title={`${greeting()}, Alex`}
+        eyebrow="커맨드 센터"
+        title={`Alex님, ${greeting()}`}
         meta={
           /* Honest state-of-the-world line  -  what needs you, straight from live data */
           <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px]">
@@ -241,30 +241,30 @@ export default async function HomePage() {
       <Rise as="section" i={1} className="mb-6 grid grid-cols-4 gap-3 max-[1100px]:grid-cols-2">
         <StatTile
           href="/integrations"
-          label="Systems"
+          label="시스템"
           value={<CountUp value={connected} />}
-          unit={`/ ${connections.length} connected`}
+          unit={`/ ${connections.length} 연결됨`}
           foot={<ConnectorBars connections={connections} />}
         />
         <StatTile
           href="/agents"
-          label="Agents live"
+          label="가동 중인 에이전트"
           value={<CountUp value={activeAgents} />}
-          unit={`/ ${agents.length} roster`}
+          unit={`/ 전체 ${agents.length}`}
           foot={<SparkBars data={agentsSpark} />}
         />
         <StatTile
           href="/comms"
-          label="Communications"
+          label="커뮤니케이션"
           value={<CountUp value={inbound} />}
-          unit="inbound · 24h"
+          unit="수신 · 24시간"
           foot={<SparkBars data={commsSpark} />}
         />
         <StatTile
           href="/brain"
-          label="G-Brain health"
+          label="G-Brain 상태"
           value={health == null ? ' - ' : <CountUp value={health} />}
-          unit={`/ 100${overview.doctor.connected ? ` · ${overview.doctor.status}` : ' · offline'}`}
+          unit={`/ 100${overview.doctor.connected ? ` · ${overview.doctor.status}` : ' · 오프라인'}`}
           valueClass="text-os-accent"
           foot={<HealthMeter value={health ?? null} />}
         />
@@ -279,11 +279,11 @@ export default async function HomePage() {
 
         <SlabCard
           i={3}
-          title="Operating volume"
+          title="운영 규모"
           className="flex flex-col self-start"
           action={
             <Link href="/agents" className="rounded-full border border-os-border px-3 py-1 font-mono text-[11px] text-os-dim hover:border-os-border-strong hover:text-os-text">
-              runs →
+              실행 기록 →
             </Link>
           }
         >
@@ -291,33 +291,33 @@ export default async function HomePage() {
             <BigStat
               value={vol.runsToday}
               chips={[
-                ...(vol.failedToday > 0 ? [{ tone: 'err' as const, text: `${vol.failedToday} failed` }] : []),
+                ...(vol.failedToday > 0 ? [{ tone: 'err' as const, text: `${vol.failedToday}건 실패` }] : []),
                 ...(chargedToday > 0
-                  ? [{ tone: 'ok' as const, text: `${chargedToday.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} charged` }]
+                  ? [{ tone: 'ok' as const, text: `${chargedToday.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })} 결제됨` }]
                   : []),
               ]}
-              caption={`agent runs today across ${vol.agentsToday} agent${vol.agentsToday === 1 ? '' : 's'}`}
+              caption={`오늘 에이전트 ${vol.agentsToday}개가 실행한 횟수`}
             />
-            <MeterStack meters={vol.meters} foot={`${connected} systems · ${activeAgents} agents · brain ${health ?? ' - '}/100`} />
+            <MeterStack meters={vol.meters} foot={`시스템 ${connected}개 · 에이전트 ${activeAgents}개 · 브레인 ${health ?? ' - '}/100`} />
           </div>
         </SlabCard>
       </div>
 
       {/* Second row: activity line, inbound mix dots, THE gradient card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={4} title="Agent activity">
+        <SlabCard i={4} title="에이전트 활동">
           <div className="px-6 pt-3">
-            <BigStat size={30} value={activityTotal} caption="agent runs, last 14 days" />
+            <BigStat size={30} value={activityTotal} caption="최근 14일간 에이전트 실행 횟수" />
           </div>
-          <StepLine series={activity} hue="var(--send-activity)" empty="No agent runs in the last 14 days." />
+          <StepLine series={activity} hue="var(--send-activity)" empty="최근 14일간 에이전트 실행 기록이 없습니다." />
         </SlabCard>
 
-        <SlabCard i={5} title="Inbound mix">
+        <SlabCard i={5} title="수신 채널 구성">
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <div>
-              <BigStat size={30} value={feed.length} caption="latest messages in the feed" />
+              <BigStat size={30} value={feed.length} caption="피드의 최신 메시지" />
               <Link href="/comms" className="mt-4 inline-block rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted hover:text-os-text">
-                <span className="font-semibold tabular-nums">{inbound}</span> in the last 24h →
+                최근 24시간 <span className="font-semibold tabular-nums">{inbound}</span>건 →
               </Link>
             </div>
             <DotMatrix cols={mix} hue="var(--ramp-1)" />
@@ -326,10 +326,10 @@ export default async function HomePage() {
 
         <InsightCard
           i={6}
-          badge="Needs you now"
+          badge="지금 확인 필요"
           value={attention.count}
           headline={attention.headline}
-          body={`${doneCount} thing${doneCount === 1 ? '' : 's'} already done today.`}
+          body={`오늘 이미 ${doneCount}건 완료했습니다.`}
           frac={attention.frac}
         />
       </div>
@@ -343,14 +343,14 @@ export default async function HomePage() {
         <Rise as="section" i={8} className="min-w-0">
           <div data-part="card" className="relative overflow-hidden rounded-panel border border-os-border bg-os-surface">
             <div data-part="card-head" className="flex items-center gap-3 border-b border-os-border px-4 py-2.5">
-              <Label>Done today</Label>
-              <span className="font-mono text-[10px] text-os-dim">{doneCount} since midnight</span>
+              <Label>오늘 완료</Label>
+              <span className="font-mono text-[10px] text-os-dim">자정 이후 {doneCount}건</span>
               <Link href="/agents" className="ml-auto font-mono text-[10px] text-os-dim linky">
-                runs →
+                실행 기록 →
               </Link>
             </div>
             {doneToday.length === 0 ? (
-              <div className="px-4 py-5 font-mono text-[11px] text-os-dim">nothing finished yet today</div>
+              <div className="px-4 py-5 font-mono text-[11px] text-os-dim">오늘은 아직 완료된 작업이 없습니다</div>
             ) : (
               <ul className="flex flex-col">
                 {doneToday.map((d) => (

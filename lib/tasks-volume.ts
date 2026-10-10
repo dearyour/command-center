@@ -39,12 +39,11 @@ export type TasksVolume = {
 };
 
 const OWNER_COLS = 6;
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
 const frac = (n: number, d: number) => (d > 0 ? Math.max(0, Math.min(1, n / d)) : 0);
 const pct = (f: number) => `${Math.round(f * 100)}%`;
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 const localDay = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-const dayLabel = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const dayLabel = (d: Date) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
 
 /** Mirrors the scheduled-jobs state: a missing agent can only fail, a late
     slot is overdue, then the last outcome decides. */
@@ -71,10 +70,10 @@ export function tasksVolume(x: TasksVolumeInput): TasksVolume {
   };
 
   const chips: TasksVolume['chips'] = [];
-  if (counts.open) chips.push({ text: `${counts.open} to do` });
-  if (counts.doing) chips.push({ tone: 'warn', text: `${counts.doing} in progress` });
-  if (counts.review) chips.push({ tone: 'accent', text: `${counts.review} in review` });
-  if (counts.done) chips.push({ tone: 'ok', text: `${counts.done} done` });
+  if (counts.open) chips.push({ text: `할 일 ${counts.open}` });
+  if (counts.doing) chips.push({ tone: 'warn', text: `진행 중 ${counts.doing}` });
+  if (counts.review) chips.push({ tone: 'accent', text: `검토 중 ${counts.review}` });
+  if (counts.done) chips.push({ tone: 'ok', text: `완료 ${counts.done}` });
 
   // Crons: the same health the strip colors.
   const enabled = x.jobs.filter((j) => j.enabled).length;
@@ -86,13 +85,13 @@ export function tasksVolume(x: TasksVolumeInput): TasksVolume {
   const boardF = frac(board.inProgress, board.total);
   const healthyF = frac(healthy, enabled);
   const meters: Meter[] = [
-    { label: `Kanban shipped (${counts.done}/${x.tasks.length})`, frac: shippedF, display: x.tasks.length ? pct(shippedF) : 'no tasks yet', hue: 'var(--ok)' },
-    { label: `Waiting on review (${counts.review}/${inFlight} in flight)`, frac: reviewF, display: inFlight ? pct(reviewF) : 'nothing in flight', hue: 'var(--accent)' },
-    { label: `Board issues in progress (${board.inProgress}/${board.total})`, frac: boardF, display: board.total ? pct(boardF) : 'board empty or offline', hue: 'var(--warn)' },
+    { label: `완료한 칸반 (${counts.done}/${x.tasks.length})`, frac: shippedF, display: x.tasks.length ? pct(shippedF) : '아직 작업 없음', hue: 'var(--ok)' },
+    { label: `검토 대기 (진행 중 ${inFlight}개 중 ${counts.review}개)`, frac: reviewF, display: inFlight ? pct(reviewF) : '진행 중인 것 없음', hue: 'var(--accent)' },
+    { label: `진행 중인 보드 이슈 (${board.inProgress}/${board.total})`, frac: boardF, display: board.total ? pct(boardF) : '보드가 비었거나 오프라인', hue: 'var(--warn)' },
     {
-      label: `Crons healthy (${healthy}/${enabled})`,
+      label: `정상 크론 (${healthy}/${enabled})`,
       frac: healthyF,
-      display: enabled ? pct(healthyF) : 'none enabled',
+      display: enabled ? pct(healthyF) : '활성화된 항목 없음',
       hue: enabled > 0 && healthy === enabled ? 'var(--ok)' : 'var(--warn)',
     },
   ];
@@ -152,24 +151,24 @@ export function tasksVolume(x: TasksVolumeInput): TasksVolume {
   const late = x.jobs.filter(jobNeedsYou);
   const value = counts.review + board.blocked + late.length;
   const parts: string[] = [];
-  if (counts.review) parts.push(`${counts.review} in review`);
-  if (board.blocked) parts.push(`${board.blocked} blocked`);
-  if (late.length) parts.push(`${plural(late.length, 'cron')} late or failing`);
+  if (counts.review) parts.push(`검토 중 ${counts.review}`);
+  if (board.blocked) parts.push(`막힘 ${board.blocked}`);
+  if (late.length) parts.push(`지연 또는 실패한 크론 ${late.length}개`);
   const openIssues = board.total - board.done;
   const whole = inFlight + openIssues + enabled;
   const insight = {
     value,
-    headline: parts.length ? `${parts.join(' · ')}.` : 'Nothing is waiting on you.',
+    headline: parts.length ? `${parts.join(' · ')}.` : '기다리고 있는 일이 없습니다.',
     body: late.length
       ? late
           .slice(0, 3)
           .map((j) => j.description)
           .join(' · ')
       : value
-        ? `${plural(inFlight, 'task')} in flight on the kanban.`
+        ? `칸반에서 진행 중인 작업 ${inFlight}개.`
         : whole
-          ? `${plural(inFlight, 'task')} open, nothing waiting on you.`
-          : 'No tasks, issues or crons yet.',
+          ? `열린 작업 ${inFlight}개, 기다리는 일은 없습니다.`
+          : '아직 작업, 이슈, 크론이 없습니다.',
     frac: frac(value, whole),
   };
 
@@ -178,9 +177,9 @@ export function tasksVolume(x: TasksVolumeInput): TasksVolume {
     counts,
     board,
     chips,
-    caption: `${x.tasks.length} on the local kanban · ${x.issues.length} on the board`,
+    caption: `로컬 칸반 ${x.tasks.length}개 · 보드 ${x.issues.length}개`,
     meters,
-    foot: `${plural(x.jobs.length, 'cron')} · ${runsAll} runs recorded · ${plural(agentsOnKanban, 'agent')} on the kanban`,
+    foot: `크론 ${x.jobs.length}개 · 실행 기록 ${runsAll}회 · 칸반의 에이전트 ${agentsOnKanban}개`,
     series,
     touchesInWindow,
     cron: { runsInWindow, failedInWindow, rhythm },

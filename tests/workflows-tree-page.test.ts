@@ -18,7 +18,7 @@ describe('/workflows: the page keeps the clock half and swaps the map half', () 
   test('scheduled tasks and the crons pill survive, fed by real cron_runs', () => {
     expect(page).toContain('<ScheduledTasks');
     expect(page).toContain('db.agents.all()');
-    expect(page).toMatch(/crons ·/);
+    expect(page).toMatch(/크론 \{jobs\.length\}개 ·/);
     expect(page).toContain('healthy');
     expect(page).toContain('byCron');
   });

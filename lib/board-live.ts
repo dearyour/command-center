@@ -52,7 +52,7 @@ export function boardDecisionFor(
 export function modelSummary(agents: PaperclipAgent[]): string {
   const counts = new Map<string, number>();
   for (const a of agents) {
-    const key = a.model ?? a.adapterType ?? 'unconfigured';
+    const key = a.model ?? a.adapterType ?? '설정 안 됨';
     counts.set(key, (counts.get(key) ?? 0) + 1);
   }
   return [...counts.entries()]

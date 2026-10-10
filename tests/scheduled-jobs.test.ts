@@ -52,7 +52,7 @@ describe('scheduledJobRows', () => {
   });
 
   test('turns the cron expression into a human label', () => {
-    expect(rows([cron()])[0].scheduleLabel).toBe('at 07:00, daily');
+    expect(rows([cron()])[0].scheduleLabel).toBe('매일 07:00');
   });
 
   test('an unparseable expression falls back to the raw string rather than blank', () => {

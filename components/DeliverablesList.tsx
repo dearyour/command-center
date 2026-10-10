@@ -33,13 +33,13 @@ import { DELIVERABLES_COLLAPSED_KEY, parseCollapsed } from '@/lib/deliverables-s
  */
 const ago = (iso: string): string => {
   const ms = Date.now() - new Date(iso).getTime();
-  if (!Number.isFinite(ms) || ms < 0) return 'now';
+  if (!Number.isFinite(ms) || ms < 0) return '방금';
   const m = Math.floor(ms / 60_000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m ago`;
+  if (m < 1) return '방금';
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
 };
 
 const size = (b: number): string =>
@@ -100,17 +100,15 @@ export function DeliverablesList({
   return (
     <section className="rounded-lg-t border border-os-border bg-os-surface">
       <div className="flex items-center gap-3 border-b border-os-border px-4 py-2.5">
-        <Label>Agent deliverables</Label>
+        <Label>에이전트 산출물</Label>
         <span className="font-mono text-[10px] text-os-dim">
           {groups === null
-            ? 'loading…'
-            : `${total} item${total === 1 ? '' : 's'} · ${groups.length} folder${
-                groups.length === 1 ? '' : 's'
-              }`}
+            ? '불러오는 중…'
+            : `항목 ${total}개 · 폴더 ${groups.length}개`}
         </span>
         <button
           onClick={onRefresh}
-          title="Refresh"
+          title="새로고침"
           className="pressable ml-auto rounded-full p-1.5 text-os-dim hover:text-os-text"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
@@ -119,9 +117,9 @@ export function DeliverablesList({
 
       {groups !== null && groups.length === 0 && (
         <p className="px-4 py-3 font-mono text-[10.5px] text-os-dim">
-          Nothing in review yet. Proposals appear as folders above; agent files land here when agents write
-          into their workspace deliverables folders on the board host — a dev machine that does not
-          host the board honestly shows none.
+          아직 검토할 것이 없습니다. 제안서는 위에 폴더로 표시되고, 에이전트가 보드 호스트의 작업 공간
+          산출물 폴더에 파일을 쓰면 여기에 나타납니다 — 보드를 호스팅하지 않는 개발용 컴퓨터에서는
+          아무것도 표시되지 않습니다.
         </p>
       )}
 
@@ -171,10 +169,10 @@ export function DeliverablesList({
                               <span
                                 title={
                                   unseenOf(d) === 'new'
-                                    ? 'New since you last looked'
-                                    : 'Rewritten since you read it'
+                                    ? '마지막으로 본 이후 새로 생김'
+                                    : '읽은 이후 다시 작성됨'
                                 }
-                                aria-label={unseenOf(d) === 'new' ? 'new' : 'updated'}
+                                aria-label={unseenOf(d) === 'new' ? '새 항목' : '업데이트됨'}
                                 className={`h-1.5 w-1.5 shrink-0 animate-pulse rounded-full ${
                                   unseenOf(d) === 'new' ? 'bg-os-accent' : 'bg-os-warn'
                                 }`}
@@ -187,10 +185,10 @@ export function DeliverablesList({
                               <button
                                 type="button"
                                 onClick={() => void copyCode(d.id, d.accessCode)}
-                                title="Copy the access code that opens this proposal"
+                                title="이 제안서를 여는 접근 코드 복사"
                                 className="pressable shrink-0 rounded-full border border-os-border-strong px-2 py-0.5 font-mono text-[9px] tracking-[0.08em] text-os-muted hover:border-os-dim hover:text-os-text"
                               >
-                                {copied === d.id ? 'copied' : d.accessCode}
+                                {copied === d.id ? '복사됨' : d.accessCode}
                               </button>
                             )}
                           </div>
@@ -203,10 +201,10 @@ export function DeliverablesList({
                         <button
                           type="button"
                           onClick={() => onOpen(d)}
-                          title="Review this without leaving the OS"
+                          title="OS를 벗어나지 않고 검토하기"
                           className="pressable flex shrink-0 items-center gap-1.5 rounded-full border border-os-border px-3 py-1.5 font-mono text-[10px] text-os-dim hover:border-os-dim hover:text-os-text"
                         >
-                          review
+                          검토
                         </button>
                         {d.kind === 'link' ? (
                           <a
@@ -216,7 +214,7 @@ export function DeliverablesList({
                             data-lens="c"
                             className="pressable is-dark flex shrink-0 items-center gap-1.5 rounded-full border border-os-border-strong bg-os-surface2 px-3 py-1.5 font-mono text-[10px] text-os-text"
                           >
-                            <ExternalLink className="h-3 w-3" /> open
+                            <ExternalLink className="h-3 w-3" /> 열기
                           </a>
                         ) : (
                           <a
@@ -225,7 +223,7 @@ export function DeliverablesList({
                             data-lens="c"
                             className="pressable is-dark flex shrink-0 items-center gap-1.5 rounded-full border border-os-border-strong bg-os-surface2 px-3 py-1.5 font-mono text-[10px] text-os-text"
                           >
-                            <Download className="h-3 w-3" /> download
+                            <Download className="h-3 w-3" /> 다운로드
                           </a>
                         )}
                       </div>

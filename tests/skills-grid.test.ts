@@ -16,7 +16,7 @@ describe('/skills mock-5g card wall', () => {
   const page = read('app/skills/page.tsx');
 
   test('a filter input narrows the wall by text', () => {
-    expect(grid).toMatch(/placeholder="filter skills/);
+    expect(grid).toMatch(/placeholder="스킬 검색/);
     expect(grid).toMatch(/setQuery/);
   });
 

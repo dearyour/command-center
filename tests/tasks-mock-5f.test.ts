@@ -65,9 +65,9 @@ describe('/tasks mock-5f: board queue', () => {
   const board = read('components/BoardTasks.tsx');
 
   test('the header is the mock: Board queue, open-issue count, open board link', () => {
-    expect(board).toContain('Board queue');
-    expect(board).toMatch(/open issues/);
-    expect(board).toMatch(/open board/i);
+    expect(board).toContain('보드 대기열');
+    expect(board).toMatch(/열린 이슈/);
+    expect(board).toMatch(/보드 열기/);
   });
 
   test('routing chips route the composer: Conductor routes / TECH / Sales', () => {
@@ -78,7 +78,7 @@ describe('/tasks mock-5f: board queue', () => {
   });
 
   test('the submit is Create issue and rows carry an age from updatedAt', () => {
-    expect(board).toContain('Create issue');
+    expect(board).toContain('이슈 만들기');
     expect(board).toContain('updatedAt');
     expect(board).toMatch(/ago\(/);
   });
@@ -93,7 +93,7 @@ describe('/tasks mock-5f: four-lane local kanban', () => {
 
   test('the review lane exists between doing and done', () => {
     expect(board).toContain("'review'");
-    expect(board).toContain("'In review'");
+    expect(board).toContain("'검토 중'");
   });
 
   test('advance walks open -> doing -> review -> done', () => {
@@ -102,8 +102,8 @@ describe('/tasks mock-5f: four-lane local kanban', () => {
   });
 
   test('the header is the mock: Local kanban with the drag-or-advance hint', () => {
-    expect(board).toContain('Local kanban');
-    expect(board).toContain('or click ▸ to advance');
+    expect(board).toContain('로컬 칸반');
+    expect(board).toContain('▸ 를 눌러 다음 단계로');
   });
 });
 

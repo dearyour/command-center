@@ -23,10 +23,10 @@ const usd = (cents: number, decimals = false) =>
   });
 
 const monthLabel = (month: string): string =>
-  new Date(`${month}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  new Date(`${month}-01T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 const dayLabel = (date: string): string =>
-  new Date(`${date}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  new Date(`${date}T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 
 /**
  * The full expenditure statement (the operator): fullscreen, month to

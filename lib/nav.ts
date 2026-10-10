@@ -33,28 +33,28 @@ import {
 export type NavItem = { href: string; label: string; icon: typeof Home };
 
 export const NAV_OPERATE: NavItem[] = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/comms', label: 'Comms', icon: MessageSquare },
-  { href: '/funnel', label: 'Funnel', icon: Filter },
-  { href: '/workflows', label: 'Workflows', icon: Workflow },
-  { href: '/social', label: 'Social', icon: Share2 },
-  { href: '/content', label: 'Content', icon: Clapperboard },
-  { href: '/brand-deals', label: 'Brand Deals', icon: Handshake },
-  { href: '/finances', label: 'Finances', icon: Wallet },
-  { href: '/trading', label: 'Trading', icon: CandlestickChart },
+  { href: '/', label: '홈', icon: Home },
+  { href: '/comms', label: '커뮤니케이션', icon: MessageSquare },
+  { href: '/funnel', label: '퍼널', icon: Filter },
+  { href: '/workflows', label: '워크플로', icon: Workflow },
+  { href: '/social', label: '소셜', icon: Share2 },
+  { href: '/content', label: '콘텐츠', icon: Clapperboard },
+  { href: '/brand-deals', label: '브랜드 협찬', icon: Handshake },
+  { href: '/finances', label: '재무', icon: Wallet },
+  { href: '/trading', label: '트레이딩', icon: CandlestickChart },
   // Slab import: last in Operate on purpose, outside the nine digit shortcuts.
-  { href: '/adpilot', label: 'AdPilot', icon: Crosshair },
+  { href: '/adpilot', label: '광고 파일럿', icon: Crosshair },
 ];
 
 // The agent workforce: the roster and the org chart that maps how they report.
 export const NAV_AGENTS: NavItem[] = [
-  { href: '/agents', label: 'Agents', icon: Users },
-  { href: '/chats', label: 'Chats', icon: MessagesSquare },
-  { href: '/tasks', label: 'Tasks', icon: ListChecks },
-  { href: '/skills', label: 'Skills', icon: Sparkles },
-  { href: '/org', label: 'Org Chart', icon: Network },
+  { href: '/agents', label: '에이전트', icon: Users },
+  { href: '/chats', label: '채팅', icon: MessagesSquare },
+  { href: '/tasks', label: '작업', icon: ListChecks },
+  { href: '/skills', label: '스킬', icon: Sparkles },
+  { href: '/org', label: '조직도', icon: Network },
   // Slab import: the system drawn from its own registries.
-  { href: '/blueprint', label: 'Blueprint', icon: Waypoints },
+  { href: '/blueprint', label: '설계도', icon: Waypoints },
 ];
 
 // The knowledge layer the agents draw on. G-Brain is the pure knowledge
@@ -62,19 +62,19 @@ export const NAV_AGENTS: NavItem[] = [
 // storage layers, pipeline, query path) so the graph tab stays a single view.
 export const NAV_INTELLIGENCE: NavItem[] = [
   { href: '/brain', label: 'G-Brain', icon: Brain },
-  { href: '/doctor', label: 'Doctor', icon: Stethoscope },
+  { href: '/doctor', label: '진단', icon: Stethoscope },
 ];
 
 export const NAV_SYSTEM: NavItem[] = [
-  { href: '/integrations', label: 'Connections', icon: Plug },
-  { href: '/usage', label: 'Usage', icon: Gauge },
-  { href: '/roadmap', label: 'Roadmap', icon: Map },
-  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/reference', label: 'Reference Model', icon: LayoutGrid },
+  { href: '/integrations', label: '연결', icon: Plug },
+  { href: '/usage', label: '사용량', icon: Gauge },
+  { href: '/roadmap', label: '로드맵', icon: Map },
+  { href: '/analytics', label: '분석', icon: BarChart3 },
+  { href: '/reference', label: '참조 모델', icon: LayoutGrid },
 ];
 
 // At the very bottom: persona templates that can run variants of this platform.
-export const NAV_LIBRARY: NavItem[] = [{ href: '/personas', label: 'Personas', icon: Layers }];
+export const NAV_LIBRARY: NavItem[] = [{ href: '/personas', label: '페르소나', icon: Layers }];
 
 /** Visible top-to-bottom order across all groups. */
 export const NAV_ORDER: string[] = [

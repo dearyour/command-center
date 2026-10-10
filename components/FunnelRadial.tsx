@@ -179,7 +179,7 @@ export function FunnelRadial({
   }, [nodes]);
 
   if (nodes.length === 0) {
-    return <p className="py-6 text-center font-mono text-[11.5px] text-os-dim">No journeys for this filter yet.</p>;
+    return <p className="py-6 text-center font-mono text-[11.5px] text-os-dim">이 필터에 해당하는 여정이 아직 없습니다.</p>;
   }
 
   const selected = nodes.find((n) => n.id === selectedId) ?? null;
@@ -194,7 +194,7 @@ export function FunnelRadial({
           if (document.fullscreenElement) void document.exitFullscreen();
           else void rootRef.current?.requestFullscreen();
         }}
-        aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+        aria-label={isFullscreen ? '전체 화면 종료' : '전체 화면'}
         className="pressable absolute right-1 top-1 z-20 rounded-sm-t border border-os-border bg-os-surface2 p-1.5 text-os-dim hover:border-os-border-strong hover:text-os-text"
       >
         {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
@@ -213,7 +213,7 @@ export function FunnelRadial({
         viewBox={`0 0 ${W} ${H}`}
         className="funnel-radial-canvas block w-full"
         role="img"
-        aria-label="Clients spiralling from their acquisition source into the conversion core"
+        aria-label="유입 경로에서 전환 중심부로 나선형으로 들어오는 고객들"
         onClick={() => setSelectedId(null)}
       >
         {/* stage rings  -  the journey's depth markers, outside → in */}
@@ -290,7 +290,7 @@ export function FunnelRadial({
           fontFamily="var(--font-mono)"
           style={{ textTransform: 'uppercase', letterSpacing: '0.18em' }}
         >
-          converted
+          전환
         </text>
         <text x={CX} y={CY + 14} textAnchor="middle" fill="var(--ok)" fontSize={13} fontFamily="var(--font-mono)">
           {convertedTotal}
@@ -356,17 +356,17 @@ export function FunnelRadial({
 
       <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-wide text-os-dim">
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full" style={{ background: 'var(--funnel-s1)' }} /> hue = where they came from
+          <span className="h-2 w-2 rounded-full" style={{ background: 'var(--funnel-s1)' }} /> 색상 = 유입 경로
         </span>
-        <span>rings run outside → in · center = purchase</span>
+        <span>고리는 바깥 → 안쪽 순 · 중심 = 구매</span>
         <span className="flex items-center gap-1.5">
           <span
             className="h-2 w-2 rounded-full"
             style={{ background: 'color-mix(in oklab, var(--err) 70%, var(--funnel-s1))', opacity: 0.6 }}
           />{' '}
-          fades red after {DECAY_FADE_START}d quiet → archive at {DECAY_DAYS}d
+          {DECAY_FADE_START}일 조용하면 빨갛게 바램 → {DECAY_DAYS}일에 보관
         </span>
-        <span className="ml-auto">wedge = Trakyo first touch when attributed · untracked = word of mouth · click a node</span>
+        <span className="ml-auto">부채꼴 = 추적된 Trakyo 첫 접점 · 추적 안 됨 = 입소문 · 노드를 클릭하세요</span>
       </div>
     </div>
   );

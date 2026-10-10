@@ -9,7 +9,7 @@ import { STATEMENT_UPLOADED, type StatementUploadedDetail } from '@/lib/statemen
 type Target = CardId | 'bank';
 
 const monthName = (month: string): string =>
-  new Date(`${month}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  new Date(`${month}-01T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 const TARGETS: { id: Target; label: string }[] = [
   ...CARD_LANES.map((c) => ({ id: c.id as Target, label: c.label })),

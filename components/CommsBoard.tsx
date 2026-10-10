@@ -80,14 +80,14 @@ function ReaderRow({
         composing ? (
           <div className="mt-2.5 rounded-xl border border-os-border bg-os-bg p-2.5">
             <p className="mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.15em] text-os-dim">
-              to {item.replyTo} · re: {item.preview.slice(0, 60)}
+              받는 사람 {item.replyTo} · 답장: {item.preview.slice(0, 60)}
             </p>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={4}
               autoFocus
-              placeholder="Write the reply…"
+              placeholder="답장을 작성하세요…"
               className="w-full resize-y rounded-ctl border border-os-border bg-os-surface px-2.5 py-2 text-[12px] leading-relaxed text-os-text outline-none placeholder:text-os-dim focus:border-os-border-strong"
             />
             <div className="mt-2 flex items-center gap-2">
@@ -97,7 +97,7 @@ function ReaderRow({
                 className="pressable flex items-center gap-1.5 rounded-ctl border border-os-border bg-os-surface px-3 py-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-os-accent hover:border-os-border-strong disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Send className="h-3 w-3" />
-                {mine?.phase === 'sending' ? 'sending…' : 'send'}
+                {mine?.phase === 'sending' ? '보내는 중…' : '보내기'}
               </button>
               <button
                 onClick={() => setComposing(false)}
@@ -105,8 +105,8 @@ function ReaderRow({
               >
                 cancel
               </button>
-              {mine?.phase === 'sent' && <Badge tone="ok">sent</Badge>}
-              {mine?.phase === 'error' && <Badge tone="err">{mine.detail ?? 'failed'}</Badge>}
+              {mine?.phase === 'sent' && <Badge tone="ok">보냄</Badge>}
+              {mine?.phase === 'error' && <Badge tone="err">{mine.detail ?? '실패'}</Badge>}
             </div>
           </div>
         ) : (
@@ -118,7 +118,7 @@ function ReaderRow({
               <CornerUpLeft className="h-3 w-3" />
               reply
             </button>
-            {mine?.phase === 'sent' && <Badge tone="ok">sent</Badge>}
+            {mine?.phase === 'sent' && <Badge tone="ok">보냄</Badge>}
           </div>
         )
       ) : null}
@@ -157,7 +157,7 @@ function InboxReader({
       if (res.ok && body.ok !== false) setSendState({ id: item.id, phase: 'sent' });
       else setSendState({ id: item.id, phase: 'error', detail: body.error ?? `HTTP ${res.status}` });
     } catch {
-      setSendState({ id: item.id, phase: 'error', detail: 'network error' });
+      setSendState({ id: item.id, phase: 'error', detail: '네트워크 오류' });
     }
   };
 
@@ -173,14 +173,14 @@ function InboxReader({
           <span className="font-mono text-[10px] text-os-dim">{lane.detail}</span>
           <span className="ml-auto flex items-center gap-2.5">
             {lane.unread > 0 ? <Badge tone="accent">{lane.unread} unread</Badge> : null}
-            <button onClick={onClose} aria-label="Close" className="pressable text-os-dim hover:text-os-text">
+            <button onClick={onClose} aria-label="닫기" className="pressable text-os-dim hover:text-os-text">
               <X className="h-4 w-4" />
             </button>
           </span>
         </div>
         <div className="flex flex-col divide-y divide-os-border overflow-y-auto">
           {lane.items.length === 0 ? (
-            <p className="px-4 py-5 font-mono text-[10.5px] text-os-dim">Nothing here right now.</p>
+            <p className="px-4 py-5 font-mono text-[10.5px] text-os-dim">지금은 아무것도 없습니다.</p>
           ) : (
             lane.items.map((it) => (
               <ReaderRow key={it.id} lane={lane} item={it} nowISO={nowISO} sendState={sendState} onSend={send} />
@@ -206,8 +206,8 @@ function LaneColumn({ lane, nowISO, onExpand }: { lane: CommsLane; nowISO: strin
           {onExpand ? (
             <button
               onClick={onExpand}
-              title={`Expand ${lane.name} — read + reply`}
-              aria-label={`Expand ${lane.name}`}
+              title={`${lane.name} 펼치기 — 읽기 + 답장`}
+              aria-label={`${lane.name} 펼치기`}
               className="pressable text-os-dim hover:text-os-accent"
             >
               <Maximize2 className="h-3 w-3" />
@@ -218,7 +218,7 @@ function LaneColumn({ lane, nowISO, onExpand }: { lane: CommsLane; nowISO: strin
       <div className="flex max-h-[calc(100dvh-19rem)] min-h-[320px] flex-col divide-y divide-os-border overflow-y-auto">
         {lane.items.length === 0 ? (
           <p className="px-3 py-4 font-mono text-[10px] leading-relaxed text-os-dim">
-            {ok ? 'Nothing here right now.' : lane.detail}
+            {ok ? '지금은 아무것도 없습니다.' : lane.detail}
           </p>
         ) : (
           lane.items.map((it) => <ItemRow key={it.id} item={it} nowISO={nowISO} />)

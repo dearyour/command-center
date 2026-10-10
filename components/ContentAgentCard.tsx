@@ -4,6 +4,7 @@ import { Wrench } from 'lucide-react';
 import { AsyncButton } from '@/components/AsyncButton';
 import { Dot } from '@/components/terminal';
 import type { Agent } from '@/lib/schemas';
+import { statusKo } from '@/lib/status-labels';
 
 function prettyTool(slug: string): string {
   return slug.split(/[-_]/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
@@ -35,7 +36,7 @@ export function ContentAgentCard({ agent, lead = false }: { agent: Agent; lead?:
             <span className="truncate text-[14px] font-bold">{agent.name}</span>
             {lead && (
               <span className="rounded-full border border-[var(--accent-line)] px-1.5 py-px font-mono text-[9px] uppercase tracking-wide text-os-accent">
-                lead
+                리드
               </span>
             )}
           </div>
@@ -49,10 +50,10 @@ export function ContentAgentCard({ agent, lead = false }: { agent: Agent; lead?:
               agent.status === 'active' ? 'text-os-ok' : 'text-os-warn'
             }`}
           >
-            {agent.status}
+            {statusKo(agent.status)}
           </span>
-          <AsyncButton run={run} tone="secondary" busyLabel="running" doneLabel="ok" showElapsed>
-            ▸ run
+          <AsyncButton run={run} tone="secondary" busyLabel="실행 중" doneLabel="완료" showElapsed>
+            ▸ 실행
           </AsyncButton>
         </div>
       </div>

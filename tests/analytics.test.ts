@@ -68,7 +68,7 @@ describe('/analytics mock-5i run-volume card', () => {
     expect(card).toContain('chipClass(range === r)');
     // chips render {r}d over the ranges array, so pin the array + template
     expect(card).toMatch(/RANGES[^=]*= \[7, 14, 30\]/);
-    expect(card).toMatch(/\{r\}d/);
+    expect(card).toMatch(/\{r\}일/);
     expect(card).toMatch(/useState[^;]*14/);
   });
 
@@ -78,8 +78,8 @@ describe('/analytics mock-5i run-volume card', () => {
   });
 
   test('the footer reads first day / hover a day / today', () => {
-    expect(card).toMatch(/hover a day/);
-    expect(card).toMatch(/today/);
+    expect(card).toMatch(/날짜에 마우스를 올려 보세요/);
+    expect(card).toMatch(/오늘/);
   });
 
   test('the page feeds the card the real 30-day run log and retires the inline chart', () => {

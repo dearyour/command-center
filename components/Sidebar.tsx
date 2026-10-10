@@ -176,7 +176,7 @@ export function Sidebar() {
             <div>
               <div className="text-[13px] font-bold tracking-[0.14em]">COMMAND CENTER</div>
               <div className="mt-[3px] whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">
-                v3 · Operator Mode
+                v3 · 운영자 모드
               </div>
             </div>
           </div>
@@ -184,8 +184,8 @@ export function Sidebar() {
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={collapsed ? '사이드바 펼치기' : '사이드바 접기'}
+          aria-label={collapsed ? '사이드바 펼치기' : '사이드바 접기'}
           aria-expanded={!collapsed}
           data-lens="c"
           className="pressable is-dark flex h-7 w-7 shrink-0 items-center justify-center rounded-ctl border border-transparent text-os-dim hover:border-os-border hover:text-os-text"
@@ -194,11 +194,11 @@ export function Sidebar() {
         </button>
       </div>
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2.5 pb-2">
-        <NavGroup title="Operate" items={NAV_OPERATE} pathname={pathname} collapsed={collapsed} onTip={setTip} />
-        <NavGroup title="Agents" items={NAV_AGENTS} pathname={pathname} collapsed={collapsed} onTip={setTip} />
-        <NavGroup title="Intelligence" items={NAV_INTELLIGENCE} pathname={pathname} collapsed={collapsed} onTip={setTip} />
-        <NavGroup title="System" items={NAV_SYSTEM} pathname={pathname} collapsed={collapsed} onTip={setTip} />
-        <NavGroup title="Variants" items={NAV_LIBRARY} pathname={pathname} collapsed={collapsed} onTip={setTip} />
+        <NavGroup title="운영" items={NAV_OPERATE} pathname={pathname} collapsed={collapsed} onTip={setTip} />
+        <NavGroup title="에이전트" items={NAV_AGENTS} pathname={pathname} collapsed={collapsed} onTip={setTip} />
+        <NavGroup title="인텔리전스" items={NAV_INTELLIGENCE} pathname={pathname} collapsed={collapsed} onTip={setTip} />
+        <NavGroup title="시스템" items={NAV_SYSTEM} pathname={pathname} collapsed={collapsed} onTip={setTip} />
+        <NavGroup title="변형" items={NAV_LIBRARY} pathname={pathname} collapsed={collapsed} onTip={setTip} />
       </nav>
       <div
         className={`flex flex-col gap-2 border-t border-os-border py-3.5 ${
@@ -207,14 +207,14 @@ export function Sidebar() {
       >
         <div className="flex items-center gap-2 whitespace-nowrap font-mono text-[10px] text-os-muted">
           <span className="dot ok pulse" />
-          {!collapsed && <>{live ? `${live.up}/${live.total}` : '—/—'} systems live</>}
+          {!collapsed && <>{live ? `${live.up}/${live.total}` : '—/—'} 시스템 가동 중</>}
         </div>
         {!collapsed && (
           // The host is read at runtime: hardcoding localhost read as a lie the
           // moment the OS was served from a remote host. Wraps rather than nowrap,
           // which used to clip "real agents" off the edge of the rail.
           <div className="break-words font-mono text-[10px] leading-relaxed text-os-dim">
-            {host ?? '…'} · sqlite · real agents
+            {host ?? '…'} · sqlite · 실제 에이전트
           </div>
         )}
       </div>
@@ -236,8 +236,8 @@ export function Sidebar() {
           onDoubleClick={() => setWidth(DEFAULT_W)}
           role="separator"
           aria-orientation="vertical"
-          aria-label="Resize sidebar"
-          title="Drag to resize · double-click to reset"
+          aria-label="사이드바 크기 조절"
+          title="드래그해서 크기 조절 · 더블클릭하면 초기화"
           className="absolute inset-y-0 -right-1 z-30 w-2 cursor-col-resize hover:bg-[var(--accent-soft)]"
         />
       )}

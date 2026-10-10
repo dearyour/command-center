@@ -14,7 +14,7 @@ export type SeriesPoint = { label: string; count: number };
 export function StepLine({
   series,
   hue,
-  empty = 'No activity in this window.',
+  empty = '이 기간에는 활동이 없습니다.',
   unit = '',
 }: {
   series: SeriesPoint[];

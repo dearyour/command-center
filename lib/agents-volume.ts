@@ -34,15 +34,14 @@ export type AgentsVolume = {
 const PENDING = new Set(['running', 'queued', 'pending']);
 const frac = (n: number, d: number) => (d > 0 ? Math.max(0, Math.min(1, n / d)) : 0);
 const pct = (f: number) => `${Math.round(f * 100)}%`;
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 /** Open stages in board order; the board spells review two ways. */
 const LANES: Array<[string, string[]]> = [
-  ['doing', ['in_progress']],
-  ['review', ['in_review', 'review']],
-  ['todo', ['todo']],
-  ['blocked', ['blocked']],
-  ['backlog', ['backlog']],
+  ['진행 중', ['in_progress']],
+  ['검토', ['in_review', 'review']],
+  ['할 일', ['todo']],
+  ['막힘', ['blocked']],
+  ['백로그', ['backlog']],
 ];
 
 /** The board hands back its latest runs only (app/agents + /api/board/live
@@ -71,8 +70,8 @@ export function agentsVolume(
   const oldest = Math.min(...p.runs.map((r) => (r.startedAt ? new Date(r.startedAt).getTime() : Infinity)));
   const truncated = p.runs.length >= RUNS_FETCHED && Number.isFinite(oldest) && oldest > start.getTime();
   const window = truncated
-    ? `since ${new Date(oldest).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-    : `${days}d`;
+    ? `${new Date(oldest).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}부터`
+    : `${days}일`;
   const failed = (s: string) => !RUN_OK.has(s) && !PENDING.has(s);
   const finished = inWindow.filter((r) => !PENDING.has(r.status));
   const okRuns = finished.filter((r) => RUN_OK.has(r.status)).length;
@@ -100,10 +99,10 @@ export function agentsVolume(
     return {
       headline: 0,
       counts,
-      chips: [{ tone: 'err', text: 'board unreachable' }],
-      caption: 'Paperclip is not answering, so there is nothing to count',
+      chips: [{ tone: 'err', text: '보드 연결 불가' }],
+      caption: 'Paperclip이 응답하지 않아 셀 것이 없습니다',
       meters: [],
-      foot: 'no live board',
+      foot: '실시간 보드 없음',
       openTasks: 0,
       series,
       window,
@@ -111,15 +110,15 @@ export function agentsVolume(
       failedInWindow: 0,
       bySeat: [],
       lanes,
-      insight: { value: 0, headline: 'Board unreachable.', body: 'No numbers until Paperclip answers on the tailnet.', frac: 0 },
+      insight: { value: 0, headline: '보드에 연결할 수 없습니다.', body: 'tailnet에서 Paperclip이 응답하기 전까지는 숫자가 없습니다.', frac: 0 },
     };
   }
 
   const chips: AgentsVolume['chips'] = [];
-  if (counts.running) chips.push({ tone: 'ok', text: `${counts.running} running` });
-  if (counts.idle) chips.push({ text: `${counts.idle} idle` });
-  if (counts.paused) chips.push({ tone: 'warn', text: `${counts.paused} paused` });
-  if (counts.error) chips.push({ tone: 'err', text: `${counts.error} in error` });
+  if (counts.running) chips.push({ tone: 'ok', text: `실행 중 ${counts.running}` });
+  if (counts.idle) chips.push({ text: `대기 ${counts.idle}` });
+  if (counts.paused) chips.push({ tone: 'warn', text: `일시정지 ${counts.paused}` });
+  if (counts.error) chips.push({ tone: 'err', text: `오류 ${counts.error}` });
 
   const seats = stats.seats;
   const runF = frac(counts.running, seats);
@@ -127,22 +126,22 @@ export function agentsVolume(
   const okF = frac(okRuns, finished.length);
   const doneF = frac(done, live.length);
   const meters: Meter[] = [
-    { label: `Seats running (${counts.running}/${seats})`, frac: runF, display: counts.running ? pct(runF) : 'none running', hue: 'var(--ok)' },
-    { label: `Heartbeat in 24h (${stats.heartbeats24h}/${seats})`, frac: beatF, display: seats ? pct(beatF) : 'no seats', hue: 'var(--accent)' },
+    { label: `실행 중인 자리 (${counts.running}/${seats})`, frac: runF, display: counts.running ? pct(runF) : '실행 중 없음', hue: 'var(--ok)' },
+    { label: `24시간 내 하트비트 (${stats.heartbeats24h}/${seats})`, frac: beatF, display: seats ? pct(beatF) : '자리 없음', hue: 'var(--accent)' },
     {
-      label: `Runs OK · ${window} (${okRuns}/${finished.length})`,
+      label: `성공한 실행 · ${window} (${okRuns}/${finished.length})`,
       frac: okF,
-      display: finished.length ? `${okRuns} ok · ${failedInWindow} failed` : 'no finished runs',
+      display: finished.length ? `성공 ${okRuns} · 실패 ${failedInWindow}` : '끝난 실행 없음',
       hue: 'var(--ramp-1)',
     },
-    { label: `Tasks done (${done}/${live.length})`, frac: doneF, display: live.length ? pct(doneF) : 'no tasks', hue: 'var(--ramp-4)' },
+    { label: `완료한 작업 (${done}/${live.length})`, frac: doneF, display: live.length ? pct(doneF) : '작업 없음', hue: 'var(--ramp-4)' },
   ];
 
   const waiting = lanes[1].count + lanes[3].count;
   const insight = {
     value: waiting,
-    headline: waiting ? `${plural(waiting, 'task')} waiting on review or unblocking.` : 'Nothing on the board is waiting on you.',
-    body: `${plural(counts.error, 'seat')} in error · ${plural(failed24h, 'failed run')} in 24h`,
+    headline: waiting ? `검토 또는 차단 해제를 기다리는 작업 ${waiting}개.` : '보드에서 당신을 기다리는 것이 없습니다.',
+    body: `오류 자리 ${counts.error}개 · 24시간 내 실패한 실행 ${failed24h}회`,
     frac: frac(waiting, stats.openTasks),
   };
 
@@ -150,9 +149,9 @@ export function agentsVolume(
     headline: seats,
     counts,
     chips,
-    caption: `seats on the Paperclip board · ${plural(models, 'model')}`,
+    caption: `Paperclip 보드의 자리 · 모델 ${models}개`,
     meters,
-    foot: `${plural(stats.openTasks, 'open task')} · ${plural(stats.runs24h, 'run')} in 24h`,
+    foot: `열린 작업 ${stats.openTasks}개 · 24시간 내 실행 ${stats.runs24h}회`,
     openTasks: stats.openTasks,
     series,
     window,

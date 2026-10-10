@@ -45,9 +45,9 @@ export function CommsTabs({
       <div className="mb-5 flex items-center gap-2 border-b border-os-border pb-3">
         <SlidingTabs<Tab>
           tabs={[
-            { id: 'messaging', label: 'Messaging', count: unread },
-            { id: 'meetings', label: 'Meetings', count: events.length },
-            { id: 'recordings', label: 'Recordings', count: recordings.recordings.length },
+            { id: 'messaging', label: '메시지', count: unread },
+            { id: 'meetings', label: '회의', count: events.length },
+            { id: 'recordings', label: '녹음', count: recordings.recordings.length },
           ]}
           value={tab}
           onChange={setTab}
@@ -55,7 +55,7 @@ export function CommsTabs({
           tabWidth={120}
         />
         <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.15em] text-os-dim">
-          {tab === 'messaging' ? `${unread} unread` : tab === 'meetings' ? 'next 7 days' : 'plaud + fathom · newest first'}
+          {tab === 'messaging' ? `안 읽음 ${unread}` : tab === 'meetings' ? '앞으로 7일' : 'plaud + fathom · 최신순'}
         </span>
       </div>
 

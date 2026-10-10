@@ -40,7 +40,6 @@ export type CommsVolume = {
   insight: { value: number; headline: string; body: string; frac: number };
 };
 
-const plural = (n: number, word: string, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
 const frac = (n: number, d: number) => (d > 0 ? n / d : 0);
 
 /** Local calendar day, the day Alex lived. */
@@ -82,42 +81,42 @@ export function commsVolume(x: CommsVolumeInput): CommsVolume {
   const errored = x.sources.filter((s) => s.state === 'error').length;
 
   const chips: CommsVolume['chips'] = [];
-  if (urgentItems.length > 0) chips.push({ tone: 'warn', text: `${urgentItems.length} priority unread` });
-  if (slackUnread > 0) chips.push({ tone: 'accent', text: `${slackUnread} Slack unread` });
-  if (errored > 0) chips.push({ tone: 'err', text: plural(errored, 'source error') });
+  if (urgentItems.length > 0) chips.push({ tone: 'warn', text: `우선 안 읽음 ${urgentItems.length}` });
+  if (slackUnread > 0) chips.push({ tone: 'accent', text: `Slack 안 읽음 ${slackUnread}` });
+  if (errored > 0) chips.push({ tone: 'err', text: `소스 오류 ${errored}` });
 
   const caption =
     x.lanes.length === 0
-      ? 'no inboxes configured yet'
-      : `unread across ${plural(emailLanes.length, 'inbox', 'inboxes')}${x.lanes.length > emailLanes.length ? ' + WhatsApp' : ''} · ${plural(items.length, 'thread')} in view`;
+      ? '아직 설정된 받은편지함이 없습니다'
+      : `받은편지함 ${emailLanes.length}개${x.lanes.length > emailLanes.length ? ' + WhatsApp' : ''}의 안 읽은 메시지 · 스레드 ${items.length}개 표시 중`;
 
   const today = localMidnight(now, 0);
   const series = perDay(
     items.map((i) => i.ts).filter((ts) => Date.parse(ts) <= now.getTime()),
     localMidnight(now, -(days - 1)),
     days,
-    (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    (d) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }),
   );
   const meetings = perDay(
     x.events.map((e) => e.start),
     today,
     7,
-    (d) => d.toLocaleDateString('en-US', { weekday: 'short' }),
+    (d) => d.toLocaleDateString('ko-KR', { weekday: 'short' }),
   );
   const meetingsTotal = meetings.reduce((n, m) => n + m.count, 0);
   const recs = x.recordings.length;
 
   const meters: CommsMeter[] = [
-    { label: `Email (${emailUnread})`, frac: frac(emailUnread, headline), display: `${emailUnread} unread`, hue: 'var(--ramp-1)' },
-    { label: `WhatsApp (${waUnread})`, frac: frac(waUnread, headline), display: `${waUnread} unread`, hue: 'var(--ramp-3)' },
+    { label: `이메일 (${emailUnread})`, frac: frac(emailUnread, headline), display: `안 읽음 ${emailUnread}`, hue: 'var(--ramp-1)' },
+    { label: `WhatsApp (${waUnread})`, frac: frac(waUnread, headline), display: `안 읽음 ${waUnread}`, hue: 'var(--ramp-3)' },
     {
-      label: `Slack clients waiting on you (${waitingCards.length}/${x.slackCards.length})`,
+      label: `답변을 기다리는 Slack 고객 (${waitingCards.length}/${x.slackCards.length})`,
       frac: frac(waitingCards.length, x.slackCards.length),
-      display: x.slackCards.length ? `${waitingCards.length} of ${x.slackCards.length}` : 'no clients linked',
+      display: x.slackCards.length ? `${x.slackCards.length}명 중 ${waitingCards.length}명` : '연결된 고객 없음',
       hue: 'var(--warn)',
     },
     {
-      label: `Sources connected (${connected}/${x.sources.length})`,
+      label: `연결된 소스 (${connected}/${x.sources.length})`,
       frac: frac(connected, x.sources.length),
       display: `${Math.round(frac(connected, x.sources.length) * 100)}%`,
       hue: 'var(--accent)',
@@ -131,17 +130,17 @@ export function commsVolume(x: CommsVolumeInput): CommsVolume {
     headline,
     chips,
     caption,
-    meta: `${headline} unread · ${connected}/${x.sources.length} sources connected · ${plural(meetingsTotal, 'meeting')} next 7 days · ${plural(recs, 'recording')}`,
+    meta: `안 읽음 ${headline} · 소스 ${connected}/${x.sources.length} 연결됨 · 앞으로 7일간 회의 ${meetingsTotal}건 · 녹음 ${recs}건`,
     meters,
-    foot: `${plural(meetingsTotal, 'meeting')} next 7 days · ${plural(recs, 'recent recording')}`,
+    foot: `앞으로 7일간 회의 ${meetingsTotal}건 · 최근 녹음 ${recs}건`,
     series,
     seriesTotal: series.reduce((n, s) => n + s.count, 0),
     meetings,
     meetingsTotal,
     insight: {
       value,
-      headline: `${plural(waitingCards.length, 'client thread')} waiting on you · ${urgentItems.length} priority unread.`,
-      body: waitingNames.slice(0, 3).join(' · ') || 'Nobody is waiting on you. The threads that matter are answered.',
+      headline: `답변을 기다리는 고객 스레드 ${waitingCards.length}개 · 우선 안 읽음 ${urgentItems.length}건.`,
+      body: waitingNames.slice(0, 3).join(' · ') || '기다리는 사람이 없습니다. 중요한 스레드는 모두 답장했습니다.',
       frac: frac(value, x.slackCards.length + priorityItems),
     },
   };

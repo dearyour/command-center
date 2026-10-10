@@ -44,13 +44,14 @@ export type SkillCard = {
 const STATUS: Record<string, string> = { live: 'var(--ok)', learning: 'var(--warn)', planned: 'var(--text-3)' };
 
 type Filter = 'All' | 'Claude Code' | 'Operator' | 'Draft';
+const FILTER_LABEL: Record<Filter, string> = { All: '전체', 'Claude Code': 'Claude Code', Operator: '운영자', Draft: '초안' };
 const isDraft = (c: SkillCard) => c.status != null && c.status !== 'live';
 const matches = (c: SkillCard, f: Filter) =>
   f === 'All' ? true : f === 'Draft' ? isDraft(c) : f === 'Claude Code' ? c.kind === 'claude' : c.kind === 'operator';
 
 /** What sits above the title: the card's source and scope. */
 const eyebrowOf = (c: SkillCard) =>
-  c.kind === 'claude' ? `Claude Code · ${c.id.includes(':') ? 'plugin' : 'user'}` : c.group;
+  c.kind === 'claude' ? `Claude Code · ${c.id.includes(':') ? '플러그인' : '사용자'}` : c.group;
 
 /** The tool/nature each skill runs on, as an icon. */
 function skillIcon(card: SkillCard): LucideIcon {
@@ -141,9 +142,9 @@ export function SkillsGrid({ cards, sourceNote, i = 6 }: { cards: SkillCard[]; s
     try {
       const res = await fetch(`/api/skills/${encodeURIComponent(card.id)}`);
       const body = (await res.json()) as { markdown?: string; error?: string };
-      setMd(body.markdown ?? `SKILL.md could not be read (${body.error ?? res.status}).`);
+      setMd(body.markdown ?? `SKILL.md를 읽을 수 없습니다 (${body.error ?? res.status}).`);
     } catch {
-      setMd('SKILL.md could not be read.');
+      setMd('SKILL.md를 읽을 수 없습니다.');
     }
   };
 
@@ -179,11 +180,11 @@ export function SkillsGrid({ cards, sourceNote, i = 6 }: { cards: SkillCard[]; s
       <SlabCard
         i={i}
         className="mt-6"
-        title="Skills"
+        title="스킬"
         sub={`${shown.length} of ${cards.length}`}
         action={FILTERS.map((f) => (
           <button key={f} onClick={() => setFilter(f)} className={chipClass(filter === f)}>
-            {f} {cards.filter((c) => matches(c, f)).length}
+            {FILTER_LABEL[f]} {cards.filter((c) => matches(c, f)).length}
           </button>
         ))}
       >
@@ -192,7 +193,7 @@ export function SkillsGrid({ cards, sourceNote, i = 6 }: { cards: SkillCard[]; s
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="filter skills"
+            placeholder="스킬 검색"
             className="h-[34px] w-52 rounded-full border border-os-border bg-os-bg px-4 font-mono text-[12px] text-os-text placeholder:text-os-dim focus:border-os-border-strong focus:outline-none"
           />
         </div>
@@ -211,7 +212,7 @@ export function SkillsGrid({ cards, sourceNote, i = 6 }: { cards: SkillCard[]; s
                   <button
                     key={c.id}
                     onClick={() => open(c)}
-                    title={`${c.name} · open SKILL.md`}
+                    title={`${c.name} · SKILL.md 열기`}
                     data-lens="r"
                     className="pressable is-row group flex flex-col gap-2 rounded-[10px] border border-os-border bg-os-bg p-4 text-left"
                   >
@@ -249,20 +250,20 @@ export function SkillsGrid({ cards, sourceNote, i = 6 }: { cards: SkillCard[]; s
               <span className="flex shrink-0 items-center gap-3">
                 <button
                   onClick={() => download(viewing)}
-                  title="Download SKILL.md"
+                  title="SKILL.md 다운로드"
                   className="pressable flex items-center gap-1.5 rounded-md border border-os-border px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-os-dim hover:border-os-border-strong hover:text-os-text"
                 >
                   <Download className="h-3 w-3" />
                   skill.md
                 </button>
-                <button onClick={() => setViewing(null)} aria-label="Close" className="pressable shrink-0 text-os-dim hover:text-os-text">
+                <button onClick={() => setViewing(null)} aria-label="닫기" className="pressable shrink-0 text-os-dim hover:text-os-text">
                   <X className="h-4 w-4" />
                 </button>
               </span>
             </div>
             <div className="overflow-y-auto px-5 py-4">
               {md === null ? (
-                <p className="animate-pulse font-mono text-[11px] text-os-dim">loading SKILL.md…</p>
+                <p className="animate-pulse font-mono text-[11px] text-os-dim">SKILL.md 불러오는 중…</p>
               ) : (
                 <Markdown src={md} />
               )}

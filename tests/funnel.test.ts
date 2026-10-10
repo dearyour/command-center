@@ -584,18 +584,18 @@ describe('/funnel mock-3c polish', () => {
   const page = readFileSync(join(process.cwd(), 'app/funnel/page.tsx'), 'utf8');
 
   test('Flow / Radial is a chip toggle, Archive is a chip with its count', () => {
-    expect(page).toContain("label: 'Flow'");
-    expect(page).toContain("label: 'Radial'");
-    expect(page).toMatch(/Archive \(\{archived\.length\}\)/);
+    expect(page).toContain("label: '흐름'");
+    expect(page).toContain("label: '방사형'");
+    expect(page).toMatch(/보관함 \(\{archived\.length\}\)/);
     // chips, not text links: the archive control carries the chip frame
-    expect(page).toMatch(/rounded-ctl border[\s\S]{0,600}Archive \(/);
+    expect(page).toMatch(/rounded-ctl border[\s\S]{0,600}보관함 \(/);
     // the standalone "live funnel" text link is retired
     expect(page).not.toContain('live funnel');
   });
 
   test('visible copy carries no em dashes', () => {
-    expect(page).toContain('hot + moving · close them');
-    expect(page).toContain('fading toward the archive · highest likelihood first');
+    expect(page).toContain('뜨겁고 움직이는 리드 · 성사시키세요');
+    expect(page).toContain('보관함으로 사라지는 중 · 가능성 높은 순');
     expect(page).not.toMatch(/decayed — no lead/);
     expect(page).not.toMatch(/fading — every lead/);
     expect(page).not.toMatch(/unavailable — last messages/);

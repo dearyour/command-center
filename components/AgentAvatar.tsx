@@ -30,7 +30,7 @@ export function AgentAvatar({ src, name, size = 24 }: { src: string | null; name
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      alt={name ? `${name} avatar` : ''}
+      alt={name ? `${name} 아바타` : ''}
       width={size}
       height={size}
       className="shrink-0 rounded-full border border-os-border object-cover"

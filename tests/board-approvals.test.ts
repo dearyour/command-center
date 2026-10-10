@@ -147,7 +147,7 @@ describe('the Needs You tab is wired to the same payload as Deliverables', () =>
   test('the tab exists and carries its own count badge', () => {
     const src = read('components/AgentsTabs.tsx');
     expect(src).toContain("'needsyou'");
-    expect(src).toContain('Needs You');
+    expect(src).toContain('확인 필요');
     // the waiting badge is NOT the unread badge: looking must not clear it
     expect(src).toContain('waiting > 0');
     expect(src).not.toMatch(/tab === 'needsyou' && waiting > 0\) acknowledge/);
@@ -178,7 +178,7 @@ describe('the Needs You tab is wired to the same payload as Deliverables', () =>
 
   test('approve and dismiss are wired to a real endpoint, not decorative', () => {
     const panel = read('components/TaskReviewPanel.tsx');
-    expect(panel).toMatch(/>\s*approve\s*</i);
+    expect(panel).toMatch(/>\s*승인\s*</);
     expect(panel).toContain("onDecide(item.id, 'approved'");
     expect(panel).toContain("onDecide(item.id, 'dismissed'");
     // The button is only honest if something persists the call.

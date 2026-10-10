@@ -34,7 +34,7 @@ describe('operatingVolume', () => {
   });
 
   test('four meters, each a real fraction of its own whole', () => {
-    expect(v.meters.map((m) => m.label)).toEqual(['Systems connected (19/24)', 'Agents live (19/32)', 'Runs OK today (2/3)', 'G-Brain health']);
+    expect(v.meters.map((m) => m.label)).toEqual(['연결된 시스템 (19/24)', '가동 중인 에이전트 (19/32)', '오늘 성공한 실행 (2/3)', 'G-Brain 상태']);
     expect(v.meters[0].frac).toBeCloseTo(19 / 24);
     expect(v.meters[2].frac).toBeCloseTo(2 / 3);
     expect(v.meters[3]).toMatchObject({ frac: 0.95, display: '95 / 100' });
@@ -43,7 +43,7 @@ describe('operatingVolume', () => {
   test('no runs and no brain read as empty meters, not fake fills', () => {
     const e = operatingVolume({ connected: 0, totalConnections: 0, activeAgents: 0, totalAgents: 0, health: null, runs: [], now: NOW });
     expect(e.meters.every((m) => m.frac === 0)).toBe(true);
-    expect(e.meters[3].display).toBe('offline');
+    expect(e.meters[3].display).toBe('오프라인');
   });
 });
 
@@ -54,7 +54,7 @@ describe('one meter, two pages', () => {
     // Home draws it through the kit's MeterStack, which renders VolumeMeter.
     expect(read('app/page.tsx')).toContain('<MeterStack');
     expect(read('components/slab.tsx')).toContain('<VolumeMeter');
-    expect(read('app/page.tsx')).toContain('Operating volume');
+    expect(read('app/page.tsx')).toContain('운영 규모');
   });
   test('the sweep-out keyframe is global so the bars grow on Home too', () => {
     expect(read('app/globals.css')).toMatch(/@keyframes vol-meter-in/);
@@ -66,18 +66,18 @@ describe('Home second row: the Brand Deals activity line, mix dots and insight',
     const { dailySeries } = await import('@/lib/pulse-history');
     const s = dailySeries([at(9), at(10), '2026-09-22T12:00:00', 'garbage', undefined], 3, NOW);
     expect(s).toEqual([
-      { label: 'Sep 22', count: 1 },
-      { label: 'Sep 23', count: 0 },
-      { label: 'Sep 24', count: 2 },
+      { label: '9월 22일', count: 1 },
+      { label: '9월 23일', count: 0 },
+      { label: '9월 24일', count: 2 },
     ]);
   });
 
   test('sourceMix counts inbound per source in a fixed order, zeros kept', async () => {
     const { sourceMix } = await import('@/lib/pulse-history');
     expect(sourceMix([{ source: 'email' }, { source: 'slack' }, { source: 'email' }])).toEqual([
-      { label: 'email', count: 2 },
-      { label: 'whatsapp', count: 0 },
-      { label: 'slack', count: 1 },
+      { label: '이메일', count: 2 },
+      { label: 'WhatsApp', count: 0 },
+      { label: 'Slack', count: 1 },
     ]);
   });
 
@@ -85,12 +85,12 @@ describe('Home second row: the Brand Deals activity line, mix dots and insight',
     const { homeAttention } = await import('@/lib/pulse-history');
     const a = homeAttention({ inbound: 3, failedToday: 1, connectorsDown: 2, doneToday: 6 });
     expect(a.count).toBe(6);
-    expect(a.headline).toBe('3 inbound · 1 failed run · 2 connectors down');
+    expect(a.headline).toBe('수신 3건 · 실패한 실행 1건 · 커넥터 2개 다운');
     expect(a.frac).toBeCloseTo(6 / 12);
     const calm = homeAttention({ inbound: 0, failedToday: 0, connectorsDown: 0, doneToday: 4 });
     expect(calm.count).toBe(0);
     expect(calm.frac).toBe(0);
-    expect(calm.headline).toBe('Nothing is waiting on you.');
+    expect(calm.headline).toBe('기다리고 있는 일이 없습니다.');
   });
 });
 

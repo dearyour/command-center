@@ -80,7 +80,7 @@ export function ConductorChat({
       applyThread(await loadThread());
       if (awaitingRef.current && Date.now() - awaitingSinceRef.current > WAIT_LIMIT_MS) {
         setAwaiting(false);
-        setError('The CEO run is taking a while. Its reply lands in this thread automatically.');
+        setError('CEO 실행이 오래 걸리고 있습니다. 답변은 이 대화에 자동으로 도착합니다.');
       }
     }, 4000);
     return () => clearInterval(id);
@@ -114,7 +114,7 @@ export function ConductorChat({
       setAwaiting(true);
       assistantBaselineRef.current = (await loadThread()).filter((t) => t.role === 'assistant').length;
     } catch (err) {
-      setError(`Message did not reach the board: ${err instanceof Error ? err.message : String(err)}`);
+      setError(`메시지가 보드에 전달되지 않았습니다: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setSending(false);
     }
@@ -133,19 +133,19 @@ export function ConductorChat({
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span aria-hidden className="h-1.5 w-1.5 shrink-0 animate-pulse bg-os-ok" />
-            <span className="text-[13px] font-bold tracking-[0.12em]">CONDUCTOR</span>
+            <span className="text-[13px] font-bold tracking-[0.12em]">컨덕터</span>
             <span className="rounded-full border border-os-border px-1.5 py-0.5 font-mono text-[8.5px] text-os-dim">
-              board · {model ?? 'model unknown'}
+              보드 · {model ?? '모델 알 수 없음'}
             </span>
           </div>
           <div className="font-mono text-[10px] text-os-dim">
-            the real CEO on the company board · delegates, creates tasks, reads your data
+            회사 보드의 실제 CEO · 업무 위임, 작업 생성, 데이터 확인
           </div>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2.5">
           {awaiting && (
             <span className="font-mono text-[9.5px] uppercase tracking-wider text-os-warn">
-              CEO working
+              CEO 작업 중
             </span>
           )}
           {boardUrl && (
@@ -155,7 +155,7 @@ export function ConductorChat({
               rel="noreferrer"
               className="flex items-center gap-1 font-mono text-[10px] text-os-dim linky"
             >
-              open on board <ArrowUpRight className="h-3 w-3" />
+              보드에서 열기 <ArrowUpRight className="h-3 w-3" />
             </a>
           )}
         </div>
@@ -173,7 +173,7 @@ export function ConductorChat({
             ) : (
               <div key={t.id} className="text-left">
                 <div className="mb-0.5 font-mono text-[9.5px] uppercase tracking-wider text-os-accent">
-                  → Conductor · board
+                  → 컨덕터 · 보드
                 </div>
                 <span className="inline-block max-w-[85%] whitespace-pre-wrap break-words rounded-md bg-os-raised px-2.5 py-1 text-[11.5px] text-os-muted">
                   {t.content}
@@ -184,7 +184,7 @@ export function ConductorChat({
           {awaiting && (
             <div className="text-left" data-thinking>
               <div className="mb-0.5 font-mono text-[9.5px] uppercase tracking-wider text-os-accent">
-                → Conductor · board
+                → 컨덕터 · 보드
               </div>
               <span className="inline-flex items-center rounded-xl bg-os-raised px-3 py-2">
                 <Synthesizing since={awaitingSinceRef.current} />

@@ -31,7 +31,7 @@ export type NewsletterVolume = {
 const MATRIX_COLS = 6;
 const clamp = (f: number) => (Number.isFinite(f) ? Math.max(0, Math.min(1, f)) : 0);
 const pct = (f: number, digits = 1) => `${(f * 100).toFixed(digits)}%`;
-const shortDate = (iso: string) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const shortDate = (iso: string) => new Date(iso).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 const sum = (list: Newsletter[], k: keyof Pick<Newsletter, 'recipients' | 'delivered' | 'opens' | 'clicks' | 'unsubscribes' | 'spamReports'>) =>
   list.reduce((n, x) => n + x[k], 0);
 
@@ -51,34 +51,34 @@ export function newsletterVolume(x: { newsletters: Newsletter[]; subscribers: nu
 
   const chips: NewsletterVolume['chips'] = [];
   if (count) {
-    chips.push({ tone: 'accent', text: `${count} issue${count === 1 ? '' : 's'}` });
-    chips.push({ tone: 'ok', text: `${summary.avgOpenRate.toFixed(1)}% avg open` });
+    chips.push({ tone: 'accent', text: `${count}호` });
+    chips.push({ tone: 'ok', text: `평균 오픈율 ${summary.avgOpenRate.toFixed(1)}%` });
   }
 
   const meters: Meter[] = [];
-  if (recipients > 0) meters.push({ label: 'Delivered', frac: clamp(delivered / recipients), display: `${pct(delivered / recipients)} of sends`, hue: 'var(--ok)' });
-  if (delivered > 0) meters.push({ label: 'Opened', frac: clamp(opens / delivered), display: `${pct(opens / delivered)} of delivered`, hue: 'var(--ramp-1)' });
-  if (opens > 0) meters.push({ label: 'Clicked', frac: clamp(clicks / opens), display: `${pct(clicks / opens)} of opens`, hue: 'var(--ramp-3)' });
-  if (delivered > 0) meters.push({ label: 'Unsubscribed', frac: clamp(unsubscribes / delivered), display: `${pct(unsubscribes / delivered, 2)} of delivered`, hue: 'var(--warn)' });
+  if (recipients > 0) meters.push({ label: '전달됨', frac: clamp(delivered / recipients), display: `발송 대비 ${pct(delivered / recipients)}`, hue: 'var(--ok)' });
+  if (delivered > 0) meters.push({ label: '열람', frac: clamp(opens / delivered), display: `전달 대비 ${pct(opens / delivered)}`, hue: 'var(--ramp-1)' });
+  if (opens > 0) meters.push({ label: '클릭', frac: clamp(clicks / opens), display: `열람 대비 ${pct(clicks / opens)}`, hue: 'var(--ramp-3)' });
+  if (delivered > 0) meters.push({ label: '구독 해지', frac: clamp(unsubscribes / delivered), display: `전달 대비 ${pct(unsubscribes / delivered, 2)}`, hue: 'var(--warn)' });
 
   const foot = count
-    ? `${count} issue${count === 1 ? '' : 's'} · ${recipients.toLocaleString('en-US')} sends${seeded ? ' · seeded preview' : ''}`
-    : 'no issues yet';
+    ? `${count}호 · ${recipients.toLocaleString('en-US')}건 발송${seeded ? ' · 샘플 미리보기' : ''}`
+    : '아직 발송한 호가 없습니다';
 
   const best = list.reduce<Newsletter | null>((b, n) => (b && b.openRate >= n.openRate ? b : n), null);
   const insight: NewsletterVolume['insight'] = best
     ? {
         display: `${best.openRate.toFixed(1)}%`,
-        headline: `Best open rate: ${best.title}.`,
-        body: `${summary.avgOpenRate.toFixed(1)}% average across ${count} issue${count === 1 ? '' : 's'} · ${shortDate(best.publishedAt)}`,
+        headline: `최고 오픈율: ${best.title}.`,
+        body: `${count}호 평균 ${summary.avgOpenRate.toFixed(1)}% · ${shortDate(best.publishedAt)}`,
         frac: clamp(best.openRate / 100),
       }
-    : { display: 'none', headline: 'No issues sent yet.', body: 'Open rates show here after the first send.', frac: 0 };
+    : { display: '없음', headline: '아직 발송한 호가 없습니다.', body: '첫 발송 후 여기에 오픈율이 표시됩니다.', frac: 0 };
 
   return {
     headline: x.subscribers,
     chips,
-    caption: x.subscribers != null ? 'subscribers, live via Beehiiv' : 'no live subscriber count · add BEEHIIV_API_KEY',
+    caption: x.subscribers != null ? '구독자 수, Beehiiv 실시간 연동' : '실시간 구독자 수 없음 · BEEHIIV_API_KEY 추가 필요',
     meters,
     foot,
     sends: oldestFirst.map((n) => ({ label: shortDate(n.publishedAt), count: n.recipients })),

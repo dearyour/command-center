@@ -16,12 +16,12 @@ describe('/chats mock-5e: rail search + new thread', () => {
   const hub = read('components/ChatHub.tsx');
 
   test('the rail has a search-threads box that filters rows', () => {
-    expect(hub).toContain('search threads');
+    expect(hub).toContain('대화 검색');
     expect(hub).toMatch(/toLowerCase\(\)/);
   });
 
   test('a + button opens the fresh-thread picker', () => {
-    expect(hub).toMatch(/title="New chat"/);
+    expect(hub).toMatch(/title="새 채팅"/);
     expect(hub).toMatch(/<Plus\b/);
   });
 });
@@ -55,12 +55,12 @@ describe('/chats mock-5e: Conductor header goes to the board', () => {
 
   test('a live dot and the board model tag sit in the header', () => {
     expect(cc).toMatch(/bg-os-ok/);
-    expect(cc).toMatch(/board · \{/);
+    expect(cc).toMatch(/보드 · \{/);
   });
 
   test('an open-on-board link renders when the board URL is known', () => {
     expect(cc).toContain('boardUrl');
-    expect(cc).toMatch(/open on board/);
+    expect(cc).toMatch(/보드에서 열기/);
   });
 
   test('the hub and page thread the real board URL through', () => {
@@ -71,6 +71,6 @@ describe('/chats mock-5e: Conductor header goes to the board', () => {
 
 describe('/chats mock-5e: composer states its keys', () => {
   test('Enter sends, Shift+Enter breaks · said out loud', () => {
-    expect(read('components/ConductorComposer.tsx')).toContain('Enter sends · Shift+Enter breaks');
+    expect(read('components/ConductorComposer.tsx')).toContain('Enter 전송 · Shift+Enter 줄바꿈');
   });
 });

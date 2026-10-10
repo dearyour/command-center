@@ -71,7 +71,7 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
   };
 
   const ask = async (message: string, label: string) => {
-    const id = toast.busy(`Asking the Conductor · "${label}"`);
+    const id = toast.busy(`컨덕터에게 묻는 중 · "${label}"`);
     try {
       const res = await fetch('/api/conductor/chat', {
         method: 'POST',
@@ -79,9 +79,9 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
         body: JSON.stringify({ message }),
       });
       if (!res.ok) throw new Error(String(res.status));
-      toast.update(id, 'ok', `Sent to the Conductor · "${label}"`);
+      toast.update(id, 'ok', `컨덕터에게 전달됨 · "${label}"`);
     } catch {
-      toast.update(id, 'err', 'Conductor unreachable');
+      toast.update(id, 'err', '컨덕터에 연결할 수 없음');
     }
   };
 
@@ -97,9 +97,9 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
       try {
         const res = await fetch(`/api/agents/${c.agentId}/run`, { method: 'POST' });
         if (!res.ok) throw new Error(String(res.status));
-        toast.update(id, 'ok', `${c.title} · done`);
+        toast.update(id, 'ok', `${c.title} · 완료`);
       } catch {
-        toast.update(id, 'err', `${c.title} failed`);
+        toast.update(id, 'err', `${c.title} 실패`);
       }
       return;
     }
@@ -130,9 +130,9 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
   if (!open) return null;
   const groups = (
     [
-      ['go', 'Go to'],
-      ['run', 'Run'],
-      ['ask', 'Ask'],
+      ['go', '이동'],
+      ['run', '실행'],
+      ['ask', '질문'],
     ] as const
   )
     .map(([k, label]) => ({ label, items: rows.filter((r) => r.kind === k) }))
@@ -155,13 +155,13 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
               setSel(0);
             }}
             onKeyDown={onKey}
-            placeholder="Jump, run, ask… (type an agent name, a route, or a question)"
+            placeholder="이동, 실행, 질문… (에이전트 이름, 화면, 또는 질문을 입력)"
             className="min-w-0 flex-1 bg-transparent font-mono text-[12.5px] text-os-text outline-none placeholder:text-os-dim"
           />
           <kbd className="kbd">esc</kbd>
         </div>
         <div className="flex gap-1.5 border-b border-os-hairline px-3.5 py-2">
-          {['All', 'Go to', 'Run', 'Ask'].map((l, i) => (
+          {['전체', '이동', '실행', '질문'].map((l, i) => (
             <Chip
               key={l}
               on={scope === i}
@@ -174,7 +174,7 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
               {l}
             </Chip>
           ))}
-          <span className="ml-auto self-center font-mono text-[9px] text-os-dim">{rows.length} results</span>
+          <span className="ml-auto self-center font-mono text-[9px] text-os-dim">결과 {rows.length}개</span>
         </div>
         <div className="max-h-[330px] overflow-auto p-1.5">
           {groups.map((g) => (
@@ -201,7 +201,7 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
                       <div className="truncate font-mono text-[9.5px] text-os-dim">{r.sub}</div>
                     </div>
                     <span className="flex items-center gap-1 font-mono text-[9.5px] text-os-dim">
-                      {r.kind === 'go' ? 'jump' : r.kind}
+                      {r.kind === 'go' ? '이동' : r.kind === 'run' ? '실행' : '질문'}
                       {on && <kbd className="kbd">↵</kbd>}
                     </span>
                   </div>
@@ -211,26 +211,26 @@ export function CommandPalette({ agents }: { agents: PaletteAgent[] }) {
           ))}
           {rows.length === 0 && (
             <div className="animate-enter p-7 text-center font-mono text-[10.5px] leading-relaxed text-os-dim">
-              <span className="text-os-text">No match for «{q}».</span>
+              <span className="text-os-text">«{q}»와 일치하는 항목이 없습니다.</span>
               <br />
-              <span className="text-[9.5px]">press ↵ to ask the Conductor instead</span>
+              <span className="text-[9.5px]">↵ 를 누르면 대신 컨덕터에게 물어봅니다</span>
             </div>
           )}
         </div>
         <div className="flex items-center gap-3.5 border-t border-os-border px-3.5 py-2 font-mono text-[9.5px] text-os-dim">
           <span>
             <kbd className="kbd">↑</kbd>
-            <kbd className="kbd">↓</kbd> move
+            <kbd className="kbd">↓</kbd> 이동
           </span>
           <span>
-            <kbd className="kbd">↵</kbd> run
+            <kbd className="kbd">↵</kbd> 실행
           </span>
           <span>
-            <kbd className="kbd">tab</kbd> scope
+            <kbd className="kbd">tab</kbd> 범위
           </span>
           <span className="ml-auto inline-flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 animate-blink bg-os-ok" />
-            Conductor listening
+            컨덕터 대기 중
           </span>
         </div>
       </div>

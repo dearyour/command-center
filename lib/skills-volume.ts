@@ -37,7 +37,6 @@ const GROUP_COLS = 8;
 const OWNER_COLS = 6;
 const frac = (n: number, d: number) => (d > 0 ? Math.max(0, Math.min(1, n / d)) : 0);
 const pct = (f: number) => `${Math.round(f * 100)}%`;
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 /** A plugin skill's slug is `plugin:skill`, the same test the card wall uses. */
 const isPlugin = (s: { slug: string }) => s.slug.includes(':');
@@ -72,9 +71,9 @@ export function skillsVolume(x: SkillsVolumeInput): SkillsVolume {
   const counts = { claude, user: claude - plugin, plugin, operator, live, learning, planned };
 
   const chips: SkillsVolume['chips'] = [];
-  if (live) chips.push({ tone: 'ok', text: `${live} live` });
-  if (learning) chips.push({ tone: 'warn', text: `${learning} learning` });
-  if (planned) chips.push({ text: `${planned} planned` });
+  if (live) chips.push({ tone: 'ok', text: `운영 중 ${live}` });
+  if (learning) chips.push({ tone: 'warn', text: `학습 중 ${learning}` });
+  if (planned) chips.push({ text: `계획됨 ${planned}` });
 
   const owned = x.operator.filter((s) => s.ownerAgentId != null).length;
   const withTools = x.operator.filter((s) => s.tools.length > 0).length;
@@ -83,14 +82,14 @@ export function skillsVolume(x: SkillsVolumeInput): SkillsVolume {
   const ownedF = frac(owned, operator);
   const toolsF = frac(withTools, operator);
   const meters: Meter[] = [
-    { label: `Live (${live}/${total})`, frac: liveF, display: total ? pct(liveF) : 'no skills yet', hue: 'var(--ok)' },
-    { label: `Claude Code on disk (${claude}/${total})`, frac: claudeF, display: claude ? pct(claudeF) : 'none on disk', hue: 'var(--ramp-1)' },
-    { label: `Operator skills owned (${owned}/${operator})`, frac: ownedF, display: operator ? pct(ownedF) : 'no operator skills', hue: 'var(--accent)' },
-    { label: `Operator skills with tools (${withTools}/${operator})`, frac: toolsF, display: operator ? pct(toolsF) : 'no operator skills', hue: 'var(--ramp-4)' },
+    { label: `운영 중 (${live}/${total})`, frac: liveF, display: total ? pct(liveF) : '아직 스킬 없음', hue: 'var(--ok)' },
+    { label: `디스크의 Claude Code (${claude}/${total})`, frac: claudeF, display: claude ? pct(claudeF) : '디스크에 없음', hue: 'var(--ramp-1)' },
+    { label: `담당자가 있는 운영자 스킬 (${owned}/${operator})`, frac: ownedF, display: operator ? pct(ownedF) : '운영자 스킬 없음', hue: 'var(--accent)' },
+    { label: `도구가 연결된 운영자 스킬 (${withTools}/${operator})`, frac: toolsF, display: operator ? pct(toolsF) : '운영자 스킬 없음', hue: 'var(--ramp-4)' },
   ];
 
   // Source groups: each plugin is its own group; operator skills are one.
-  const groupKeys = [...x.claude.map((s) => s.group.replace(/^Plugin · /, '')), ...x.operator.map(() => 'Operator')];
+  const groupKeys = [...x.claude.map((s) => s.group.replace(/^Plugin · /, '')), ...x.operator.map(() => '운영자')];
   const rankedGroups = tally(groupKeys);
   const groups = toSeries(rankedGroups.slice(0, GROUP_COLS), /\s*·\s*|\s+/);
   const pluginNames = new Set(x.claude.filter(isPlugin).map((s) => s.slug.split(':')[0]));
@@ -106,19 +105,19 @@ export function skillsVolume(x: SkillsVolumeInput): SkillsVolume {
   // The one gradient card: the operator drafts still to finish.
   const drafts = x.operator.filter((s) => s.status !== 'live');
   const parts: string[] = [];
-  if (learning) parts.push(`${learning} learning`);
-  if (planned) parts.push(`${planned} planned`);
+  if (learning) parts.push(`학습 중 ${learning}`);
+  if (planned) parts.push(`계획됨 ${planned}`);
   const insight = {
     value: drafts.length,
-    headline: parts.length ? `${parts.join(' · ')}.` : 'Every operator skill is live.',
+    headline: parts.length ? `${parts.join(' · ')}.` : '모든 운영자 스킬이 운영 중입니다.',
     body: drafts.length
       ? drafts
           .slice(0, 3)
           .map((s) => s.name)
           .join(' · ')
       : operator
-        ? `${plural(operator, 'operator skill')}, all live.`
-        : 'No operator skills yet.',
+        ? `운영자 스킬 ${operator}개, 모두 운영 중.`
+        : '아직 운영자 스킬이 없습니다.',
     frac: frac(drafts.length, operator),
   };
 
@@ -126,9 +125,9 @@ export function skillsVolume(x: SkillsVolumeInput): SkillsVolume {
     headline: total,
     counts,
     chips,
-    caption: `${counts.user} user · ${plugin} plugin · ${operator} operator`,
+    caption: `사용자 ${counts.user} · 플러그인 ${plugin} · 운영자 ${operator}`,
     meters,
-    foot: `${plural(rankedGroups.length, 'group')} · ${plural(pluginNames.size, 'plugin')} · ${plural(tools, 'tool')} wired`,
+    foot: `그룹 ${rankedGroups.length}개 · 플러그인 ${pluginNames.size}개 · 연결된 도구 ${tools}개`,
     groups,
     groupCount: rankedGroups.length,
     categories,

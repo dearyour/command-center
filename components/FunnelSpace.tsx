@@ -171,7 +171,7 @@ export function FunnelSpace({
   }, [nodes]);
 
   if (nodes.length === 0) {
-    return <p className="py-6 text-center font-mono text-[11.5px] text-os-dim">No journeys for this filter yet.</p>;
+    return <p className="py-6 text-center font-mono text-[11.5px] text-os-dim">이 필터에 해당하는 여정이 아직 없습니다.</p>;
   }
 
   const selected = nodes.find((n) => n.id === selectedId) ?? null;
@@ -184,7 +184,7 @@ export function FunnelSpace({
           if (document.fullscreenElement) void document.exitFullscreen();
           else void rootRef.current?.requestFullscreen();
         }}
-        aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+        aria-label={isFullscreen ? '전체 화면 종료' : '전체 화면'}
         className="pressable absolute right-1 top-1 z-20 rounded-sm-t border border-os-border bg-os-surface2 p-1.5 text-os-dim hover:border-os-border-strong hover:text-os-text"
       >
         {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
@@ -193,7 +193,7 @@ export function FunnelSpace({
         viewBox={`0 0 ${W} ${H}`}
         className="block w-full"
         role="img"
-        aria-label="Clients orbiting their funnel stage from first touch to conversion"
+        aria-label="첫 접점부터 전환까지 퍼널 단계를 도는 고객들"
         onClick={() => setSelectedId(null)}
       >
         {/* spine the data pulses travel */}
@@ -287,17 +287,17 @@ export function FunnelSpace({
       {/* node language legend */}
       <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-wide text-os-dim">
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full" style={{ background: 'var(--funnel-s1)' }} /> hue = its stage
+          <span className="h-2 w-2 rounded-full" style={{ background: 'var(--funnel-s1)' }} /> 색상 = 현재 단계
         </span>
         <span className="flex items-center gap-1.5">
           <span
             className="h-2 w-2 rounded-full"
             style={{ background: 'color-mix(in oklab, var(--err) 70%, var(--funnel-s1))', opacity: 0.6 }}
           />{' '}
-          fades red after {DECAY_FADE_START}d quiet → archive at {DECAY_DAYS}d
+          {DECAY_FADE_START}일 조용하면 빨갛게 바램 → {DECAY_DAYS}일에 보관
         </span>
-        <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[var(--ok)]" /> converted</span>
-        <span className="ml-auto">size + closeness = ICP fit · movement resets the clock · click a node</span>
+        <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[var(--ok)]" /> 전환됨</span>
+        <span className="ml-auto">크기 + 중심과의 거리 = ICP 적합도 · 움직이면 시간 초기화 · 노드를 클릭하세요</span>
       </div>
     </div>
   );

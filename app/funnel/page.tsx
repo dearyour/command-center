@@ -41,14 +41,14 @@ export const dynamic = 'force-dynamic';
 const STAGE_LABEL = Object.fromEntries(FUNNEL_STAGES.map((s) => [s.id, s.label]));
 
 const VENTURE_TABS: { id: FunnelVenture | 'all'; label: string }[] = [
-  { id: 'all', label: 'All clients' },
+  { id: 'all', label: '전체 고객' },
   { id: 'vantage', label: 'Vantage' },
   { id: 'launchpad-cohort', label: 'Launchpad Cohort' },
 ];
 
 const VIEWS: { id: 'flow' | 'radial'; label: string }[] = [
-  { id: 'flow', label: 'Flow' },
-  { id: 'radial', label: 'Radial' },
+  { id: 'flow', label: '흐름' },
+  { id: 'radial', label: '방사형' },
 ];
 
 function usd(amount: number): string {
@@ -80,7 +80,7 @@ function TouchChip({ touch }: { touch: FunnelTouch }) {
   return (
     <span
       className="inline-flex max-w-[260px] items-center gap-1.5 rounded-full border border-os-border px-2.5 py-1"
-      title={`${touch.stage} · via ${touch.source} · ${touch.at}`}
+      title={`${touch.stage} · ${touch.source} 경유 · ${touch.at}`}
     >
       <span className="shrink-0 font-mono text-[10.5px] text-os-accent">{CHANNEL_GLYPHS[touch.channel] ?? '·'}</span>
       <span className="truncate text-[11.5px] text-os-muted">{touch.label}</span>
@@ -93,6 +93,12 @@ const RELATIONSHIP_VAR: Record<FunnelJourney['relationship'], string> = {
   hot: 'var(--funnel-hot)',
   warm: 'var(--funnel-warm)',
   cold: 'var(--funnel-cold)',
+};
+
+const RELATIONSHIP_LABEL: Record<FunnelJourney['relationship'], string> = {
+  hot: '뜨거움',
+  warm: '미지근함',
+  cold: '차가움',
 };
 
 const PILL_BASE = 'shrink-0 rounded-full px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.1em]';
@@ -127,7 +133,7 @@ function ContactActions({ journey }: { journey: FunnelJourney }) {
     <span className="flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-wide">
       {journey.email && (
         <a href={`mailto:${journey.email}`} title={journey.email} className="text-os-muted hover:text-os-accent">
-          email
+          이메일
         </a>
       )}
       {digits && (
@@ -143,7 +149,7 @@ function ContactActions({ journey }: { journey: FunnelJourney }) {
       )}
       {journey.phone && (
         <a href={`sms:${journey.phone}`} title={journey.phone} className="text-os-muted hover:text-os-accent">
-          sms
+          문자
         </a>
       )}
       {journey.url && (
@@ -153,10 +159,10 @@ function ContactActions({ journey }: { journey: FunnelJourney }) {
           rel="noopener noreferrer"
           className="text-os-dim hover:text-os-accent"
         >
-          {isCall ? 'call↗' : 'open↗'}
+          {isCall ? '통화↗' : '열기↗'}
         </a>
       )}
-      {!journey.email && !journey.phone && !journey.url && <span className="text-os-dim">no contact</span>}
+      {!journey.email && !journey.phone && !journey.url && <span className="text-os-dim">연락처 없음</span>}
     </span>
   );
 }
@@ -181,7 +187,7 @@ function AttentionRow({
       <span className="min-w-0">
         <span className="block truncate text-[13.5px] font-medium group-hover:text-os-accent">{journey.person ?? journey.name}</span>
         <span className="block truncate font-mono text-[11px] text-os-dim">
-          {[journey.company, `${journey.likelihood}% likely`].filter(Boolean).join(' · ')}
+          {[journey.company, `가능성 ${journey.likelihood}%`].filter(Boolean).join(' · ')}
         </span>
       </span>
       <span className="flex items-center gap-2">
@@ -191,7 +197,7 @@ function AttentionRow({
         </span>
       </span>
       <span className="w-[44px] text-right font-mono text-[11px] tabular-nums text-os-dim" style={quietStyle(meta.daysSinceLastTouch, journey)}>
-        {meta.daysSinceLastTouch}d
+        {meta.daysSinceLastTouch}일
       </span>
     </Link>
   );
@@ -199,7 +205,7 @@ function AttentionRow({
 
 const agoDays = (ts: string, now: Date): string => {
   const d = Math.max(0, Math.floor((now.getTime() - Date.parse(ts)) / 86_400_000));
-  return d === 0 ? 'today' : `${d}d ago`;
+  return d === 0 ? '오늘' : `${d}일 전`;
 };
 
 /** One roomy row per client: the data line, then their touches. */
@@ -243,7 +249,7 @@ function JourneyRow({
         <span className="flex items-center gap-2">
           {converted && <ValuePill amount={journey.amountUsd ?? 0} />}
           <span className={PILL_BASE} style={{ background: `color-mix(in oklab, ${RELATIONSHIP_VAR[journey.relationship]} 16%, transparent)`, color: RELATIONSHIP_VAR[journey.relationship] }}>
-            {journey.relationship}
+            {RELATIONSHIP_LABEL[journey.relationship]}
           </span>
           <span className={PILL_BASE} style={stagePillStyle(journey, now)}>
             {STAGE_LABEL[journey.status]}
@@ -252,19 +258,19 @@ function JourneyRow({
         <span
           className={`w-[64px] font-mono text-[11px] tabular-nums max-[1000px]:hidden ${meta.state === 'stalled' && decayFactor(meta.daysSinceLastTouch, journey.status) === 0 ? 'text-os-err' : 'text-os-dim'}`}
           style={quietStyle(meta.daysSinceLastTouch, journey)}
-          title="days since the last touch"
+          title="마지막 접점 이후 지난 일수"
         >
-          {meta.daysSinceLastTouch}d quiet
+          {meta.daysSinceLastTouch}일 조용함
         </span>
-        <span className="w-[72px] font-mono text-[11px] tabular-nums text-os-muted max-[1000px]:hidden" title="likelihood to buy">
-          {journey.likelihood}% likely
+        <span className="w-[72px] font-mono text-[11px] tabular-nums text-os-muted max-[1000px]:hidden" title="구매 가능성">
+          가능성 {journey.likelihood}%
         </span>
         <span className="max-[1000px]:hidden">
           <ContactActions journey={journey} />
         </span>
       </div>
       <div className="mt-2.5 flex flex-wrap items-center gap-1.5 pl-[18px]">
-        <span className="mr-1 font-mono text-[10.5px] uppercase tracking-wide text-os-dim" title="entry lane">
+        <span className="mr-1 font-mono text-[10.5px] uppercase tracking-wide text-os-dim" title="유입 경로">
           {lane}
         </span>
         {journey.touches.map((t, i) => (
@@ -276,13 +282,13 @@ function JourneyRow({
         {!converted && <span className="font-mono text-[10px] text-os-dim">→ …</span>}
         {lastMsg !== undefined && (
           <span className="ml-auto flex min-w-0 items-center gap-1.5 font-mono text-[10.5px]">
-            <span className="shrink-0 uppercase tracking-wide text-os-dim">last msg</span>
+            <span className="shrink-0 uppercase tracking-wide text-os-dim">마지막 메시지</span>
             {lastMsg ? (
               <span className="min-w-0 truncate text-os-muted" title={lastMsg.preview}>
-                via {lastMsg.source} · {agoDays(lastMsg.ts, now)} · “{lastMsg.preview.slice(0, 60)}”
+                {lastMsg.source} 경유 · {agoDays(lastMsg.ts, now)} · “{lastMsg.preview.slice(0, 60)}”
               </span>
             ) : (
-              <span className="text-os-dim">no thread on record</span>
+              <span className="text-os-dim">기록된 대화 없음</span>
             )}
           </span>
         )}
@@ -367,20 +373,20 @@ export default async function FunnelPage({
   return (
     <Slab>
       <SlabTitle
-        eyebrow="client journeys · leads → conversations → sales"
-        title="Funnel"
-        meta={`${summary.clients} active client${summary.clients === 1 ? '' : 's'} · ${summary.converted} closed · ${usd(summary.revenueUsd)} revenue · ${archived.length} archived`}
+        eyebrow="고객 여정 · 리드 → 대화 → 매출"
+        title="퍼널"
+        meta={`활성 고객 ${summary.clients}명 · 성사 ${summary.converted}건 · 매출 ${usd(summary.revenueUsd)} · 보관 ${archived.length}건`}
         right={
           <>
             {isLive ? (
-              <Badge tone="ok">live · {liveLabel}</Badge>
+              <Badge tone="ok">실시간 · {liveLabel}</Badge>
             ) : (
               <Badge tone="warn" ghost>
-                demo data
+                데모 데이터
               </Badge>
             )}
             <span className="rounded-full border border-os-border px-4 py-2 text-[13px] tabular-nums text-os-muted">
-              {summary.converted}/{summary.clients} converted · {usd(summary.revenueUsd)}
+              {summary.converted}/{summary.clients} 전환 · {usd(summary.revenueUsd)}
             </span>
           </>
         }
@@ -395,7 +401,7 @@ export default async function FunnelPage({
               <Link
                 key={tab.id}
                 href={href(tab.id === 'all' ? undefined : (tab.id as FunnelVenture), view)}
-                title={tab.id !== 'all' && isLive ? 'Live split = name heuristic: Vantage when the form or call names it' : undefined}
+                title={tab.id !== 'all' && isLive ? '실시간 분류 = 이름 기반 추정: 폼이나 통화에 Vantage가 언급되면 Vantage로 분류' : undefined}
                 data-lens="c" className={`pressable rounded-ctl border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide ${
  active
  ? 'border-[var(--accent-line)] bg-[var(--accent-soft)] text-os-accent'
@@ -414,7 +420,7 @@ export default async function FunnelPage({
           })}
         </span>
         <span className="h-3 w-px bg-os-border" />
-        <span className="flex items-center gap-2.5" title="leads · calls booked · calls held · attribution · paid">
+        <span className="flex items-center gap-2.5" title="리드 · 예약된 통화 · 진행된 통화 · 유입 추적 · 결제">
           <SourceCheck status={attio} live={Boolean(attioLive?.total)} count={attioLive?.total} />
           <SourceCheck status={ghl} live={Boolean(ghlLive?.total)} count={ghlLive?.total} />
           <SourceCheck status={trakyo} />
@@ -426,7 +432,7 @@ export default async function FunnelPage({
           <span className="mx-0.5 h-3 w-px bg-os-border" />
           <Link
             href={view === 'archive' ? href(venture, 'live') : href(venture, 'archive')}
-            title="Leads quiet past the decay window rest here"
+            title="소멸 기간이 지나도록 조용한 리드는 여기에 보관됩니다"
             data-lens="c"
             className={`pressable rounded-ctl border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide ${
  view === 'archive'
@@ -434,7 +440,7 @@ export default async function FunnelPage({
  : 'border-os-border text-os-dim hover:border-os-border-strong hover:text-os-muted'
  }`}
           >
-            Archive ({archived.length})
+            보관함 ({archived.length})
           </Link>
         </span>
       </Rise>
@@ -442,11 +448,11 @@ export default async function FunnelPage({
       {/* The space  -  every node is a client travelling toward conversion.
           Leads quiet past DECAY_DAYS decay into the archive tab. */}
       {view === 'archive' ? (
-        <SlabCard title="Archive" sub={`${archived.length} quiet past ${DECAY_DAYS} days`} i={3}>
+        <SlabCard title="보관함" sub={`${DECAY_DAYS}일 넘게 조용한 리드 ${archived.length}건`} i={3}>
           <div className="mt-4 border-t border-os-border">
             {archived.length === 0 ? (
               <p className="px-6 py-8 text-center text-[12.5px] text-os-dim">
-                Nothing decayed · no lead has sat quiet past {DECAY_DAYS} days.
+                소멸된 리드 없음 · {DECAY_DAYS}일 넘게 조용했던 리드가 없습니다.
               </p>
             ) : (
               archived.map((j) => {
@@ -462,7 +468,7 @@ export default async function FunnelPage({
                       <span className="min-w-0">
                         <span className="block truncate text-[13.5px] font-medium text-os-muted">{j.name}</span>
                         <span className="block truncate font-mono text-[11px] text-os-dim" title={last?.label}>
-                          {last?.label ?? 'no touches'}
+                          {last?.label ?? '접점 없음'}
                         </span>
                       </span>
                     </span>
@@ -470,7 +476,7 @@ export default async function FunnelPage({
                       {STAGE_LABEL[j.status]}
                     </span>
                     <span className="font-mono text-[11px] tabular-nums text-os-dim max-[1000px]:hidden">
-                      {meta.daysSinceLastTouch}d quiet · {j.likelihood}% likely
+                      {meta.daysSinceLastTouch}일 조용함 · 가능성 {j.likelihood}%
                     </span>
                     <span className="w-[56px] text-right max-[1000px]:hidden">
                       {j.url && (
@@ -480,7 +486,7 @@ export default async function FunnelPage({
                           rel="noopener noreferrer"
                           className="font-mono text-[10.5px] uppercase tracking-wide text-os-dim hover:text-os-accent"
                         >
-                          {j.url.includes('fathom') ? 'call ↗' : 'open ↗'}
+                          {j.url.includes('fathom') ? '통화 ↗' : '열기 ↗'}
                         </a>
                       )}
                     </span>
@@ -505,23 +511,23 @@ export default async function FunnelPage({
       {/* Below the graph, the Brand Deals rows: volume, activity, THE insight. */}
       {view === 'live' && (
         <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-          <SlabCard title="Funnel Volume" sub={`${summary.clients} active`} i={4} className="flex flex-col">
+          <SlabCard title="퍼널 규모" sub={`활성 ${summary.clients}`} i={4} className="flex flex-col">
             <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
               <BigStat value={vol.revenueUsd} kind="usd" chips={vol.chips} caption={vol.caption} />
-              <MeterStack meters={vol.meters} foot={vol.foot} empty="no leads yet" />
+              <MeterStack meters={vol.meters} foot={vol.foot} empty="아직 리드가 없습니다" />
             </div>
           </SlabCard>
 
-          <SlabCard title="Lead Activity" sub="last 30 days" i={5}>
+          <SlabCard title="리드 활동" sub="최근 30일" i={5}>
             <div className="px-6 pt-3">
-              <BigStat size={30} value={vol.touchesInWindow} caption="touches across every journey: forms, bookings, calls, payments" />
+              <BigStat size={30} value={vol.touchesInWindow} caption="모든 여정의 접점: 폼, 예약, 통화, 결제" />
             </div>
-            <StepLine series={vol.series} hue="var(--send-activity)" unit=" touches" empty="No touches in this window." />
+            <StepLine series={vol.series} hue="var(--send-activity)" unit=" 접점" empty="이 기간에는 접점이 없습니다." />
           </SlabCard>
 
           <InsightCard
             i={6}
-            badge="Needs you today"
+            badge="오늘 확인 필요"
             value={vol.insight.value}
             headline={vol.insight.headline}
             body={vol.insight.body}
@@ -534,10 +540,10 @@ export default async function FunnelPage({
           click pins that lead's dossier in the canvas above. */}
       {view === 'live' && (attention.pushNow.length > 0 || attention.saveNow.length > 0) && (
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <SlabCard title="Push Now" sub="hot + moving · close them" i={7}>
+          <SlabCard title="지금 밀어붙이기" sub="뜨겁고 움직이는 리드 · 성사시키세요" i={7}>
             <div className="mt-4 border-t border-os-border">
               {attention.pushNow.length === 0 ? (
-                <p className="px-6 py-6 text-center text-[12.5px] text-os-dim">no hot leads in motion right now</p>
+                <p className="px-6 py-6 text-center text-[12.5px] text-os-dim">지금 움직이는 뜨거운 리드가 없습니다</p>
               ) : (
                 attention.pushNow.map((j) => (
                   <AttentionRow key={j.id} journey={j} now={now} href={href(venture, view, stage, layout, j.id)} />
@@ -545,10 +551,10 @@ export default async function FunnelPage({
               )}
             </div>
           </SlabCard>
-          <SlabCard title="Save Now" sub="fading toward the archive · highest likelihood first" i={8}>
+          <SlabCard title="지금 살리기" sub="보관함으로 사라지는 중 · 가능성 높은 순" i={8}>
             <div className="mt-4 border-t border-os-border">
               {attention.saveNow.length === 0 ? (
-                <p className="px-6 py-6 text-center text-[12.5px] text-os-dim">nothing fading · every lead is fresh</p>
+                <p className="px-6 py-6 text-center text-[12.5px] text-os-dim">사라지는 리드 없음 · 모든 리드가 활발합니다</p>
               ) : (
                 attention.saveNow.map((j) => (
                   <AttentionRow key={j.id} journey={j} now={now} href={href(venture, view, stage, layout, j.id)} />
@@ -562,14 +568,14 @@ export default async function FunnelPage({
 
       {/* The same clients as a list: pick a segment, contact them. */}
       <SlabCard
-        title="Journeys"
-        sub={`${tableJourneys.length} of ${journeys.length}`}
+        title="고객 여정"
+        sub={`${journeys.length}건 중 ${tableJourneys.length}건`}
         i={10}
         className="mt-6"
         action={
           <>
             <Link href={href(venture, view, undefined)} data-lens="c" className={chipClass(!stage)}>
-              All {journeys.length}
+              전체 {journeys.length}
             </Link>
             {FUNNEL_STAGES.map((s, i) => {
               const active = stage === s.id;
@@ -589,11 +595,11 @@ export default async function FunnelPage({
         }
       >
         {stage && !commsFeed && tableJourneys.length > 0 && (
-          <p className="px-6 pt-3 font-mono text-[11px] text-os-dim">comms feed unavailable · last messages hidden</p>
+          <p className="px-6 pt-3 font-mono text-[11px] text-os-dim">커뮤니케이션 피드 사용 불가 · 마지막 메시지 숨김</p>
         )}
         <div className="mt-4 border-t border-os-border">
           {tableJourneys.length === 0 ? (
-            <p className="px-6 py-8 text-center text-[12.5px] text-os-dim">No leads in this segment.</p>
+            <p className="px-6 py-8 text-center text-[12.5px] text-os-dim">이 구간에는 리드가 없습니다.</p>
           ) : (
             tableJourneys.map((j) => (
               <JourneyRow key={j.id} journey={j} now={now} lastMsg={commsFeed ? lastMessageFor(j, commsFeed) : undefined} />

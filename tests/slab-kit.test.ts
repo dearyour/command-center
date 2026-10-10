@@ -222,7 +222,7 @@ describe('seen live on the mini (2026-09-24)', () => {
   });
   test("Home's volume card keeps its own height when the Needs you list runs long", () => {
     const page = read('app/page.tsx');
-    const card = page.slice(page.indexOf('title="Operating volume"'), page.indexOf('title="Operating volume"') + 120);
+    const card = page.slice(page.indexOf('title="운영 규모"'), page.indexOf('title="운영 규모"') + 120);
     expect(card).toContain('self-start');
     expect(card).not.toContain('self-stretch');
   });

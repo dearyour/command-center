@@ -153,7 +153,7 @@ export function mergeStripeWins(journeys: FunnelJourney[], wins: StripeWin[]): F
       standalone.push(
         FunnelJourneySchema.parse({
           id,
-          name: first.name ?? first.email ?? 'Stripe customer',
+          name: first.name ?? first.email ?? 'Stripe 고객',
           venture: first.venture,
           status: 'converted',
           product: group.find((w) => w.product)?.product ?? null,

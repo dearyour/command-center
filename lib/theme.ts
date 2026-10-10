@@ -14,12 +14,12 @@ export const DEFAULT_THEME: Theme = 'mono';
 
 /** Picker metadata: display name, one-line feel, [bg, accent, text] swatch. */
 export const THEME_META: Record<Theme, { name: string; blurb: string; swatch: [string, string, string] }> = {
-  dark: { name: 'Terminal', blurb: 'phosphor green on near-black', swatch: ['#050807', '#3df08c', '#e4efe6'] },
-  light: { name: 'Clay', blurb: 'warm paper with clay orange', swatch: ['#ece3d2', '#c96442', '#2b2722'] },
-  midnight: { name: 'Midnight', blurb: 'deep navy, signal blue', swatch: ['#070d1f', '#5ec9f8', '#e8ecf9'] },
-  ember: { name: 'Ember', blurb: 'coal dark, vault orange', swatch: ['#0c0806', '#e35c35', '#f2e9e2'] },
-  mono: { name: 'Monolith', blurb: 'white on black, color = status only', swatch: ['#0a0a0a', '#f2f2f2', '#2fd36f'] },
-  'mono-light': { name: 'Daylight', blurb: 'G-Brain blue on cool white', swatch: ['#f2f6f9', '#1f84c6', '#16222c'] },
+  dark: { name: 'Terminal', blurb: '거의 검은 바탕에 형광 초록', swatch: ['#050807', '#3df08c', '#e4efe6'] },
+  light: { name: 'Clay', blurb: '따뜻한 종이색에 점토 주황', swatch: ['#ece3d2', '#c96442', '#2b2722'] },
+  midnight: { name: 'Midnight', blurb: '짙은 남색, 신호 파랑', swatch: ['#070d1f', '#5ec9f8', '#e8ecf9'] },
+  ember: { name: 'Ember', blurb: '석탄빛 어둠, 금고 주황', swatch: ['#0c0806', '#e35c35', '#f2e9e2'] },
+  mono: { name: 'Monolith', blurb: '검정 바탕 흰 글씨, 색은 상태 표시에만', swatch: ['#0a0a0a', '#f2f2f2', '#2fd36f'] },
+  'mono-light': { name: 'Daylight', blurb: '시원한 흰 바탕에 G-Brain 파랑', swatch: ['#f2f6f9', '#1f84c6', '#16222c'] },
 };
 
 export const THEME_STORAGE_KEY = 'alex-theme';

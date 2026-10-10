@@ -22,10 +22,10 @@ export type { FunnelAcquisition };
 export const ACQUISITIONS: { id: FunnelAcquisition; label: string }[] = [
   { id: 'instagram', label: 'Instagram' },
   { id: 'youtube', label: 'YouTube' },
-  { id: 'newsletter', label: 'Newsletter' },
+  { id: 'newsletter', label: '뉴스레터' },
   { id: 'x_linkedin', label: 'X / LinkedIn' },
-  { id: 'form', label: 'Forms' },
-  { id: 'word_of_mouth', label: 'Word of mouth' },
+  { id: 'form', label: '폼' },
+  { id: 'word_of_mouth', label: '입소문' },
 ];
 
 const SEGMENT_INDEX: Record<FunnelAcquisition, number> = Object.fromEntries(

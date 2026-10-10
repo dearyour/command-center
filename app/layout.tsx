@@ -15,11 +15,13 @@ const fontMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-mono',
+  // JetBrains Mono has no Hangul glyphs — Korean text falls through to these.
+  fallback: ['ui-monospace', 'SFMono-Regular', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'monospace'],
 });
 
 export const metadata: Metadata = {
   title: 'COMMAND CENTER',
-  description: 'Personal operating system and AI agent command center for a single person company',
+  description: '1인 기업을 위한 개인 운영체제이자 AI 에이전트 커맨드 센터',
 };
 
 /** The palette builds its own Go-to group from lib/nav; the layout only feeds
@@ -33,7 +35,7 @@ function paletteAgents(): PaletteAgent[] {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={fontMono.variable} suppressHydrationWarning>
+    <html lang="ko" className={fontMono.variable} suppressHydrationWarning>
       <head>
         {/* Apply the persisted theme before first paint — no dark↔light flash. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />

@@ -26,13 +26,13 @@ describe('the Conductor header states the real model', () => {
 
   test('the header renders the model prop', () => {
     const src = read('components/ConductorChat.tsx');
-    const header = src.slice(src.indexOf('CONDUCTOR'), src.indexOf('CONDUCTOR') + 600);
+    const header = src.slice(src.indexOf('컨덕터</span>'), src.indexOf('컨덕터</span>') + 600);
     expect(header).toContain('{model');
   });
 
   test('it says so honestly when the board did not report a model', () => {
     // An unreachable board must not silently render a blank or a stale guess.
-    expect(read('components/ConductorChat.tsx')).toMatch(/model unknown|unknown model/i);
+    expect(read('components/ConductorChat.tsx')).toMatch(/모델 알 수 없음/);
   });
 
   test('both call sites still feed it live board data', () => {

@@ -13,7 +13,7 @@ import {
 
 type Range = 30 | 90 | 365;
 const RANGES: Range[] = [30, 90, 365];
-const RANGE_LABEL: Record<string, string> = { '30': '30d', '90': '90d', '365': '1y' };
+const RANGE_LABEL: Record<string, string> = { '30': '30일', '90': '90일', '365': '1년' };
 
 type AudPoint = { date: string; value: number };
 
@@ -41,7 +41,7 @@ const colorFor = (p: string): string => COLORS[p] ?? 'var(--accent)';
 const labelFor = (p: string): string => LABELS[p] ?? p.charAt(0).toUpperCase() + p.slice(1);
 
 function fmtDay(d: string): string {
-  return new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  return new Date(`${d}T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 }
 
 function RangeChips({ value, onChange }: { value: Range; onChange: (r: Range) => void }) {
@@ -152,15 +152,15 @@ function ChartPair({
 
       <div className="mt-1.5 flex justify-between font-mono text-[9.5px] text-os-dim">
         <span>{axis[0] ? fmtDay(axis[0]) : ''}</span>
-        <span>today</span>
+        <span>오늘</span>
       </div>
 
       <div className="my-3.5 h-px bg-os-border" />
 
       <div className="mb-2 flex items-center justify-between gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">Posting consistency</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">게시 꾸준함</span>
         <span className="font-mono text-[11px] text-os-muted">
-          {days.reduce((s, d) => s + d.total, 0)} posts · {platforms.length} platforms
+          게시물 {days.reduce((s, d) => s + d.total, 0)}개 · 플랫폼 {platforms.length}개
         </span>
       </div>
 
@@ -192,7 +192,7 @@ function ChartPair({
 
       <div className="mt-1.5 flex justify-between font-mono text-[9.5px] text-os-dim">
         <span>{axis[0] ? fmtDay(axis[0]) : ''}</span>
-        <span>today</span>
+        <span>오늘</span>
       </div>
 
       {/* shared hover surface (spans both charts) + floating tooltip */}
@@ -210,7 +210,7 @@ function ChartPair({
               </span>
             </div>
             {hoverEntries.length === 0 ? (
-              <div className="text-[10px] text-os-dim">no posts</div>
+              <div className="text-[10px] text-os-dim">게시물 없음</div>
             ) : (
               <div className="flex flex-col gap-0.5">
                 {hoverEntries.map((p) => (
@@ -314,14 +314,14 @@ export function AudienceConsistency({
       <div className={aside ? 'grid gap-6 lg:grid-cols-[1.55fr_1fr]' : ''}>
         <div className="flex min-w-0 flex-col">
           <div className="mb-2 flex items-center justify-between gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">Audience · {RANGE_LABEL[String(range)]}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">오디언스 · {RANGE_LABEL[String(range)]}</span>
             <div className="flex items-center gap-2.5">
               {netLabel}
               <RangeChips value={range} onChange={setRange} />
               <button
                 onClick={() => setExpanded(true)}
-                aria-label="Expand to fullscreen"
-                title="Fullscreen"
+                aria-label="전체 화면으로 펼치기"
+                title="전체 화면"
                 className="pressable flex h-[22px] w-[22px] items-center justify-center rounded-ctl border border-os-border text-os-dim hover:border-os-border-strong hover:text-os-accent"
               >
                 <Maximize2 className="h-3 w-3" />
@@ -359,14 +359,14 @@ export function AudienceConsistency({
           >
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-os-border px-5 py-3.5">
               <div>
-                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">social</div>
-                <div className="mt-0.5 text-[15px] font-semibold">Combined audience &amp; posting consistency</div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">소셜</div>
+                <div className="mt-0.5 text-[15px] font-semibold">통합 오디언스 &amp; 게시 꾸준함</div>
               </div>
               <div className="flex items-center gap-3">
                 <RangeChips value={range} onChange={setRange} />
                 <button
                   onClick={() => setExpanded(false)}
-                  aria-label="Close"
+                  aria-label="닫기"
                   className="pressable flex h-7 w-7 items-center justify-center rounded-ctl border border-os-border text-os-dim hover:border-os-border-strong hover:text-os-text"
                 >
                   <X className="h-4 w-4" />
@@ -376,7 +376,7 @@ export function AudienceConsistency({
 
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <div className="mb-2 flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">Audience · {RANGE_LABEL[String(range)]}</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-os-dim">오디언스 · {RANGE_LABEL[String(range)]}</span>
                 {netLabel}
               </div>
               <ChartPair

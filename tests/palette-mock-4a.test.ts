@@ -28,14 +28,14 @@ describe('⌘K palette mock-4a: the card', () => {
   });
 
   test('the prompt line names what you can actually type', () => {
-    expect(p).toContain('placeholder="Jump, run, ask… (type an agent name, a route, or a question)"');
+    expect(p).toContain('placeholder="이동, 실행, 질문… (에이전트 이름, 화면, 또는 질문을 입력)"');
     expect(p).toContain('<kbd className="kbd">esc</kbd>');
   });
 
   test('the scope row is divided by the hairline, not a structural rule', () => {
-    const chips = p.slice(p.indexOf("['All', 'Go to', 'Run', 'Ask']") - 260, p.indexOf("['All', 'Go to', 'Run', 'Ask']"));
+    const chips = p.slice(p.indexOf("['전체', '이동', '실행', '질문']") - 260, p.indexOf("['전체', '이동', '실행', '질문']"));
     expect(chips).toContain('border-b border-os-hairline');
-    expect(p).toContain('results');
+    expect(p).toContain('결과');
   });
 });
 
@@ -59,12 +59,12 @@ describe('⌘K palette mock-4a: the rows', () => {
   test('the empty state arrives the same way and offers the Conductor', () => {
     const empty = list.slice(list.indexOf('rows.length === 0'), list.indexOf('border-t border-os-border'));
     expect(empty).toContain('animate-enter');
-    expect(empty).toContain('press ↵ to ask the Conductor instead');
+    expect(empty).toContain('↵ 를 누르면 대신 컨덕터에게 물어봅니다');
   });
 
   test('the footer LED blinks on the 2.6s step, next to the listening line', () => {
     expect(p).toContain('animate-blink');
-    expect(p).toContain('Conductor listening');
+    expect(p).toContain('컨덕터 대기 중');
     expect(read('tailwind.config.ts')).toContain("blink: 'om-blink 2.6s steps(1) infinite'");
   });
 });

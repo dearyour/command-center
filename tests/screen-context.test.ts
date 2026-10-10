@@ -5,9 +5,9 @@ import { realAgents } from '@/lib/agents/real';
 
 describe('screenTitleFor', () => {
   test('maps known routes to their nav labels, query strings included', () => {
-    expect(screenTitleFor('/funnel')).toBe('Funnel');
-    expect(screenTitleFor('/funnel?venture=vantage&stage=nurtured')).toBe('Funnel');
-    expect(screenTitleFor('/')).toBe('Home');
+    expect(screenTitleFor('/funnel')).toBe('퍼널');
+    expect(screenTitleFor('/funnel?venture=vantage&stage=nurtured')).toBe('퍼널');
+    expect(screenTitleFor('/')).toBe('홈');
     expect(screenTitleFor('/brain')).toBe('G-Brain');
   });
 
@@ -37,10 +37,10 @@ describe('describeFunnelContext', () => {
         { name: 'Marcus Webb', days: 25 },
       ],
     });
-    expect(text).toContain('153 active leads');
+    expect(text).toContain('활성 리드 153명');
     expect(text).toContain('Engaged: 80');
-    expect(text).toContain('91 fading toward the 90-day archive');
-    expect(text).toContain('Liam Carter (22d quiet)');
+    expect(text).toContain('91명이 90일 보관함 쪽으로 사라지는 중');
+    expect(text).toContain('Liam Carter (22일 조용함)');
     expect(text).toContain('Attio 117 + GHL 57');
   });
 });

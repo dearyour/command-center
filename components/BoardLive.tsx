@@ -24,6 +24,7 @@ import { Label } from '@/components/terminal';
 import { publishBoard } from '@/components/board-live-store';
 import { boardDecisionFor, boardStats, groupIssues, modelSummary, orderRuns, orderSeats, runDuration, runningSince, RUN_OK, type BoardLivePayload } from '@/lib/board-live';
 import type { PaperclipAgent } from '@/lib/connectors/paperclip';
+import { statusKo } from '@/lib/status-labels';
 
 /**
  * The live Paperclip board rendered natively in the OS (Alex, 2026-08-07:
@@ -117,14 +118,14 @@ const runGlyph = (status: string): string => (status === 'running' ? '▸' : RUN
 const ago = (iso: string | null): string => {
   if (!iso) return '';
   const ms = Date.now() - new Date(iso).getTime();
-  if (!Number.isFinite(ms) || ms < 0) return 'now';
+  if (!Number.isFinite(ms) || ms < 0) return '방금';
   const s = Math.floor(ms / 1000);
-  if (s < 60) return `${s}s ago`;
+  if (s < 60) return `${s}초 전`;
   const m = Math.floor(s / 60);
-  if (m < 60) return `${m}m ago`;
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
 };
 
 function SeatChip({ agent, since }: { agent: PaperclipAgent; since: string | null }) {
@@ -180,11 +181,11 @@ function SeatChip({ agent, since }: { agent: PaperclipAgent; since: string | nul
         </div>
         <div
           className="truncate font-mono text-[9px] text-os-dim"
-          title={`${agent.model ?? agent.adapterType ?? 'unconfigured'}${agent.model && agent.adapterType ? ` · ${agent.adapterType}` : ''}`}
+          title={`${agent.model ?? agent.adapterType ?? '설정 안 됨'}${agent.model && agent.adapterType ? ` · ${agent.adapterType}` : ''}`}
         >
-          {agent.model ?? agent.adapterType ?? 'unconfigured'}
+          {agent.model ?? agent.adapterType ?? '설정 안 됨'}
           {agent.model && agent.adapterType ? ` · ${agent.adapterType}` : ''}
-          {failed && <span className="text-os-err"> · run failed</span>}
+          {failed && <span className="text-os-err"> · 실행 실패</span>}
         </div>
       </div>
       {/* Right column, three exclusive states. A run HE started goes ▸ →
@@ -198,7 +199,7 @@ function SeatChip({ agent, since }: { agent: PaperclipAgent; since: string | nul
             {startedMs !== null && <Elapsed since={startedMs} />}
           </>
         ) : (
-          <span title={`Run ${agent.name} heartbeat on the board`}>
+          <span title={`보드에서 ${agent.name} 하트비트 실행`}>
             <AsyncButton run={run} tone="ghost" failed={failed} showElapsed busyLabel="" doneLabel="" failLabel="">
               ▸
             </AsyncButton>
@@ -251,9 +252,9 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
       <div className="shrink-0 border-b border-os-border px-4 py-2.5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className={`h-1.5 w-1.5 ${data.connected ? 'bg-os-ok animate-pulse' : 'bg-os-err'}`} />
-          <Label>Board live</Label>
+          <Label>실시간 보드</Label>
           <span className="font-mono text-[10px] text-os-dim">
-            {data.connected ? `${data.agents.length} seats · ${running} running` : 'board unreachable'}
+            {data.connected ? `자리 ${data.agents.length}개 · 실행 중 ${running}` : '보드 연결 불가'}
           </span>
           {boardUrl && (
             <a
@@ -262,7 +263,7 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
               rel="noreferrer"
               className="ml-auto flex shrink-0 items-center gap-1 font-mono text-[10px] text-os-dim linky"
             >
-              open board <ArrowUpRight className="h-3 w-3" />
+              보드 열기 <ArrowUpRight className="h-3 w-3" />
             </a>
           )}
         </div>
@@ -271,7 +272,7 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
             fifth model clipped to an ellipsis  -  Alex, 2026-08-18: "can't
             see the rest of the models on the board". */}
         {data.connected && (
-          <p className="mt-1 font-mono text-[10px] leading-relaxed text-os-muted" title="models holding seats right now">
+          <p className="mt-1 font-mono text-[10px] leading-relaxed text-os-muted" title="지금 자리를 차지하고 있는 모델">
             {modelSummary(data.agents)}
           </p>
         )}
@@ -279,7 +280,7 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
 
       {!data.connected ? (
         <p className="px-4 py-3 font-mono text-[10.5px] text-os-dim">
-          Paperclip is not answering on the tailnet. No fake data: this strip lights up the moment the board responds.
+          tailnet에서 Paperclip이 응답하지 않습니다. 가짜 데이터는 없습니다: 보드가 응답하는 즉시 이 영역이 켜집니다.
         </p>
       ) : (
         <div className="flex min-h-0 flex-1 flex-col gap-4 p-4">
@@ -289,11 +290,11 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
               const s = boardStats(data);
               return (
                 [
-                  ['Seats', s.seats],
-                  ['Running now', s.running],
-                  ['Open tasks', s.openTasks],
-                  ['Runs · 24h', s.runs24h],
-                  ['Heartbeats · 24h', s.heartbeats24h],
+                  ['자리', s.seats],
+                  ['지금 실행 중', s.running],
+                  ['열린 작업', s.openTasks],
+                  ['실행 · 24시간', s.runs24h],
+                  ['하트비트 · 24시간', s.heartbeats24h],
                 ] as const
               ).map(([label, value]) => (
                 <div key={label} data-lens="r" className="pressable is-row flex min-w-0 flex-col gap-1 rounded-ctl border border-os-border bg-os-bg px-2.5 py-2">
@@ -317,10 +318,10 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
               panel; the lanes did, so they take everything that is left. */}
           <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,12rem)_minmax(0,1fr)]">
             <div className="flex min-h-0 flex-col">
-              <div className="mb-2 shrink-0"><Label>Run feed</Label></div>
+              <div className="mb-2 shrink-0"><Label>실행 피드</Label></div>
               <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pr-1">
                 {runs.length === 0 && (
-                  <p className="font-mono text-[10px] text-os-dim">no heartbeat runs yet, hit a ▸ on a seat</p>
+                  <p className="font-mono text-[10px] text-os-dim">아직 하트비트 실행이 없습니다. 자리의 ▸ 를 누르세요</p>
                 )}
                 {runs.map((r) => (
                   <div key={r.id} data-lens="r" className="pressable is-row animate-enter flex items-baseline gap-1.5 rounded-ctl px-1 py-0.5 font-mono text-[9.5px] leading-snug">
@@ -332,7 +333,7 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
                         out 'succeeded' on every row just ate the width the
                         agent name needed and clipped 'Conductor' to 'Cond…'.
                         Anything NOT a clean finish still says so in words. */}
-                    {!RUN_OK.has(r.status) && <span className={runColor(r.status)}>{r.status}</span>}
+                    {!RUN_OK.has(r.status) && <span className={runColor(r.status)}>{statusKo(r.status)}</span>}
                     {runDuration(r) && <span className="text-os-dim">{runDuration(r)}</span>}
                     <span className="shrink-0 text-os-dim">{ago(r.startedAt)}</span>
                   </div>
@@ -341,7 +342,7 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
             </div>
 
             <div className="flex min-h-0 flex-col">
-              <div className="mb-2 shrink-0"><Label>Task lanes</Label></div>
+              <div className="mb-2 shrink-0"><Label>작업 레인</Label></div>
               {/* The stages always render  -  an empty lane reads as a stage with
                   nothing in it, whereas a missing lane reads as a broken board.
                   groupIssues guarantees at least in progress / todo / done. */}
@@ -359,13 +360,13 @@ export function BoardLive({ initial, boardUrl }: { initial: BoardLivePayload; bo
                         }`}
                       >
                         <span className={`h-1 w-1 shrink-0 ${LANE_DOT[lane.status] ?? 'bg-os-dim'}`} />
-                        <span className="truncate">{lane.status.replace(/_/g, ' ')}</span>
+                        <span className="truncate">{statusKo(lane.status)}</span>
                         <span className="ml-auto shrink-0 tabular-nums">{lane.issues.length}</span>
                       </div>
                       <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto overscroll-contain pr-1">
                         {lane.issues.length === 0 && (
                           <div className="animate-enter rounded-ctl border border-dashed border-os-border px-2 py-1.5 font-mono text-[9.5px] text-os-dim/70">
-                            nothing here
+                            비어 있음
                           </div>
                         )}
                         {lane.issues.map((i) => {

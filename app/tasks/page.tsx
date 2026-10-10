@@ -45,17 +45,17 @@ export default async function TasksPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="agent work"
-        title="Tasks"
-        meta={`${v.touchesInWindow} items moved in ${WINDOW_DAYS} days · ${v.cron.runsInWindow} cron runs · ${v.board.blocked} blocked`}
+        eyebrow="에이전트 작업"
+        title="작업"
+        meta={`${WINDOW_DAYS}일간 움직인 항목 ${v.touchesInWindow}개 · 크론 실행 ${v.cron.runsInWindow}회 · 막힘 ${v.board.blocked}개`}
         right={
           <>
-            <Chip tone={boardUrl ? 'ok' : undefined}>{boardUrl ? 'board live · paperclip' : 'board offline · paperclip'}</Chip>
+            <Chip tone={boardUrl ? 'ok' : undefined}>{boardUrl ? '보드 실시간 · paperclip' : '보드 오프라인 · paperclip'}</Chip>
             <Link href="/workflows" className={PILL}>
-              Workflows
+              워크플로
             </Link>
             <Link href="/agents" className={PILL}>
-              Agents
+              에이전트
             </Link>
           </>
         }
@@ -63,53 +63,53 @@ export default async function TasksPage() {
 
       {/* Hero row, Brand Deals' shape: the work line + the volume card */}
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={1} title="Task Activity" sub={`last ${WINDOW_DAYS} days`} className="pb-2">
+        <SlabCard i={1} title="작업 활동" sub={`최근 ${WINDOW_DAYS}일`} className="pb-2">
           <div className="px-6 pb-2 pt-3">
             <BigStat
               size={30}
               value={v.touchesInWindow}
-              chips={v.board.blocked > 0 ? [{ tone: 'err', text: `${v.board.blocked} blocked` }] : []}
-              caption="kanban tasks and board issues, on the day each last moved"
+              chips={v.board.blocked > 0 ? [{ tone: 'err', text: `막힘 ${v.board.blocked}` }] : []}
+              caption="칸반 작업과 보드 이슈, 각각 마지막으로 움직인 날 기준"
             />
           </div>
-          <StepLine series={v.series} hue="var(--send-activity)" unit=" moved" empty={`Nothing moved in the last ${WINDOW_DAYS} days.`} />
+          <StepLine series={v.series} hue="var(--send-activity)" unit="개" empty={`최근 ${WINDOW_DAYS}일간 움직인 것이 없습니다.`} />
         </SlabCard>
 
-        <SlabCard i={2} title="Task Volume" className="flex flex-col">
+        <SlabCard i={2} title="작업 규모" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat value={v.headline} chips={v.chips} caption={v.caption} />
-            <MeterStack meters={v.meters} foot={v.foot} empty="no tasks yet, hand the company work below" />
+            <MeterStack meters={v.meters} foot={v.foot} empty="아직 작업이 없습니다. 아래에서 회사에 일을 맡기세요" />
           </div>
         </SlabCard>
       </div>
 
       {/* Second row: cron rhythm, who holds the work, THE gradient card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Cron Runs" sub="by weekday">
+        <SlabCard i={3} title="크론 실행" sub="요일별">
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <BigStat
               size={30}
               value={v.cron.runsInWindow}
-              chips={v.cron.failedInWindow > 0 ? [{ tone: 'err', text: `${v.cron.failedInWindow} failed` }] : []}
-              caption={busiestDay.count > 0 ? `busiest ${busiestDay.label} · ${busiestDay.count} runs` : `no runs in ${WINDOW_DAYS} days`}
+              chips={v.cron.failedInWindow > 0 ? [{ tone: 'err', text: `실패 ${v.cron.failedInWindow}` }] : []}
+              caption={busiestDay.count > 0 ? `가장 바쁜 요일 ${busiestDay.label} · ${busiestDay.count}회` : `${WINDOW_DAYS}일간 실행 없음`}
             />
             <DotMatrix cols={v.cron.rhythm} hue="var(--send-activity)" />
           </div>
         </SlabCard>
 
-        <SlabCard i={4} title="Owners" sub="unfinished kanban work">
+        <SlabCard i={4} title="담당자" sub="끝나지 않은 칸반 작업">
           {/* stacked: agent names are long column labels */}
           <div className="flex flex-col gap-5 px-6 pb-6 pt-3">
             <BigStat
               size={30}
               value={v.busiestOwner?.count ?? 0}
-              caption={v.busiestOwner ? `most on ${v.busiestOwner.name}` : 'nothing open on the kanban'}
+              caption={v.busiestOwner ? `가장 많이 맡은 담당: ${v.busiestOwner.name}` : '칸반에 열린 작업 없음'}
             />
             {v.owners.length > 0 && <DotMatrix cols={v.owners} hue="var(--ramp-1)" />}
           </div>
         </SlabCard>
 
-        <InsightCard i={5} badge="Needs you" value={v.insight.value} headline={v.insight.headline} body={v.insight.body} frac={v.insight.frac} />
+        <InsightCard i={5} badge="확인 필요" value={v.insight.value} headline={v.insight.headline} body={v.insight.body} frac={v.insight.frac} />
       </div>
 
       {/* The three queues: what fires on a timer, the live board, the local kanban */}

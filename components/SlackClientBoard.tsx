@@ -17,9 +17,9 @@ const HEAT_VAR: Record<NonNullable<SlackClientCard['heat']>, string> = {
 };
 
 const WAIT_LABEL: Record<SlackClientCard['waiting'], string> = {
-  you: 'waiting on you',
-  them: 'waiting on them',
-  none: 'all clear',
+  you: '내 답변 대기 중',
+  them: '상대 답변 대기 중',
+  none: '모두 정리됨',
 };
 
 function ago(iso: string, nowISO: string): string {
@@ -40,7 +40,7 @@ function ClientCard({ card, nowISO }: { card: SlackClientCard; nowISO: string })
         <span
           className="h-2 w-2 shrink-0 rounded-full"
           style={{ background: card.heat ? HEAT_VAR[card.heat] : 'var(--border-strong)' }}
-          title={card.heat ? `${card.heat} activity` : 'no Slack thread'}
+          title={card.heat ? `활동 ${card.heat}` : 'Slack 스레드 없음'}
         />
         <span className="truncate text-[12.5px] font-semibold">{card.name}</span>
         {card.unread > 0 ? (
@@ -51,11 +51,11 @@ function ClientCard({ card, nowISO }: { card: SlackClientCard; nowISO: string })
       </div>
       <div className="mt-1 flex items-center gap-1.5 font-mono text-[9.5px] text-os-dim">
         <Hash className="h-3 w-3 shrink-0" strokeWidth={1.7} />
-        <span className="truncate">{card.channel ? card.channel.replace(/^#/, '') : 'no channel linked'}</span>
+        <span className="truncate">{card.channel ? card.channel.replace(/^#/, '') : '연결된 채널 없음'}</span>
         {card.lastTs && <span className="ml-auto shrink-0">{ago(card.lastTs, nowISO)}</span>}
       </div>
       <p className="mt-2 line-clamp-2 text-[11px] leading-snug text-os-muted">
-        {card.lastText || <span className="text-os-dim">No Slack thread yet. Invite the bot to their channel.</span>}
+        {card.lastText || <span className="text-os-dim">아직 Slack 스레드가 없습니다. 상대 채널에 봇을 초대하세요.</span>}
       </p>
       <div className="mt-2.5 flex items-center gap-2 border-t border-os-border pt-2">
         <span
@@ -66,7 +66,7 @@ function ClientCard({ card, nowISO }: { card: SlackClientCard; nowISO: string })
           {WAIT_LABEL[card.waiting]}
         </span>
         <span className="ml-auto shrink-0">
-          {card.live ? <Badge tone="ok">live</Badge> : <Badge ghost>quiet</Badge>}
+          {card.live ? <Badge tone="ok">활성</Badge> : <Badge ghost>조용함</Badge>}
         </span>
       </div>
     </div>

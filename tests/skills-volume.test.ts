@@ -33,37 +33,37 @@ describe('skillsVolume', () => {
   test('headline is the whole catalog, split by source and status', () => {
     expect(v.headline).toBe(11);
     expect(v.counts).toEqual({ claude: 7, user: 3, plugin: 4, operator: 4, live: 9, learning: 1, planned: 1 });
-    expect(v.caption).toBe('3 user · 4 plugin · 4 operator');
+    expect(v.caption).toBe('사용자 3 · 플러그인 4 · 운영자 4');
   });
 
   test('dot chips carry status in status colors, zero states left out', () => {
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '9 live' },
-      { tone: 'warn', text: '1 learning' },
-      { text: '1 planned' },
+      { tone: 'ok', text: '운영 중 9' },
+      { tone: 'warn', text: '학습 중 1' },
+      { text: '계획됨 1' },
     ]);
   });
 
   test('four meters, each a real fraction of its own whole', () => {
     expect(v.meters.map((m) => m.label)).toEqual([
-      'Live (9/11)',
-      'Claude Code on disk (7/11)',
-      'Operator skills owned (3/4)',
-      'Operator skills with tools (2/4)',
+      '운영 중 (9/11)',
+      '디스크의 Claude Code (7/11)',
+      '담당자가 있는 운영자 스킬 (3/4)',
+      '도구가 연결된 운영자 스킬 (2/4)',
     ]);
     expect(v.meters[0].frac).toBeCloseTo(9 / 11);
     expect(v.meters[0]).toMatchObject({ display: '82%', hue: 'var(--ok)' });
     expect(v.meters[1]).toMatchObject({ display: '64%', hue: 'var(--ramp-1)' });
     expect(v.meters[2]).toMatchObject({ frac: 0.75, display: '75%', hue: 'var(--accent)' });
     expect(v.meters[3]).toMatchObject({ frac: 0.5, display: '50%', hue: 'var(--ramp-4)' });
-    expect(v.foot).toBe('5 groups · 2 plugins · 2 tools wired');
+    expect(v.foot).toBe('그룹 5개 · 플러그인 2개 · 연결된 도구 2개');
   });
 
   test('groups: skills per source group, biggest first, short labels', () => {
     expect(v.groups).toEqual([
       { label: 'superpowers', count: 3 },
       { label: 'Engineering', count: 2 },
-      { label: 'Operator', count: 4 },
+      { label: '운영자', count: 4 },
       { label: 'Spec', count: 1 },
       { label: 'slack', count: 1 },
     ].sort((a, b) => b.count - a.count));
@@ -85,7 +85,7 @@ describe('skillsVolume', () => {
 
   test('the one insight card is the drafts still to finish', () => {
     expect(v.insight.value).toBe(2);
-    expect(v.insight.headline).toBe('1 learning · 1 planned.');
+    expect(v.insight.headline).toBe('학습 중 1 · 계획됨 1.');
     expect(v.insight.body).toBe('Objection map · Ops audit');
     expect(v.insight.frac).toBeCloseTo(2 / 4);
   });
@@ -98,14 +98,14 @@ describe('skillsVolume with nothing to show', () => {
     expect(e.headline).toBe(0);
     expect(e.chips).toEqual([]);
     expect(e.meters.every((m) => m.frac === 0)).toBe(true);
-    expect(e.meters.map((m) => m.display)).toEqual(['no skills yet', 'none on disk', 'no operator skills', 'no operator skills']);
+    expect(e.meters.map((m) => m.display)).toEqual(['아직 스킬 없음', '디스크에 없음', '운영자 스킬 없음', '운영자 스킬 없음']);
     expect(e.groups).toEqual([]);
-    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: 'Every operator skill is live.', body: 'No operator skills yet.' });
+    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: '모든 운영자 스킬이 운영 중입니다.', body: '아직 운영자 스킬이 없습니다.' });
   });
 
   test('all live reads as all live', () => {
     const g = skillsVolume({ claude: [], operator: [{ name: 'A', category: 'Ops', status: 'live', ownerAgentId: null, tools: [] }], agentNames: {} });
-    expect(g.insight.body).toBe('1 operator skill, all live.');
+    expect(g.insight.body).toBe('운영자 스킬 1개, 모두 운영 중.');
     expect(g.unassigned).toBe(1);
   });
 });

@@ -179,7 +179,7 @@ describe('mergeStripeWins', () => {
     expect(grouped.amountUsd).toBe(750);
     expect(grouped.touches.map((t) => t.at)).toEqual(['2026-07-01', '2026-07-20']);
     expect(grouped.createdAt).toBe('2026-07-01');
-    expect(merged.find((j) => j.id === 'stripe-ch_c')!.name).toBe('Stripe customer');
+    expect(merged.find((j) => j.id === 'stripe-ch_c')!.name).toBe('Stripe 고객');
   });
 
   test('no wins → journeys pass through untouched', () => {

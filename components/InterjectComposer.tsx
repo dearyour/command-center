@@ -26,14 +26,14 @@ type Receipt = {
  */
 const ROUTES: { id: Route; label: string }[] = [
   { id: 'note', label: '→ G-Brain' },
-  { id: 'task', label: '→ Board' },
-  { id: 'agent', label: '→ Agent' },
+  { id: 'task', label: '→ 보드' },
+  { id: 'agent', label: '→ 에이전트' },
 ];
 
 const ROUTE_VERB: Record<Receipt['route'], string> = {
-  task: 'on the board',
-  agent: 'relayed via the board',
-  note: 'captured to G-Brain',
+  task: '보드에 등록됨',
+  agent: '보드를 통해 전달됨',
+  note: 'G-Brain에 저장됨',
 };
 
 /**
@@ -60,7 +60,7 @@ export function InterjectComposer() {
       });
       r = (await res.json()) as Receipt;
     } catch {
-      r = { ok: false, route: route ?? 'note', error: 'network error' };
+      r = { ok: false, route: route ?? 'note', error: '네트워크 오류' };
     }
     setReceipt(r);
     if (r.ok) setText('');
@@ -71,8 +71,8 @@ export function InterjectComposer() {
   return (
     <section data-part="card" className="rounded-panel border border-os-border bg-os-surface">
       <div data-part="card-head" className="flex items-center gap-3 border-b border-os-border px-4 py-2.5">
-        <Label>Interject</Label>
-        <span className="font-mono text-[10px] text-os-dim">task · agent · note  -  routed for you</span>
+        <Label>빠른 입력</Label>
+        <span className="font-mono text-[10px] text-os-dim">작업 · 에이전트 · 메모  -  알아서 분류됩니다</span>
       </div>
       <div className="flex flex-col gap-2.5 p-4">
         <textarea
@@ -86,7 +86,7 @@ export function InterjectComposer() {
           }}
           rows={3}
           data-part="input"
-          placeholder="call Nick back re: Tampa scope…  (Enter sends, Shift+Enter breaks)"
+          placeholder="Nick에게 Tampa 범위 관련해서 다시 전화하기…  (Enter 전송, Shift+Enter 줄바꿈)"
           className="w-full resize-none rounded-ctl border border-os-border bg-os-bg px-3 py-2.5 font-mono text-[12.5px] text-os-text outline-none state-fade placeholder:text-os-dim focus:border-os-border-strong"
         />
         <div className="flex items-center gap-1.5">
@@ -97,7 +97,7 @@ export function InterjectComposer() {
             </Chip>
           ))}
           <span className="ml-auto font-mono text-[9.5px] text-os-dim">
-            {text.trim() ? (route ? 'route pinned' : 'auto-routed · Enter sends') : 'Enter sends · Shift+Enter breaks'}
+            {text.trim() ? (route ? '경로 고정됨' : '자동 분류 · Enter 전송') : 'Enter 전송 · Shift+Enter 줄바꿈'}
           </span>
           {/* the artboard's send is a 26px white disc carrying ↑, not a
               labelled button: the label is already in the hint beside it */}
@@ -129,12 +129,12 @@ export function InterjectComposer() {
                 </span>
                 {receipt.url && (
                   <a href={receipt.url} target="_blank" rel="noreferrer" className="text-os-accent hover:underline">
-                    open →
+                    열기 →
                   </a>
                 )}
               </>
             ) : (
-              <span>failed to land: {receipt.error ?? 'unknown error'}</span>
+              <span>전달 실패: {receipt.error ?? '알 수 없는 오류'}</span>
             )}
           </div>
         )}

@@ -50,39 +50,39 @@ describe('stateOfWorld — honest attention-first status line', () => {
 
   it('leads with "All nominal" when nothing needs attention', () => {
     const segs = stateOfWorld(base);
-    expect(segs[0]).toEqual({ text: 'All nominal', tone: 'ok' });
+    expect(segs[0]).toEqual({ text: '모두 정상', tone: 'ok' });
     // mock 3a states the roster as "N live · N idle" and the brain score at
     // every health, so the tail is three facts, not one fraction
-    expect(segs).toContainEqual({ text: '5 agents live', tone: 'ok' });
-    expect(segs).toContainEqual({ text: '3 idle', tone: 'dim' });
-    expect(segs).toContainEqual({ text: 'brain 92/100', tone: 'ok' });
+    expect(segs).toContainEqual({ text: '에이전트 5개 가동 중', tone: 'ok' });
+    expect(segs).toContainEqual({ text: '3개 대기', tone: 'dim' });
+    expect(segs).toContainEqual({ text: '브레인 92/100', tone: 'ok' });
   });
 
   it('surfaces failed runs first, in error tone', () => {
     const segs = stateOfWorld({ ...base, failedRuns: 2 });
-    expect(segs[0]).toEqual({ text: '2 runs failed', tone: 'err' });
-    expect(segs.some((s) => s.text === 'All nominal')).toBe(false);
+    expect(segs[0]).toEqual({ text: '실행 2건 실패', tone: 'err' });
+    expect(segs.some((s) => s.text === '모두 정상')).toBe(false);
   });
 
   it('reports a degraded brain and down connectors', () => {
     const segs = stateOfWorld({ ...base, health: 55, connectorsDown: 2 });
-    expect(segs).toContainEqual({ text: 'G-Brain degraded 55/100', tone: 'warn' });
-    expect(segs).toContainEqual({ text: '2 connectors down', tone: 'warn' });
+    expect(segs).toContainEqual({ text: 'G-Brain 성능 저하 55/100', tone: 'warn' });
+    expect(segs).toContainEqual({ text: '커넥터 2개 다운', tone: 'warn' });
   });
 
   it('reports an offline brain as an error', () => {
     const segs = stateOfWorld({ ...base, brainConnected: false, health: null });
-    expect(segs).toContainEqual({ text: 'G-Brain offline', tone: 'err' });
+    expect(segs).toContainEqual({ text: 'G-Brain 오프라인', tone: 'err' });
   });
 
   it('flags inbound needing reply', () => {
     const segs = stateOfWorld({ ...base, inbound: 7 });
-    expect(segs).toContainEqual({ text: '7 inbound need reply', tone: 'accent' });
+    expect(segs).toContainEqual({ text: '답장 필요한 수신 7건', tone: 'accent' });
   });
 
-  it('singularizes one failed run and one connector down', () => {
+  it('counts one failed run and one connector down', () => {
     const segs = stateOfWorld({ ...base, failedRuns: 1, connectorsDown: 1 });
-    expect(segs).toContainEqual({ text: '1 run failed', tone: 'err' });
-    expect(segs).toContainEqual({ text: '1 connector down', tone: 'warn' });
+    expect(segs).toContainEqual({ text: '실행 1건 실패', tone: 'err' });
+    expect(segs).toContainEqual({ text: '커넥터 1개 다운', tone: 'warn' });
   });
 });

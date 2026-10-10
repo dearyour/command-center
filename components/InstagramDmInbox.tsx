@@ -77,13 +77,13 @@ export function InstagramDmInbox({ threads: initial, nowMs }: { threads: DmThrea
       });
       const body = await res.json().catch(() => null);
       if (!res.ok || !body?.ok) {
-        setError(typeof body?.error === 'string' ? body.error : 'Send failed — connect ManyChat (MANYCHAT_API_KEY) to reply.');
+        setError(typeof body?.error === 'string' ? body.error : '전송 실패 — 답장하려면 ManyChat(MANYCHAT_API_KEY)을 연결하세요.');
         return;
       }
       setMessages((prev) => [body.message as SocialDmMessage, ...prev]);
       setDraft('');
     } catch {
-      setError('Network error while sending.');
+      setError('전송 중 네트워크 오류가 발생했습니다.');
     } finally {
       setSending(false);
     }
@@ -102,13 +102,13 @@ export function InstagramDmInbox({ threads: initial, nowMs }: { threads: DmThrea
         </div>
         <span className="ml-auto flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.15em] text-os-dim">
           <span className={`h-1.5 w-1.5 ${isLive ? 'bg-os-ok' : 'bg-os-dim'}`} />
-          {isLive ? 'live · manychat' : 'seeded · live via manychat webhook'}
+          {isLive ? '실시간 · manychat' : '샘플 데이터 · manychat 웹훅으로 실시간 전환'}
         </span>
       </div>
 
       {threads.length === 0 ? (
         <div className="rounded-lg-t border border-os-border bg-os-surface px-4 py-8 text-center font-mono text-[12px] text-os-dim">
-          No DMs yet. They appear here as ManyChat posts them to /api/webhooks/manychat.
+          아직 DM이 없습니다. ManyChat이 /api/webhooks/manychat 으로 보내면 여기에 표시됩니다.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg-t border border-os-border bg-os-border md:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
@@ -134,10 +134,10 @@ export function InstagramDmInbox({ threads: initial, nowMs }: { threads: DmThrea
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="truncate font-mono text-[11px] text-os-dim">
-                        {t.last.direction === 'out' ? 'You: ' : ''}
+                        {t.last.direction === 'out' ? '나: ' : ''}
                         {t.last.text}
                       </span>
-                      {t.unreplied && <span className="ml-auto h-1.5 w-1.5 shrink-0 bg-os-warn" title="needs reply" />}
+                      {t.unreplied && <span className="ml-auto h-1.5 w-1.5 shrink-0 bg-os-warn" title="답장 필요" />}
                     </div>
                   </div>
                 </button>
@@ -155,7 +155,7 @@ export function InstagramDmInbox({ threads: initial, nowMs }: { threads: DmThrea
                   {active.handle && <span className="font-mono text-[11px] text-os-dim">@{active.handle}</span>}
                   {active.unreplied && (
                     <span className="ml-auto rounded-sm-t border border-os-warn/50 px-1.5 py-px font-mono text-[9.5px] uppercase tracking-[0.12em] text-os-warn">
-                      needs reply
+                      답장 필요
                     </span>
                   )}
                 </div>
@@ -195,7 +195,7 @@ export function InstagramDmInbox({ threads: initial, nowMs }: { threads: DmThrea
                         }
                       }}
                       rows={1}
-                      placeholder={`Reply to ${active.name}…  (⌘↵ to send)`}
+                      placeholder={`${active.name}에게 답장…  (⌘↵ 전송)`}
                       className="max-h-28 min-h-[38px] flex-1 resize-none rounded-md-t border border-os-border bg-os-bg px-3 py-2 font-mono text-[12px] text-os-text placeholder:text-os-dim focus:border-os-border-strong focus:outline-none"
                     />
                     <button
@@ -204,7 +204,7 @@ export function InstagramDmInbox({ threads: initial, nowMs }: { threads: DmThrea
                       className="pressable flex h-[38px] items-center gap-1.5 rounded-md-t bg-os-accent px-3.5 font-mono text-[12px] font-semibold text-os-bg transition-opacity disabled:opacity-40"
                     >
                       <Send className="h-3.5 w-3.5" />
-                      {sending ? 'Sending' : 'Send'}
+                      {sending ? '보내는 중' : '보내기'}
                     </button>
                   </div>
                 </div>

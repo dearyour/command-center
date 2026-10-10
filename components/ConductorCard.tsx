@@ -50,15 +50,15 @@ export function ConductorCard({
 
   return (
     <div data-lens="r" className="pressable is-row group w-[340px] rounded-tile border border-os-border-bright bg-os-surface p-4">
-      <div className="text-center text-[10px] uppercase tracking-[0.25em] text-os-dim">AI Head</div>
+      <div className="text-center text-[10px] uppercase tracking-[0.25em] text-os-dim">AI 총괄</div>
 
       {/* Living core — breathes and orbits while the Conductor is broadcasting */}
       <div className="mt-2 flex justify-center">
         <ConductorEmblem size={62} thinking={sending} />
       </div>
-      <div className="mt-2 text-center text-sm font-bold tracking-[0.2em]">CONDUCTOR</div>
+      <div className="mt-2 text-center text-sm font-bold tracking-[0.2em]">컨덕터</div>
       <div className="text-center text-[10px] text-os-dim">
-        super agent · {conductor.instance} runtime until the dedicated host lands
+        슈퍼 에이전트 · 전용 호스트가 준비될 때까지 {conductor.instance} 런타임
       </div>
 
       {/* Chat pill → broadcast to every agent */}
@@ -67,7 +67,7 @@ export function ConductorCard({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && send()}
-          placeholder="Chat with Conductor — reaches every agent"
+          placeholder="컨덕터와 채팅 — 모든 에이전트에게 전달됩니다"
           className="min-w-0 flex-1 rounded-full border border-os-border bg-os-bg px-3 py-1.5 text-xs text-os-text placeholder:text-os-dim focus:border-os-border-bright focus:outline-none"
           disabled={sending}
         />
@@ -80,14 +80,14 @@ export function ConductorCard({
           failLabel=""
           className="!rounded-full shrink-0"
         >
-          Send
+          보내기
         </AsyncButton>
       </div>
       {error && <p className="mt-1.5 text-[11px] text-os-muted">⚠ {error}</p>}
 
       {/* Capability pills */}
       <div className="mt-3 grid grid-cols-3 gap-1">
-        {['Broadcast', 'Orchestration', 'Instances'].map((cap) => (
+        {['일괄 전송', '오케스트레이션', '인스턴스'].map((cap) => (
           <span key={cap} className="rounded-full bg-os-text px-2 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-os-bg">
             {cap}
           </span>
@@ -96,7 +96,7 @@ export function ConductorCard({
 
       {/* Agent tools bar */}
       <div className="mt-2 rounded-md bg-os-raised px-2 py-1 text-center text-[9px] uppercase tracking-[0.2em] text-os-muted">
-        Agent Tools
+        에이전트 도구
       </div>
       <div className="mt-1.5 flex justify-center gap-1">
         {conductor.tools.map((tool) => (

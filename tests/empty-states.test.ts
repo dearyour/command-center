@@ -12,13 +12,13 @@ const read = (p: string) => readFileSync(join(process.cwd(), p), 'utf8');
 describe('step-9 empty states + refetch skeletons', () => {
   test('the empty Conductor transcript says Nothing yet and offers quick actions', () => {
     const panel = read('components/ConductorPanel.tsx');
-    expect(panel).toMatch(/Nothing yet/);
+    expect(panel).toMatch(/아직 대화가 없습니다/);
     expect(panel).toContain('QUICK_ACTIONS');
   });
 
   test('the deliverables review lane names itself when empty', () => {
     const list = read('components/DeliverablesList.tsx');
-    expect(list).toMatch(/Nothing in review/);
+    expect(list).toMatch(/아직 검토할 것이 없습니다/);
   });
 
   test('ChatHub shows skeleton rows while a thread loads, rows enter animated', () => {

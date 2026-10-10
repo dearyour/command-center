@@ -23,13 +23,13 @@ const CONDUCTOR = '__board_conductor__';
 
 const ago = (iso: string): string => {
   const ms = Date.now() - new Date(iso).getTime();
-  if (!Number.isFinite(ms) || ms < 0) return 'now';
+  if (!Number.isFinite(ms) || ms < 0) return '방금';
   const m = Math.floor(ms / 60000);
-  if (m < 1) return 'now';
-  if (m < 60) return `${m}m`;
+  if (m < 1) return '방금';
+  if (m < 60) return `${m}분`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.floor(h / 24)}d`;
+  if (h < 24) return `${h}시간`;
+  return `${Math.floor(h / 24)}일`;
 };
 
 const initials = (name: string): string =>
@@ -63,7 +63,7 @@ export function ChatHub({
   const scroller = useRef<HTMLDivElement>(null);
 
   const nameOf = (id: string) =>
-    id === CONDUCTOR ? 'Conductor · CEO' : (roster.find((a) => a.id === id)?.name ?? id);
+    id === CONDUCTOR ? '컨덕터 · CEO' : (roster.find((a) => a.id === id)?.name ?? id);
 
   const loadThread = useCallback(async (agentId: string) => {
     setLoadingThread(true);
@@ -193,10 +193,10 @@ export function ChatHub({
       {/* conversation rail ↔ collapsed avatar strip */}
       <div className="flex h-full min-h-0 flex-col border-r border-os-border bg-os-bg2">
         <div className={`flex shrink-0 items-center border-b border-os-border py-2 ${railOpen ? 'justify-between px-3' : 'justify-center px-1'}`}>
-          {railOpen && <Label>Conversations</Label>}
+          {railOpen && <Label>대화</Label>}
           <button
             onClick={() => setRailOpen((o) => !o)}
-            title={railOpen ? 'Collapse conversations' : 'Expand conversations'}
+            title={railOpen ? '대화 목록 접기' : '대화 목록 펼치기'}
             className="pressable text-os-dim hover:text-os-text"
           >
             <PanelLeft className="h-3.5 w-3.5" />
@@ -208,12 +208,12 @@ export function ChatHub({
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="search threads"
+                placeholder="대화 검색"
                 className="min-w-0 flex-1 rounded-ctl border border-os-border bg-os-bg px-2 py-1 font-mono text-[10px] text-os-text placeholder:text-os-dim focus:border-os-border-strong focus:outline-none"
               />
               <button
                 onClick={() => setPicking((p) => !p)}
-                title="New chat"
+                title="새 채팅"
                 className="pressable shrink-0 rounded-ctl border border-os-border p-1.5 text-os-muted hover:bg-os-surface2 hover:text-os-text"
               >
                 {picking ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
@@ -226,14 +226,14 @@ export function ChatHub({
                   .map((a) => railRow(a.id, a.name, a.description.slice(0, 60)))
               ) : (
                 <>
-                  {railRow(CONDUCTOR, 'Conductor · CEO', 'the live board thread on the host')}
+                  {railRow(CONDUCTOR, '컨덕터 · CEO', '호스트의 실시간 보드 대화')}
                   {summaries
                     .filter((c) => c.agentId !== 'conductor')
                     .filter((c) => c.agentName.toLowerCase().includes(query.trim().toLowerCase()))
                     .map((c) => railRow(c.agentId, c.agentName, c.lastMessage, c.lastAt))}
                   {summaries.length === 0 && (
                     <p className="px-3 py-3 font-mono text-[10px] text-os-dim">
-                      No direct chats yet. Hit New chat and pick an agent.
+                      아직 1:1 채팅이 없습니다. 새 채팅을 누르고 에이전트를 고르세요.
                     </p>
                   )}
                 </>
@@ -242,7 +242,7 @@ export function ChatHub({
           </>
         ) : (
           <div className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain py-2">
-            {stripDot(CONDUCTOR, 'Conductor · CEO')}
+            {stripDot(CONDUCTOR, '컨덕터 · CEO')}
             {summaries
               .filter((c) => c.agentId !== 'conductor')
               .map((c) => stripDot(c.agentId, c.agentName))}
@@ -261,7 +261,7 @@ export function ChatHub({
             {headerDot}
             <span className="text-[12.5px] font-semibold">{nameOf(selected)}</span>
             <span className="ml-2 font-mono text-[9.5px] uppercase tracking-[0.14em] text-os-dim">
-              direct · read-only tools
+              1:1 · 읽기 전용 도구
             </span>
           </div>
           <div ref={scroller} className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
@@ -278,7 +278,7 @@ export function ChatHub({
             )}
             {messages.length === 0 && !sending && !loadingThread && (
               <p className="font-mono text-[10.5px] text-os-dim">
-                Fresh thread with {nameOf(selected)}. Say something.
+                {nameOf(selected)}와(과) 새 대화입니다. 말을 걸어 보세요.
               </p>
             )}
             {messages.map((m) => (
@@ -307,7 +307,7 @@ export function ChatHub({
             {error && <p className="font-mono text-[10px] text-os-err">{error}</p>}
           </div>
           <div className="shrink-0 p-3">
-            <ConductorComposer onSend={send} disabled={sending !== null} placeholder={`Message ${nameOf(selected)}…`} />
+            <ConductorComposer onSend={send} disabled={sending !== null} placeholder={`${nameOf(selected)}에게 메시지…`} />
           </div>
         </div>
       )}

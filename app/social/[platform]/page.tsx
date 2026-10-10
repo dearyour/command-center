@@ -34,17 +34,17 @@ export default function SocialPlatformPage({ params }: { params: { platform: str
   return (
     <Slab>
       <SlabTitle
-        eyebrow={`audience · ${account.handle}`}
+        eyebrow={`오디언스 · ${account.handle}`}
         title={label}
-        meta={`${formatFollowers(followers)} followers · ${formatPct(growth.d7)} 7d · ${snapshots.length} snapshots`}
+        meta={`팔로워 ${formatFollowers(followers)} · 7일 ${formatPct(growth.d7)} · 스냅샷 ${snapshots.length}개`}
         right={
           <>
             <Link href="/social" className={PILL}>
-              <ArrowLeft className="h-3.5 w-3.5" /> All platforms
+              <ArrowLeft className="h-3.5 w-3.5" /> 모든 플랫폼
             </Link>
             {account.url && (
               <a href={account.url} target="_blank" rel="noreferrer" data-lens="c" className={PILL_ACCENT}>
-                Open profile <ExternalLink className="h-3.5 w-3.5" />
+                프로필 열기 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             )}
           </>
@@ -55,14 +55,14 @@ export default function SocialPlatformPage({ params }: { params: { platform: str
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
         <SlabCard
           i={1}
-          title="Follower History"
-          sub={`${snapshots.length} snapshots`}
+          title="팔로워 기록"
+          sub={`스냅샷 ${snapshots.length}개`}
           action={
             <>
-              <GrowthBadge label="7d" value={growth.d7} />
-              <GrowthBadge label="30d" value={growth.d30} />
-              <GrowthBadge label="60d" value={growth.d60} />
-              <GrowthBadge label="all" value={growth.allTime} />
+              <GrowthBadge label="7일" value={growth.d7} />
+              <GrowthBadge label="30일" value={growth.d30} />
+              <GrowthBadge label="60일" value={growth.d60} />
+              <GrowthBadge label="전체" value={growth.allTime} />
             </>
           }
         >
@@ -72,20 +72,20 @@ export default function SocialPlatformPage({ params }: { params: { platform: str
             {newestFirst.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-3 font-mono text-[10.5px] text-os-dim">
                 <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-[3px] w-3 rounded-full bg-os-ok" /> gained vs prev
+                  <span className="inline-block h-[3px] w-3 rounded-full bg-os-ok" /> 이전 대비 증가
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-[3px] w-3 rounded-full bg-os-err" /> dipped
+                  <span className="inline-block h-[3px] w-3 rounded-full bg-os-err" /> 감소
                 </span>
                 <span className="ml-auto">
-                  latest {newestFirst[0].capturedAt} · {newestFirst[0].source}
+                  최신 {newestFirst[0].capturedAt} · {newestFirst[0].source}
                 </span>
               </div>
             )}
           </div>
         </SlabCard>
 
-        <SlabCard i={2} title="Follower Volume" className="flex flex-col">
+        <SlabCard i={2} title="팔로워 규모" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat
               value={v.headline ?? undefined}
@@ -94,48 +94,48 @@ export default function SocialPlatformPage({ params }: { params: { platform: str
               chips={v.chips}
               caption={v.caption}
             />
-            <MeterStack meters={v.meters} foot={v.foot} empty="no snapshots recorded for this platform yet" />
+            <MeterStack meters={v.meters} foot={v.foot} empty="이 플랫폼에는 아직 기록된 스냅샷이 없습니다" />
           </div>
         </SlabCard>
       </div>
 
       {/* Second row: the growth windows, daily gains, THE gradient card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Growth Windows" sub="vs the snapshot that far back">
+        <SlabCard i={3} title="기간별 성장" sub="해당 기간 전 스냅샷 대비">
           <div className="grid grid-cols-2 gap-x-6 gap-y-5 px-6 pb-6 pt-4">
             {(
               [
-                ['7 days', growth.d7],
-                ['30 days', growth.d30],
-                ['60 days', growth.d60],
-                ['all time', growth.allTime],
+                ['7일', growth.d7],
+                ['30일', growth.d30],
+                ['60일', growth.d60],
+                ['전체 기간', growth.allTime],
               ] as const
             ).map(([windowLabel, value]) => (
               <BigStat
                 key={windowLabel}
                 size={30}
                 display={formatPct(value)}
-                chips={value == null ? [] : value === 0 ? [{ text: 'flat' }] : [{ tone: value > 0 ? 'ok' : 'err', text: value > 0 ? 'up' : 'down' }]}
-                caption={value == null ? `${windowLabel} · not enough history` : windowLabel}
+                chips={value == null ? [] : value === 0 ? [{ text: '변동 없음' }] : [{ tone: value > 0 ? 'ok' : 'err', text: value > 0 ? '상승' : '하락' }]}
+                caption={value == null ? `${windowLabel} · 기록 부족` : windowLabel}
               />
             ))}
           </div>
         </SlabCard>
 
-        <SlabCard i={4} title="Daily Gains" sub={`last ${WINDOW_DAYS} days`}>
+        <SlabCard i={4} title="일별 증가" sub={`최근 ${WINDOW_DAYS}일`}>
           <div className="px-6 pt-3">
             <BigStat
               size={30}
               value={v.gainedDays}
-              caption={v.intervals > 0 ? `days with a gain, of ${v.intervals} tracked` : 'no day-over-day history yet'}
+              caption={v.intervals > 0 ? `추적한 ${v.intervals}일 중 증가한 날` : '아직 일별 비교 기록이 없습니다'}
             />
           </div>
-          <StepLine series={v.series} hue="var(--ok)" unit=" gained" empty={`No follower gains in the last ${WINDOW_DAYS} days.`} />
+          <StepLine series={v.series} hue="var(--ok)" unit=" 증가" empty={`최근 ${WINDOW_DAYS}일간 팔로워 증가가 없습니다.`} />
         </SlabCard>
 
         <InsightCard
           i={5}
-          badge={`${WINDOW_DAYS}-day change`}
+          badge={`${WINDOW_DAYS}일 변화`}
           value={v.insight.value}
           display={v.insight.display}
           headline={v.insight.headline}

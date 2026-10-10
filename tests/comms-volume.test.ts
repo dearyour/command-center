@@ -45,27 +45,27 @@ describe('commsVolume: the headline', () => {
 
   test('chips carry priority unread, Slack unread and erroring sources in status colors', () => {
     expect(v.chips).toEqual([
-      { tone: 'warn', text: '1 priority unread' },
-      { tone: 'accent', text: '3 Slack unread' },
-      { tone: 'err', text: '1 source error' },
+      { tone: 'warn', text: '우선 안 읽음 1' },
+      { tone: 'accent', text: 'Slack 안 읽음 3' },
+      { tone: 'err', text: '소스 오류 1' },
     ]);
   });
 
   test('the caption names the inbox count and the threads in view', () => {
-    expect(v.caption).toBe('unread across 2 inboxes + WhatsApp · 5 threads in view');
+    expect(v.caption).toBe('받은편지함 2개 + WhatsApp의 안 읽은 메시지 · 스레드 5개 표시 중');
   });
 
   test('the meta line is real numbers only', () => {
-    expect(v.meta).toBe('4 unread · 3/5 sources connected · 4 meetings next 7 days · 2 recordings');
+    expect(v.meta).toBe('안 읽음 4 · 소스 3/5 연결됨 · 앞으로 7일간 회의 4건 · 녹음 2건');
   });
 });
 
 describe('commsVolume: the meters', () => {
   test('four meters, each a real fraction of its own whole', () => {
-    expect(v.meters.map((m) => m.label)).toEqual(['Email (3)', 'WhatsApp (1)', 'Slack clients waiting on you (2/4)', 'Sources connected (3/5)']);
-    expect(v.meters[0]).toMatchObject({ frac: 0.75, display: '3 unread' });
-    expect(v.meters[1]).toMatchObject({ frac: 0.25, display: '1 unread' });
-    expect(v.meters[2]).toMatchObject({ frac: 0.5, display: '2 of 4' });
+    expect(v.meters.map((m) => m.label)).toEqual(['이메일 (3)', 'WhatsApp (1)', '답변을 기다리는 Slack 고객 (2/4)', '연결된 소스 (3/5)']);
+    expect(v.meters[0]).toMatchObject({ frac: 0.75, display: '안 읽음 3' });
+    expect(v.meters[1]).toMatchObject({ frac: 0.25, display: '안 읽음 1' });
+    expect(v.meters[2]).toMatchObject({ frac: 0.5, display: '4명 중 2명' });
     expect(v.meters[3]).toMatchObject({ frac: 0.6, display: '60%' });
   });
 
@@ -75,28 +75,28 @@ describe('commsVolume: the meters', () => {
   });
 
   test('the foot says what the week and the recorder hold', () => {
-    expect(v.foot).toBe('4 meetings next 7 days · 2 recent recordings');
+    expect(v.foot).toBe('앞으로 7일간 회의 4건 · 최근 녹음 2건');
   });
 });
 
 describe('commsVolume: the series and the insight', () => {
   test('messages per local day, oldest first, ending today', () => {
     expect(v.series).toHaveLength(14);
-    expect(v.series.at(-1)).toEqual({ label: 'Sep 24', count: 2 });
-    expect(v.series.at(-2)).toEqual({ label: 'Sep 23', count: 2 });
-    expect(v.series.find((s) => s.label === 'Sep 20')?.count).toBe(1);
+    expect(v.series.at(-1)).toEqual({ label: '9월 24일', count: 2 });
+    expect(v.series.at(-2)).toEqual({ label: '9월 23일', count: 2 });
+    expect(v.series.find((s) => s.label === '9월 20일')?.count).toBe(1);
     expect(v.seriesTotal).toBe(5);
   });
 
   test('meetings per day for the next 7 days, today first', () => {
-    expect(v.meetings.map((m) => m.label)).toEqual(['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed']);
+    expect(v.meetings.map((m) => m.label)).toEqual(['목', '금', '토', '일', '월', '화', '수']);
     expect(v.meetings.map((m) => m.count)).toEqual([1, 2, 0, 0, 0, 0, 1]);
     expect(v.meetingsTotal).toBe(4);
   });
 
   test('the insight is who is waiting on Alex: Slack clients plus priority unread', () => {
     expect(v.insight.value).toBe(3);
-    expect(v.insight.headline).toBe('2 client threads waiting on you · 1 priority unread.');
+    expect(v.insight.headline).toBe('답변을 기다리는 고객 스레드 2개 · 우선 안 읽음 1건.');
     expect(v.insight.body).toBe('Vantage · Futurism · Acme');
     // 3 of the 6 things that could need him (4 client cards + 2 priority threads)
     expect(v.insight.frac).toBeCloseTo(0.5);
@@ -110,11 +110,11 @@ describe('commsVolume: nothing to show', () => {
     expect(e.headline).toBe(0);
     expect(e.chips).toEqual([]);
     expect(e.meters.every((m) => m.frac === 0)).toBe(true);
-    expect(e.meters[2].display).toBe('no clients linked');
-    expect(e.caption).toBe('no inboxes configured yet');
+    expect(e.meters[2].display).toBe('연결된 고객 없음');
+    expect(e.caption).toBe('아직 설정된 받은편지함이 없습니다');
     expect(e.seriesTotal).toBe(0);
     expect(e.meetingsTotal).toBe(0);
     expect(e.insight).toMatchObject({ value: 0, frac: 0 });
-    expect(e.insight.body).toMatch(/Nobody is waiting on you/);
+    expect(e.insight.body).toMatch(/기다리는 사람이 없습니다/);
   });
 });

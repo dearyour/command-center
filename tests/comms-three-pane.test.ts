@@ -92,8 +92,8 @@ describe('/comms step-9 keyboard + empty states', () => {
   });
 
   test('an emptied source offers a way out: undo last / all sources', () => {
-    expect(pane).toMatch(/undo last/i);
-    expect(pane).toMatch(/all sources/i);
+    expect(pane).toMatch(/마지막 작업 취소/);
+    expect(pane).toMatch(/모든 소스/);
   });
 });
 
@@ -108,22 +108,22 @@ describe('/comms mock-1e polish', () => {
   const pane = read('components/CommsThreePane.tsx');
 
   test('the message list has a source / sort header line', () => {
-    expect(pane).toMatch(/newest first/);
+    expect(pane).toMatch(/최신순/);
   });
 
   test('the rail carries the 1-6 hint and the moved-things footer note', () => {
     expect(pane).toMatch(/1-6/);
-    expect(pane).toMatch(/moved under the Slack source/);
-    expect(pane).toMatch(/Recordings has its own tab/);
+    expect(pane).toMatch(/채널은 Slack 소스 아래로 옮겼습니다/);
+    expect(pane).toMatch(/녹음은 별도 탭에 있습니다/);
   });
 
   test('the reader leads with a source-and-time eyebrow and a from line', () => {
     expect(pane).toMatch(/row\.laneName.*·.*ago\(|ago\(.*·.*row\.laneName/s);
-    expect(pane).toMatch(/from /);
+    expect(pane).toMatch(/보낸 곳 /);
   });
 
   test('Reply is the filled primary action', () => {
     // the action-bar Reply button carries the filled treatment, not an outline
-    expect(pane).toMatch(/bg-os-text text-os-ink[\s\S]{0,320}Reply/);
+    expect(pane).toMatch(/bg-os-text text-os-ink[\s\S]{0,320}답장/);
   });
 });

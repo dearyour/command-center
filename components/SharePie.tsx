@@ -50,7 +50,7 @@ export function SharePie({
 }) {
   const slices = pieSlices(items);
   if (slices.length === 0) {
-    return <p className="py-4 text-center font-mono text-[10.5px] text-os-dim">Nothing to chart yet.</p>;
+    return <p className="py-4 text-center font-mono text-[10.5px] text-os-dim">아직 표시할 데이터가 없습니다.</p>;
   }
 
   const S = 168;

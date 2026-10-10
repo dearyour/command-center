@@ -14,8 +14,8 @@ const read = (rel: string) => readFileSync(path.join(process.cwd(), rel), 'utf8'
 const stagger = (src: string) => [...src.matchAll(/<(?:Rise|SlabCard|InsightCard)[^>]*\bi=\{(\d+)\}/g)].map((m) => Number(m[1]));
 
 const PAGES = [
-  { file: 'app/tasks/page.tsx', volume: 'Task Volume', model: 'tasksVolume', lib: '@/lib/tasks-volume' },
-  { file: 'app/skills/page.tsx', volume: 'Skill Volume', model: 'skillsVolume', lib: '@/lib/skills-volume' },
+  { file: 'app/tasks/page.tsx', volume: '작업 규모', model: 'tasksVolume', lib: '@/lib/tasks-volume' },
+  { file: 'app/skills/page.tsx', volume: '스킬 규모', model: 'skillsVolume', lib: '@/lib/skills-volume' },
 ];
 
 describe.each(PAGES)('$file in the Brand Deals look', ({ file, volume, model, lib }) => {
@@ -112,6 +112,6 @@ describe('/skills keeps the card wall, now in a slab card', () => {
   });
 
   test('the SKILL.md reader and download survive', () => {
-    for (const k of ['/api/skills/', 'download=1', 'skill.md', "e.key === 'Escape'", 'placeholder="filter skills']) expect(grid, k).toContain(k);
+    for (const k of ['/api/skills/', 'download=1', 'skill.md', "e.key === 'Escape'", 'placeholder="스킬 검색']) expect(grid, k).toContain(k);
   });
 });

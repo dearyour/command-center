@@ -88,7 +88,7 @@ describe('usageVolume: the lane meters', () => {
 
 describe('usageVolume: series, models, limits, insight', () => {
   test('7 days of burn in thousands, oldest first, labelled by date', () => {
-    expect(v.series.map((s) => s.label)).toEqual(['Sep 18', 'Sep 19', 'Sep 20', 'Sep 21', 'Sep 22', 'Sep 23', 'Sep 24']);
+    expect(v.series.map((s) => s.label)).toEqual(['9월 18일', '9월 19일', '9월 20일', '9월 21일', '9월 22일', '9월 23일', '9월 24일']);
     expect(v.series.map((s) => s.count)).toEqual([100, 0, 300, 0, 0, 200, 1200]);
     expect(v.weekTokens).toBe(1_800_000);
   });

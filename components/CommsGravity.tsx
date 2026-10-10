@@ -111,14 +111,14 @@ export function CommsGravity({
         body: JSON.stringify({ source: 'slack', channel: item.replyTo, text }),
       });
       const body = await res.json().catch(() => ({}));
-      setStatus(body.detail ?? (res.ok ? 'sent' : 'failed'));
+      setStatus(body.detail ?? (res.ok ? '보냄' : '실패'));
       if (res.ok) setDraft('');
       return;
     }
 
     if (item.source === 'email') {
       if (!item.replyTo) {
-        setStatus('no reply address on this message');
+        setStatus('이 메시지에는 답장 주소가 없습니다');
         return;
       }
       const res = await fetch('/api/comms/reply', {
@@ -134,13 +134,13 @@ export function CommsGravity({
       }
       const subject = encodeURIComponent(`Re: ${item.preview}`);
       window.location.href = `mailto:${item.replyTo}?subject=${subject}&body=${encodeURIComponent(text)}`;
-      setStatus(body.error ? 'SMTP unavailable — opened draft' : 'opened draft in Mail');
+      setStatus(body.error ? 'SMTP 사용 불가 — 초안을 열었습니다' : 'Mail에서 초안을 열었습니다');
       return;
     }
 
     await navigator.clipboard.writeText(text);
     window.location.href = 'whatsapp://';
-    setStatus(`copied — paste into "${item.sender}" in WhatsApp`);
+    setStatus(`복사됨 — WhatsApp의 "${item.sender}" 대화에 붙여넣으세요`);
   };
 
   const select = (key: string) => {
@@ -153,7 +153,7 @@ export function CommsGravity({
     <div>
       {/* legend */}
       <div className="mb-3 flex flex-wrap items-center gap-3 font-mono text-[10px] text-os-dim">
-        <span className="uppercase tracking-widest">priority sinks toward the reply bar</span>
+        <span className="uppercase tracking-widest">우선순위가 높을수록 답장 바 쪽으로 가라앉습니다</span>
         {CONTACT_TIERS.map((t) => (
           <span key={t.tier} className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full" style={{ background: t.color }} />
@@ -162,9 +162,9 @@ export function CommsGravity({
         ))}
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full" style={{ background: UNTAGGED_COLOR }} />
-          untagged
+          태그 없음
         </span>
-        <span className="ml-auto normal-case">click a node to read + reply</span>
+        <span className="ml-auto normal-case">노드를 클릭하면 읽고 답장할 수 있습니다</span>
       </div>
 
       {/* gravity canvas: two dividers split it into three lanes that funnel
@@ -248,7 +248,7 @@ export function CommsGravity({
           />
         ) : (
           <div className="grid place-items-center py-6 text-center font-mono text-[11px] text-os-dim">
-            click a node above to read it and reply here
+            위의 노드를 클릭하면 여기서 읽고 답장할 수 있습니다
           </div>
         )}
       </div>
@@ -289,14 +289,14 @@ function SelectedMessage({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <span className="mr-1 font-mono text-[9px] uppercase tracking-widest text-os-dim">priority</span>
+          <span className="mr-1 font-mono text-[9px] uppercase tracking-widest text-os-dim">우선순위</span>
           {CONTACT_TIERS.map((t) => {
             const active = item.priority === t.tier;
             return (
               <button
                 key={t.tier}
                 onClick={() => onPriority(t.tier)}
-                title={`${t.label} — respond ${t.respond}`}
+                title={`${t.label} — ${t.respond} 내 답장`}
                 className={`pressable h-6 w-6 rounded font-mono text-[11px] font-bold ${
                   active ? 'text-black' : 'text-os-muted'
                 }`}
@@ -323,10 +323,10 @@ function SelectedMessage({
           rows={2}
           placeholder={
             item.source === 'slack'
-              ? `Reply in #${item.replyTo} — sends via bot`
+              ? `#${item.replyTo}에 답장 — 봇으로 전송`
               : item.source === 'email'
-                ? `Reply to ${item.replyTo ?? item.sender} — sends over SMTP`
-                : `Reply to ${item.sender} — copies & opens WhatsApp`
+                ? `${item.replyTo ?? item.sender}에게 답장 — SMTP로 전송`
+                : `${item.sender}에게 답장 — 복사 후 WhatsApp 열기`
           }
           className="min-w-0 flex-1 resize-y rounded-lg border border-os-border bg-os-bg px-3 py-2 text-xs text-os-text placeholder:text-os-dim focus:border-os-border-bright focus:outline-none"
         />
@@ -336,7 +336,7 @@ function SelectedMessage({
           className="pressable flex shrink-0 items-center gap-1.5 self-end rounded-lg bg-os-text px-3 py-2 text-xs font-bold text-os-bg disabled:opacity-30"
         >
           {item.source === 'slack' ? <Send className="h-3 w-3" /> : item.source === 'email' ? <Send className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-          {item.source === 'slack' ? 'Send' : item.source === 'email' ? 'Send' : 'Copy & open'}
+          {item.source === 'slack' ? '보내기' : item.source === 'email' ? '보내기' : '복사 후 열기'}
         </button>
       </div>
       {status && <p className="mt-1.5 font-mono text-[10px] text-os-muted">{status}</p>}

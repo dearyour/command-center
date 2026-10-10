@@ -20,24 +20,24 @@ import type { ScheduledJobRow } from '@/lib/scheduled-jobs';
  * never disagree about whether a job is late.
  */
 const PRESETS: { label: string; expr: string }[] = [
-  { label: 'Every morning 9am', expr: '0 9 * * *' },
-  { label: 'Weekdays 9am', expr: '0 9 * * 1-5' },
-  { label: 'Every morning 7am', expr: '0 7 * * *' },
-  { label: 'Every evening 6pm', expr: '0 18 * * *' },
-  { label: 'Every hour', expr: '0 * * * *' },
-  { label: 'Every 15 min', expr: '*/15 * * * *' },
+  { label: '매일 오전 9시', expr: '0 9 * * *' },
+  { label: '평일 오전 9시', expr: '0 9 * * 1-5' },
+  { label: '매일 오전 7시', expr: '0 7 * * *' },
+  { label: '매일 오후 6시', expr: '0 18 * * *' },
+  { label: '매시간', expr: '0 * * * *' },
+  { label: '15분마다', expr: '*/15 * * * *' },
 ];
 
 const ago = (iso: string | null): string => {
-  if (!iso) return 'never';
+  if (!iso) return '실행 기록 없음';
   const ms = Date.now() - new Date(iso).getTime();
   if (!Number.isFinite(ms) || ms < 0) return 'now';
   const m = Math.floor(ms / 60_000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m ago`;
+  if (m < 1) return '방금';
+  if (m < 60) return `${m}분 전`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}시간 전`;
+  return `${Math.floor(h / 24)}일 전`;
 };
 
 /** "in 6m" / "in 2h 10m" for a future ISO minute; null once it has passed. */
@@ -46,10 +46,10 @@ const untilLabel = (iso: string | null): string | null => {
   const ms = new Date(iso).getTime() - Date.now();
   if (!Number.isFinite(ms) || ms <= 0) return null;
   const m = Math.ceil(ms / 60_000);
-  if (m < 60) return `${m}m`;
+  if (m < 60) return `${m}분`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ${m % 60}m`;
-  return `${Math.floor(h / 24)}d`;
+  if (h < 24) return `${h}시간 ${m % 60}분`;
+  return `${Math.floor(h / 24)}일`;
 };
 
 function state(job: ScheduledJobRow): 'err' | 'warn' | 'ok' | 'off' {
@@ -103,7 +103,7 @@ export function ScheduledTasks({
 
   const add = async () => {
     if (!agentId || !description.trim()) {
-      setError('pick an agent and describe the task');
+      setError('에이전트를 고르고 작업을 설명하세요');
       return;
     }
     const ok = await call(
@@ -151,21 +151,21 @@ export function ScheduledTasks({
       <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <div className="min-w-0 flex-1">
           <Label count={jobs.length} rule>
-            Scheduled tasks
+            예약된 작업
           </Label>
         </div>
         {countdown && (
           <span className="flex shrink-0 items-center gap-1.5 font-mono text-[10.5px] text-os-muted">
-            <Clock className="h-3 w-3 text-os-dim" /> next fires in {countdown}
+            <Clock className="h-3 w-3 text-os-dim" /> 다음 실행까지 {countdown}
           </span>
         )}
-        {late > 0 && <span className="shrink-0 font-mono text-[11px] text-os-warn">{late} overdue</span>}
+        {late > 0 && <span className="shrink-0 font-mono text-[11px] text-os-warn">지연 {late}</span>}
         <button
           onClick={() => setAdding((a) => !a)}
           className="pressable flex shrink-0 items-center gap-1 rounded-sm-t border border-os-border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-os-muted hover:bg-os-surface2 hover:text-os-text"
         >
           {adding ? <X className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-          {adding ? 'cancel' : 'new task'}
+          {adding ? '취소' : '새 작업'}
         </button>
       </div>
 
@@ -175,7 +175,7 @@ export function ScheduledTasks({
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="What should run? e.g. Sweep unpaid invoices"
+              placeholder="무엇을 실행할까요? 예: 미결제 청구서 정리"
               className="rounded-sm-t border border-os-border bg-os-bg px-2.5 py-1.5 text-[12px] text-os-text outline-none focus:border-os-border-strong"
             />
             <select
@@ -216,12 +216,12 @@ export function ScheduledTasks({
               disabled={busy === 'add' || pending}
               className="pressable flex items-center gap-1 rounded-sm-t border border-os-accent px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-os-text hover:bg-os-surface2 disabled:opacity-40"
             >
-              <Check className="h-3 w-3" /> {busy === 'add' ? 'adding' : 'add'}
+              <Check className="h-3 w-3" /> {busy === 'add' ? '추가 중' : '추가'}
             </button>
           </div>
           <p className="mt-2 font-mono text-[9.5px] text-os-dim">
-            Runs in this machine&apos;s local time. The runner ticks every minute and catches up a missed slot after a
-            restart.
+            이 컴퓨터의 현지 시간 기준으로 실행됩니다. 실행기는 매분 확인하며, 재시작 후에는 놓친 실행을
+            따라잡습니다.
           </p>
         </div>
       )}
@@ -231,12 +231,12 @@ export function ScheduledTasks({
           <AlertTriangle className="h-3 w-3" /> {error}
         </p>
       )}
-      {ranMsg && <p className="mb-2 font-mono text-[10.5px] text-os-muted">ran: {ranMsg}</p>}
+      {ranMsg && <p className="mb-2 font-mono text-[10.5px] text-os-muted">실행함: {ranMsg}</p>}
 
       <div className="rounded-lg border border-os-border bg-os-surface">
         {jobs.length === 0 ? (
           <p className="px-3 py-4 font-mono text-[11px] text-os-dim">
-            No scheduled tasks yet. Hit <span className="text-os-muted">new task</span> to add one.
+            아직 예약된 작업이 없습니다. <span className="text-os-muted">새 작업</span>을 눌러 추가하세요.
           </p>
         ) : (
           jobs.map((job) => (
@@ -252,7 +252,7 @@ export function ScheduledTasks({
                 <div className="truncate text-[12px] font-medium text-os-text">{job.description}</div>
                 <div className="truncate font-mono text-[10px] text-os-dim">
                   {job.agentName}
-                  {job.unknownAgent && <span className="text-os-err"> · no such agent</span>}
+                  {job.unknownAgent && <span className="text-os-err"> · 존재하지 않는 에이전트</span>}
                 </div>
               </div>
 
@@ -262,15 +262,15 @@ export function ScheduledTasks({
               </div>
 
               <div className="font-mono text-[10.5px] text-os-muted">
-                {untilLabel(job.nextRunAt) ? `in ${untilLabel(job.nextRunAt)}` : job.enabled ? 'due' : 'paused'}
+                {untilLabel(job.nextRunAt) ? `${untilLabel(job.nextRunAt)} 후` : job.enabled ? '실행 예정' : '일시정지'}
               </div>
 
               <div className="min-w-0 font-mono text-[10.5px]">
                 {job.overdue ? (
-                  <span className="text-os-warn">overdue</span>
+                  <span className="text-os-warn">지연됨</span>
                 ) : job.lastOk === false ? (
                   <span className="block truncate text-os-err" title={job.lastSummary ?? undefined}>
-                    failed · {job.lastSummary ? job.lastSummary.slice(0, 32) : ago(job.lastRunAt)}
+                    실패 · {job.lastSummary ? job.lastSummary.slice(0, 32) : ago(job.lastRunAt)}
                   </span>
                 ) : (
                   <span className="text-os-muted">{ago(job.lastRunAt)}</span>
@@ -281,7 +281,7 @@ export function ScheduledTasks({
                 {job.history.length === 0 ? (
                   <span className="font-mono text-[10.5px] text-os-dim">·</span>
                 ) : (
-                  <div className="flex items-end gap-[2px]" title={`last ${job.history.length} runs`}>
+                  <div className="flex items-end gap-[2px]" title={`최근 ${job.history.length}회 실행`}>
                     {job.history.map((ok, i) => (
                       <span
                         key={i}
@@ -295,7 +295,7 @@ export function ScheduledTasks({
                   </div>
                 )}
                 {job.runs - job.ok > 0 && (
-                  <div className="text-right font-mono text-[9.5px] text-os-err">{job.runs - job.ok} failed</div>
+                  <div className="text-right font-mono text-[9.5px] text-os-err">실패 {job.runs - job.ok}</div>
                 )}
               </div>
 
@@ -305,22 +305,22 @@ export function ScheduledTasks({
                   disabled={busy === job.id || pending}
                   className="pressable whitespace-nowrap rounded-sm-t border border-os-border px-2 py-0.5 font-mono text-[9.5px] text-os-muted hover:border-os-border-strong hover:text-os-text disabled:opacity-40"
                 >
-                  ▸ run now
+                  ▸ 지금 실행
                 </button>
                 <button
                   onClick={() => toggle(job.id, !job.enabled)}
                   disabled={busy === job.id || pending}
-                  title={job.enabled ? 'Pause' : 'Enable'}
+                  title={job.enabled ? '일시정지' : '활성화'}
                   className={`pressable font-mono text-[9px] uppercase tracking-[0.1em] disabled:opacity-40 ${
  job.enabled ? 'text-os-dim hover:text-os-warn' : 'text-os-warn hover:text-os-ok'
  }`}
                 >
-                  {job.enabled ? 'on' : 'off'}
+                  {job.enabled ? '켜짐' : '꺼짐'}
                 </button>
                 <button
                   onClick={() => remove(job.id)}
                   disabled={busy === job.id || pending}
-                  title="Delete"
+                  title="삭제"
                   className="pressable text-os-dim hover:text-os-err disabled:opacity-40"
                 >
                   <Trash2 className="h-3 w-3" />

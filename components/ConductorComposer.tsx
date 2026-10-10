@@ -19,7 +19,7 @@ export function ConductorComposer({
   onSend,
   disabled = false,
   model = null,
-  placeholder = 'Message the CEO…',
+  placeholder = 'CEO에게 메시지 보내기…',
   lastReply = null,
   onError,
 }: {
@@ -72,7 +72,7 @@ export function ConductorComposer({
       const text = (await file.text()).slice(0, 8000);
       setAttachment({ name: file.name, text });
     } catch {
-      onError?.(`Could not read ${file.name}`);
+      onError?.(`${file.name} 파일을 읽을 수 없습니다`);
     }
   }
 
@@ -85,7 +85,7 @@ export function ConductorComposer({
     const w = window as unknown as { webkitSpeechRecognition?: new () => any; SpeechRecognition?: new () => any };
     const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition;
     if (!SR) {
-      onError?.('Voice input is not available in this browser.');
+      onError?.('이 브라우저에서는 음성 입력을 사용할 수 없습니다.');
       return;
     }
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -146,7 +146,7 @@ export function ConductorComposer({
         <div className="mb-1.5 flex items-center gap-1.5">
           <span className="flex items-center gap-1.5 rounded-full border border-os-border bg-os-surface2 px-2 py-0.5 font-mono text-[9.5px] text-os-muted">
             {attachment.name}
-            <button onClick={() => setAttachment(null)} aria-label="Remove attachment" className="pressable text-os-dim hover:text-os-text">
+            <button onClick={() => setAttachment(null)} aria-label="첨부 파일 제거" className="pressable text-os-dim hover:text-os-text">
               <X className="h-2.5 w-2.5" />
             </button>
           </span>
@@ -162,23 +162,23 @@ export function ConductorComposer({
         />
         <button
           onClick={() => fileRef.current?.click()}
-          title="Attach a text file — its contents ride into the message"
+          title="텍스트 파일 첨부 — 내용이 메시지에 함께 들어갑니다"
           data-lens="c"
           className="pressable is-dark rounded-full p-1.5 text-os-dim"
         >
           <Plus className="h-3.5 w-3.5" />
         </button>
         <span className="hidden font-mono text-[9px] text-os-dim sm:inline">
-          Enter sends · Shift+Enter breaks
+          Enter 전송 · Shift+Enter 줄바꿈
         </span>
         {model && (
-          <span className="ml-auto mr-1 font-mono text-[10px] text-os-dim" title="the model holding the Conductor seat right now">
+          <span className="ml-auto mr-1 font-mono text-[10px] text-os-dim" title="지금 컨덕터 자리를 맡고 있는 모델">
             {model}
           </span>
         )}
         <button
           onClick={toggleMic}
-          title={listening ? 'Stop dictation' : 'Dictate with your voice'}
+          title={listening ? '받아쓰기 중지' : '음성으로 받아쓰기'}
           data-lens="c"
           className={`pressable rounded-full p-1.5 ${listening ? 'text-os-err' : 'is-dark text-os-dim'} ${model ? '' : 'ml-auto'}`}
         >
@@ -186,7 +186,7 @@ export function ConductorComposer({
         </button>
         <button
           onClick={toggleSpeak}
-          title={speaking ? 'Stop reading' : 'Read the last reply aloud'}
+          title={speaking ? '읽기 중지' : '마지막 답변 소리 내어 읽기'}
           data-lens="c"
           className={`pressable rounded-full p-1.5 ${speaking ? 'text-os-accent' : 'is-dark text-os-dim'}`}
         >
@@ -195,7 +195,7 @@ export function ConductorComposer({
         <button
           onClick={send}
           disabled={disabled || !input.trim()}
-          aria-label="Send"
+          aria-label="보내기"
           data-lens="c"
           className="pressable is-dark rounded-full border border-os-border-strong bg-os-surface2 p-1.5 text-os-text disabled:opacity-40"
         >

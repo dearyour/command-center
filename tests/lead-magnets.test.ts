@@ -76,9 +76,9 @@ describe('the Content surface', () => {
   test('three equal top sections: Lead Magnets, Vantage Intel, My Analytics', () => {
     const page = read('app/content/page.tsx');
     expect(page).toContain('md:grid-cols-3');
-    expect(page).toContain('Lead Magnets');
+    expect(page).toContain('리드 마그넷');
     expect(page).toContain('Vantage Intel');
-    expect(page).toContain('My Analytics');
+    expect(page).toContain('내 분석');
     // Vantage Intel wears the real brand mark, not a lucide glyph
     expect(page).toContain('mark="/vantage-mark.png"');
     // Lead Magnets opens the in-OS index
@@ -94,7 +94,7 @@ describe('the Content surface', () => {
     expect(page).toContain('<NewLeadMagnet />');
     const list = read('components/LeadMagnets.tsx');
     // Notion-style: a database-like table with property columns, not cards
-    for (const col of ['Name', 'Status', 'Captures', 'Leads to']) {
+    for (const col of ['이름', '상태', '수집 항목', '리드 도착지']) {
       expect(list).toContain(col);
     }
     // every row opens the real page

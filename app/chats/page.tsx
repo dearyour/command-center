@@ -24,7 +24,7 @@ export default async function ChatsPage() {
 
   return (
     <div className="flex flex-col xl:h-[calc(100dvh-9rem)]">
-      <PageHeader eyebrow="every conversation" title="Chats" />
+      <PageHeader eyebrow="모든 대화" title="채팅" />
       {/* the hub owns its own rounded shell — no square box around it */}
       <Rise i={1} className="flex min-h-0 flex-1 flex-col">
         <ChatHub

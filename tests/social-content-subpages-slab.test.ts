@@ -16,7 +16,7 @@ const read = (rel: string) => readFileSync(path.join(process.cwd(), rel), 'utf8'
 const PAGES = [
   {
     file: 'app/social/[platform]/page.tsx',
-    volume: 'Follower Volume',
+    volume: '팔로워 규모',
     model: 'platformVolume',
     lib: '@/lib/social-volume',
     back: 'href="/social"',
@@ -25,7 +25,7 @@ const PAGES = [
   },
   {
     file: 'app/social/beehiiv/page.tsx',
-    volume: 'Newsletter Volume',
+    volume: '뉴스레터 규모',
     model: 'newsletterVolume',
     lib: '@/lib/newsletter-volume',
     back: 'href="/social"',
@@ -34,7 +34,7 @@ const PAGES = [
   },
   {
     file: 'app/content/lead-magnets/page.tsx',
-    volume: 'Magnet Volume',
+    volume: '마그넷 규모',
     model: 'leadMagnetVolume',
     lib: '@/lib/lead-magnet-volume',
     back: 'href="/content"',

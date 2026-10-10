@@ -49,18 +49,18 @@ export default async function AgentsPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="runtime"
-        title="Real Agents"
-        meta="live Paperclip board · polls every 4s · Conductor on the rail"
+        eyebrow="런타임"
+        title="실제 에이전트"
+        meta="실시간 Paperclip 보드 · 4초마다 갱신 · 오른쪽에 컨덕터"
         right={
           <>
             {boardUrl && (
               <a href={boardUrl} target="_blank" rel="noreferrer" className={PILL}>
-                Open board <ArrowUpRight size={13} strokeWidth={1.7} />
+                보드 열기 <ArrowUpRight size={13} strokeWidth={1.7} />
               </a>
             )}
             <Link href="/workflows" className={PILL}>
-              Workflows
+              워크플로
             </Link>
           </>
         }

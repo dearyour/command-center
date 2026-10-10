@@ -88,8 +88,8 @@ export function BoardTaskCard({
             <span className="truncate">{issue.assigneeName}</span>
           </>
         )}
-        {approved && <span className="ml-auto shrink-0 text-os-ok">✓ approved</span>}
-        {dismissed && <span className="ml-auto shrink-0">dismissed</span>}
+        {approved && <span className="ml-auto shrink-0 text-os-ok">✓ 승인됨</span>}
+        {dismissed && <span className="ml-auto shrink-0">넘김</span>}
       </div>
 
       {open && (
@@ -105,7 +105,7 @@ export function BoardTaskCard({
             onClick={() => void decide('approved')}
             className="pressable is-primary h-[22px] flex-1 rounded-ctl border border-os-text font-mono text-[9.5px] font-bold text-os-ink disabled:opacity-40"
           >
-            Approve
+            승인
           </button>
           <button
             data-lens="c"
@@ -113,7 +113,7 @@ export function BoardTaskCard({
             onClick={() => void decide('dismissed')}
             className="pressable is-dark h-[22px] flex-1 rounded-ctl border border-os-border bg-os-bg font-mono text-[9.5px] font-semibold text-os-muted disabled:opacity-40"
           >
-            Dismiss
+            넘기기
           </button>
         </div>
       )}

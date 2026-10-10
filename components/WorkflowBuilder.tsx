@@ -158,7 +158,7 @@ export function WorkflowBuilder({
         owner: s.ownerKind === 'agent' ? agentName(s.ownerAgentId) : s.ownerHumanName.trim(),
         hoursPerWeek: Number(s.hoursPerWeek) || 0,
         tools: s.tools,
-        automation: s.automationOn ? { title: s.automationTitle.trim() || 'Automation', state: s.automationState, recoveredUsd: 0 } : null,
+        automation: s.automationOn ? { title: s.automationTitle.trim() || '자동화', state: s.automationState, recoveredUsd: 0 } : null,
         branchFromIndex: s.branchFromKey ? keys.indexOf(s.branchFromKey) : null,
         branchCondition: s.branchFromKey ? s.branchCondition.trim() || null : null,
       })),
@@ -166,14 +166,14 @@ export function WorkflowBuilder({
   }
 
   function validate(): string | null {
-    if (!name.trim()) return 'Give the workflow a name.';
-    if (steps.length === 0) return 'A workflow needs at least one step.';
+    if (!name.trim()) return '워크플로 이름을 입력하세요.';
+    if (steps.length === 0) return '워크플로에는 단계가 최소 하나 필요합니다.';
     for (const [i, s] of steps.entries()) {
-      if (!s.title.trim()) return `Step ${i + 1} needs a title.`;
-      if (!s.detail.trim()) return `Step ${i + 1} needs a short description.`;
-      if (s.ownerKind === 'agent' && !s.ownerAgentId) return `Step ${i + 1} needs an owner.`;
-      if (s.ownerKind === 'human' && !s.ownerHumanName.trim()) return `Step ${i + 1} needs an owner.`;
-      if (s.branchFromKey && s.branchFromKey === s.key) return `Step ${i + 1} cannot branch from itself.`;
+      if (!s.title.trim()) return `${i + 1}단계에 제목이 필요합니다.`;
+      if (!s.detail.trim()) return `${i + 1}단계에 짧은 설명이 필요합니다.`;
+      if (s.ownerKind === 'agent' && !s.ownerAgentId) return `${i + 1}단계에 담당자가 필요합니다.`;
+      if (s.ownerKind === 'human' && !s.ownerHumanName.trim()) return `${i + 1}단계에 담당자가 필요합니다.`;
+      if (s.branchFromKey && s.branchFromKey === s.key) return `${i + 1}단계는 자기 자신에서 분기할 수 없습니다.`;
     }
     return null;
   }
@@ -242,7 +242,7 @@ export function WorkflowBuilder({
       const body = await res.json();
       if (!body.ok) {
         setChatUnavailable(Boolean(body.unavailable));
-        setChatError(body.error ?? 'drafting failed');
+        setChatError(body.error ?? '초안 작성 실패');
         return;
       }
       const draftData = body.draft as ReturnType<typeof buildPayload>;
@@ -289,11 +289,11 @@ export function WorkflowBuilder({
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label={editing ? `Edit ${workflow!.name}` : 'New workflow'}
+        aria-label={editing ? `${workflow!.name} 편집` : '새 워크플로'}
       >
         <button
           onClick={onClose}
-          aria-label="Close"
+          aria-label="닫기"
           className="pressable absolute right-4 top-4 z-10 grid h-8 w-8 place-items-center rounded-full border border-[color-mix(in oklab, var(--text) 14%, transparent)] bg-black/30 text-os-dim hover:text-os-text"
         >
           <X className="h-4 w-4" />
@@ -301,11 +301,11 @@ export function WorkflowBuilder({
 
         <form onSubmit={submit} className="flex flex-1 flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto px-7 py-7">
-            <h2 className="pr-10 text-[18px] font-medium leading-tight">{editing ? 'Edit workflow' : 'New workflow'}</h2>
+            <h2 className="pr-10 text-[18px] font-medium leading-tight">{editing ? '워크플로 편집' : '새 워크플로'}</h2>
 
             {/* Drafting chat */}
             <section className="mt-5">
-              <span className="glass-label">Draft it for you</span>
+              <span className="glass-label">초안 대신 작성</span>
               <div className="mt-2.5 flex items-center gap-2">
                 <input
                   value={chatPrompt}
@@ -316,7 +316,7 @@ export function WorkflowBuilder({
                       draft();
                     }
                   }}
-                  placeholder="Describe the workflow and I'll draft it…"
+                  placeholder="워크플로를 설명하면 초안을 작성해 드립니다…"
                   className="glass-chip w-full flex-1 border-none px-3.5 py-2.5 text-[13px] text-os-text outline-none placeholder:text-os-dim"
                 />
                 <button
@@ -325,34 +325,34 @@ export function WorkflowBuilder({
                   disabled={chatBusy || !chatPrompt.trim()}
                   className="pressable c-btn shrink-0"
                 >
-                  <Sparkles className="h-[13px] w-[13px]" /> {chatBusy ? 'Drafting…' : 'Draft'}
+                  <Sparkles className="h-[13px] w-[13px]" /> {chatBusy ? '작성 중…' : '초안 작성'}
                 </button>
               </div>
               {chatError && (
                 <p className="mt-2 text-[12px] text-os-dim">
-                  {chatUnavailable ? 'Drafting assistant unavailable: build manually.' : chatError}
+                  {chatUnavailable ? '초안 작성 도우미를 사용할 수 없습니다: 직접 만드세요.' : chatError}
                 </p>
               )}
-              <p className="mt-2 text-[11px] text-os-dim">Fills the form below for you to review: nothing saves until you hit Save.</p>
+              <p className="mt-2 text-[11px] text-os-dim">아래 양식을 채워 드리니 검토하세요: 저장을 누르기 전에는 아무것도 저장되지 않습니다.</p>
             </section>
 
             {/* Name / subtitle */}
             <section className="mt-6 grid gap-3 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
-                <span className="glass-label">Name</span>
+                <span className="glass-label">이름</span>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Renewal outreach"
+                  placeholder="예: 갱신 안내 연락"
                   className="glass-chip border-none px-3 py-2.5 text-[13px] text-os-text outline-none placeholder:text-os-dim"
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="glass-label">Trigger / description</span>
+                <span className="glass-label">트리거 / 설명</span>
                 <input
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
-                  placeholder="What kicks this off, in one line"
+                  placeholder="무엇이 이 흐름을 시작하는지 한 줄로"
                   className="glass-chip border-none px-3 py-2.5 text-[13px] text-os-text outline-none placeholder:text-os-dim"
                 />
               </label>
@@ -361,21 +361,21 @@ export function WorkflowBuilder({
             {/* Steps */}
             <section className="mt-6">
               <div className="flex items-center justify-between">
-                <span className="glass-label">Steps</span>
+                <span className="glass-label">단계</span>
                 <button type="button" onClick={addStep} className="pressable c-btn">
-                  <Plus className="h-[12px] w-[12px]" /> Add step
+                  <Plus className="h-[12px] w-[12px]" /> 단계 추가
                 </button>
               </div>
               <div className="mt-3 flex flex-col gap-3">
                 {steps.map((s, i) => (
                   <div key={s.key} className="glass-panel-violet flex flex-col gap-3 px-4 py-4">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-[10.5px] text-os-dim">step {i + 1}</span>
+                      <span className="font-mono text-[10.5px] text-os-dim">{i + 1}단계</span>
                       {steps.length > 1 && (
                         <button
                           type="button"
                           onClick={() => removeStep(s.key)}
-                          aria-label={`Remove step ${i + 1}`}
+                          aria-label={`${i + 1}단계 삭제`}
                           className="pressable glass-chip grid h-6 w-6 place-items-center text-os-dim hover:text-os-text"
                         >
                           <X className="h-3 w-3" strokeWidth={1.8} />
@@ -385,25 +385,25 @@ export function WorkflowBuilder({
 
                     <div className="grid gap-2.5 sm:grid-cols-2">
                       <label className="flex flex-col gap-1">
-                        <span className="text-[10.5px] text-os-dim">Title</span>
+                        <span className="text-[10.5px] text-os-dim">제목</span>
                         <input
                           value={s.title}
                           onChange={(e) => updateStep(s.key, { title: e.target.value })}
-                          placeholder="What happens in this step"
+                          placeholder="이 단계에서 일어나는 일"
                           className="glass-chip border-none px-2.5 py-2 text-[12.5px] text-os-text outline-none placeholder:text-os-dim"
                         />
                       </label>
                       <div className="flex flex-col gap-1">
-                        <span className="text-[10.5px] text-os-dim">Owner</span>
+                        <span className="text-[10.5px] text-os-dim">담당</span>
                         <div className="flex items-center gap-1.5">
                           <select
                             value={s.ownerKind}
                             onChange={(e) => updateStep(s.key, { ownerKind: e.target.value as WorkflowOwnerKind })}
                             className="glass-chip shrink-0 border-none px-2 py-2 text-[11.5px] text-os-text outline-none"
-                            aria-label="Owner kind"
+                            aria-label="담당 유형"
                           >
-                            <option value="agent">Agent</option>
-                            <option value="human">Human</option>
+                            <option value="agent">에이전트</option>
+                            <option value="human">사람</option>
                           </select>
                           {s.ownerKind === 'agent' ? (
                             <select
@@ -411,7 +411,7 @@ export function WorkflowBuilder({
                               onChange={(e) => updateStep(s.key, { ownerAgentId: e.target.value })}
                               className="glass-chip min-w-0 flex-1 border-none px-2.5 py-2 text-[12.5px] text-os-text outline-none"
                             >
-                              <option value="">Pick an agent…</option>
+                              <option value="">에이전트 선택…</option>
                               {agents.map((a) => (
                                 <option key={a.id} value={a.id}>
                                   {a.name}
@@ -422,7 +422,7 @@ export function WorkflowBuilder({
                             <input
                               value={s.ownerHumanName}
                               onChange={(e) => updateStep(s.key, { ownerHumanName: e.target.value })}
-                              placeholder="Person's name"
+                              placeholder="담당자 이름"
                               className="glass-chip min-w-0 flex-1 border-none px-2.5 py-2 text-[12.5px] text-os-text outline-none placeholder:text-os-dim"
                             />
                           )}
@@ -431,19 +431,19 @@ export function WorkflowBuilder({
                     </div>
 
                     <label className="flex flex-col gap-1">
-                      <span className="text-[10.5px] text-os-dim">Detail</span>
+                      <span className="text-[10.5px] text-os-dim">상세</span>
                       <textarea
                         value={s.detail}
                         onChange={(e) => updateStep(s.key, { detail: e.target.value })}
                         rows={2}
-                        placeholder="One or two sentences: what actually happens here"
+                        placeholder="한두 문장으로: 여기서 실제로 일어나는 일"
                         className="glass-chip resize-none border-none px-2.5 py-2 text-[12.5px] leading-relaxed text-os-text outline-none placeholder:text-os-dim"
                       />
                     </label>
 
                     <div className="grid gap-2.5 sm:grid-cols-[100px_1fr]">
                       <label className="flex flex-col gap-1">
-                        <span className="text-[10.5px] text-os-dim">Hours / wk</span>
+                        <span className="text-[10.5px] text-os-dim">주당 시간</span>
                         <input
                           type="number"
                           min={0}
@@ -454,7 +454,7 @@ export function WorkflowBuilder({
                         />
                       </label>
                       <div className="flex flex-col gap-1">
-                        <span className="text-[10.5px] text-os-dim">Tools</span>
+                        <span className="text-[10.5px] text-os-dim">도구</span>
                         <div className="flex flex-wrap gap-1.5">
                           {TOOL_IDS.map((t) => {
                             const on = s.tools.includes(t);
@@ -484,14 +484,14 @@ export function WorkflowBuilder({
                           checked={s.automationOn}
                           onChange={(e) => updateStep(s.key, { automationOn: e.target.checked })}
                         />
-                        Automated
+                        자동화됨
                       </label>
                       {s.automationOn && (
                         <>
                           <input
                             value={s.automationTitle}
                             onChange={(e) => updateStep(s.key, { automationTitle: e.target.value })}
-                            placeholder="What the automation does"
+                            placeholder="자동화가 하는 일"
                             className="glass-chip border-none px-2.5 py-2 text-[12px] text-os-text outline-none placeholder:text-os-dim"
                           />
                           <select
@@ -499,8 +499,8 @@ export function WorkflowBuilder({
                             onChange={(e) => updateStep(s.key, { automationState: e.target.value as WorkflowAutomationState })}
                             className="glass-chip border-none px-2.5 py-2 text-[12px] text-os-text outline-none"
                           >
-                            <option value="live">Live</option>
-                            <option value="suggested">Suggested</option>
+                            <option value="live">운영 중</option>
+                            <option value="suggested">제안됨</option>
                           </select>
                         </>
                       )}
@@ -509,13 +509,13 @@ export function WorkflowBuilder({
                     {i > 0 && (
                       <div className="grid gap-2.5 sm:grid-cols-2">
                         <label className="flex flex-col gap-1">
-                          <span className="text-[10.5px] text-os-dim">Branches from (optional)</span>
+                          <span className="text-[10.5px] text-os-dim">분기 시작 단계 (선택)</span>
                           <select
                             value={s.branchFromKey}
                             onChange={(e) => updateStep(s.key, { branchFromKey: e.target.value })}
                             className="glass-chip border-none px-2.5 py-2 text-[12.5px] text-os-text outline-none"
                           >
-                            <option value="">No: continues the sequence</option>
+                            <option value="">아니요: 순서대로 진행</option>
                             {steps.slice(0, i).map((prior, j) => (
                               <option key={prior.key} value={prior.key}>
                                 step {j + 1}{prior.title ? `: ${prior.title}` : ''}
@@ -525,11 +525,11 @@ export function WorkflowBuilder({
                         </label>
                         {s.branchFromKey && (
                           <label className="flex flex-col gap-1">
-                            <span className="text-[10.5px] text-os-dim">Condition</span>
+                            <span className="text-[10.5px] text-os-dim">조건</span>
                             <input
                               value={s.branchCondition}
                               onChange={(e) => updateStep(s.key, { branchCondition: e.target.value })}
-                              placeholder='e.g. "approved", "went quiet"'
+                              placeholder='예: "승인됨", "연락 끊김"'
                               className="glass-chip border-none px-2.5 py-2 text-[12.5px] text-os-text outline-none placeholder:text-os-dim"
                             />
                           </label>
@@ -559,16 +559,16 @@ export function WorkflowBuilder({
                   className="pressable flex items-center gap-1.5 rounded-sm-t border border-[color-mix(in_oklab,var(--err)_35%,transparent)] bg-[color-mix(in_oklab,var(--err)_9%,transparent)] px-3 py-2 text-[12.5px] text-os-err "
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  {deleting ? 'Deleting…' : deleteArmed ? 'Really delete? Click again' : 'Delete workflow'}
+                  {deleting ? '삭제 중…' : deleteArmed ? '정말 삭제할까요? 한 번 더 클릭' : '워크플로 삭제'}
                 </button>
               )}
             </div>
             <div className="flex items-center gap-2">
               <button type="button" onClick={onClose} className="pressable c-btn">
-                Cancel
+                취소
               </button>
               <button type="submit" disabled={busy} className="pressable c-btn c-btn-primary">
-                {busy ? 'Saving…' : 'Save'}
+                {busy ? '저장 중…' : '저장'}
               </button>
             </div>
           </div>

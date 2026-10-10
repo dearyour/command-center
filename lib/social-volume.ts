@@ -31,8 +31,8 @@ const MIX: Array<[string, string]> = [
 ];
 const METERS = 4;
 
-const growthText = (n: number) => `${n >= 0 ? '+' : ''}${Math.abs(n) < 10 ? n.toFixed(2) : n.toFixed(1)}% 7d`;
-const utcLabel = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const growthText = (n: number) => `${n >= 0 ? '+' : ''}${Math.abs(n) < 10 ? n.toFixed(2) : n.toFixed(1)}% (7일)`;
+const utcLabel = (d: Date) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 
 export function socialVolume(x: {
   channels: Array<{ key: string; label: string; value: number | null }>;
@@ -52,12 +52,12 @@ export function socialVolume(x: {
 
   const chips: SocialVolume['chips'] = [];
   if (x.growth7 != null && Number.isFinite(x.growth7)) chips.push({ tone: x.growth7 >= 0 ? 'ok' : 'err', text: growthText(x.growth7) });
-  if (owed.length) chips.push({ tone: 'warn', text: `${owed.length} need reply` });
-  if (x.queued) chips.push({ tone: 'accent', text: `${x.queued} queued` });
+  if (owed.length) chips.push({ tone: 'warn', text: `답장 필요 ${owed.length}` });
+  if (x.queued) chips.push({ tone: 'accent', text: `대기 ${x.queued}` });
 
   const caption = live.length
-    ? `across ${live.length} live channel${live.length === 1 ? '' : 's'}${x.leader ? ` · ${x.leader} leads 7-day growth` : ''}`
-    : 'no channels reporting yet';
+    ? `활성 채널 ${live.length}개 합계${x.leader ? ` · 7일 성장 1위 ${x.leader}` : ''}`
+    : '아직 보고 중인 채널이 없습니다';
 
   // Biggest channels first; the ones with no reading sink to the bottom.
   const ranked = [...x.channels].sort((a, b) => (b.value ?? -1) - (a.value ?? -1));
@@ -67,12 +67,12 @@ export function socialVolume(x: {
     return {
       label: c.label,
       frac: f,
-      display: c.value == null ? 'offline' : `${c.value.toLocaleString('en-US')} · ${Math.round(f * 100)}%`,
+      display: c.value == null ? '오프라인' : `${c.value.toLocaleString('en-US')} · ${Math.round(f * 100)}%`,
       hue: HUES[i],
     };
   });
   const rest = x.channels.length - shown.length;
-  const foot = `share of total reach${rest > 0 ? ` · ${rest} smaller channel${rest === 1 ? '' : 's'}` : ''}`;
+  const foot = `전체 도달 대비 비중${rest > 0 ? ` · 작은 채널 ${rest}개 더 있음` : ''}`;
 
   // Posts per UTC day (Zernio stamps are ISO dates), oldest first, ending today.
   const end = new Date(`${x.today}T00:00:00Z`);
@@ -100,15 +100,15 @@ export function socialVolume(x: {
   const threads = x.dmThreads.length;
   const insight = {
     value: owed.length,
-    headline: owed.length ? `${owed.length} of ${threads} Instagram threads need a reply.` : 'Inbox clear.',
+    headline: owed.length ? `Instagram 스레드 ${threads}개 중 ${owed.length}개에 답장이 필요합니다.` : '받은편지함이 비었습니다.',
     body: owed.length
       ? owed
           .slice(0, 3)
           .map((t) => t.name)
           .join(' · ')
       : threads
-        ? `${threads} threads, every one answered.`
-        : 'No Instagram threads yet.',
+        ? `스레드 ${threads}개 모두 답장 완료.`
+        : '아직 Instagram 스레드가 없습니다.',
     frac: threads ? owed.length / threads : 0,
   };
 
@@ -189,51 +189,51 @@ export function platformVolume(x: {
 
   const chips: PlatformVolume['chips'] = [];
   for (const [value, w] of [
-    [x.growth.d7, '7d'],
-    [x.growth.d30, '30d'],
+    [x.growth.d7, '(7일)'],
+    [x.growth.d30, '(30일)'],
   ] as const) {
     if (value != null && Number.isFinite(value)) chips.push({ tone: value >= 0 ? 'ok' : 'err', text: windowText(value, w) });
   }
 
   const n = snaps.length;
   const caption =
-    x.followers == null ? 'no follower reading yet' : `${x.label} followers · ${n} snapshot${n === 1 ? '' : 's'}${n ? ` since ${isoLabel(snaps[0].capturedAt)}` : ''}`;
+    x.followers == null ? '아직 팔로워 수 기록이 없습니다' : `${x.label} 팔로워 · 스냅샷 ${n}개${n ? ` · ${isoLabel(snaps[0].capturedAt)}부터` : ''}`;
 
   const meters: Meter[] = [];
   if (intervals > 0) {
-    meters.push({ label: `Days gained (${gainedDays}/${intervals})`, frac: gainedDays / intervals, display: `${gainedDays} of ${intervals}`, hue: 'var(--ok)' });
-    meters.push({ label: `Days dipped (${dippedDays}/${intervals})`, frac: dippedDays / intervals, display: `${dippedDays} of ${intervals}`, hue: 'var(--err)' });
+    meters.push({ label: `증가한 날 (${gainedDays}/${intervals})`, frac: gainedDays / intervals, display: `${intervals}일 중 ${gainedDays}일`, hue: 'var(--ok)' });
+    meters.push({ label: `감소한 날 (${dippedDays}/${intervals})`, frac: dippedDays / intervals, display: `${intervals}일 중 ${dippedDays}일`, hue: 'var(--err)' });
   }
   if (trackedDays > 0) {
     const f = Math.min(1, trackedDays / days);
-    meters.push({ label: `Tracked days (${trackedDays}/${days})`, frac: f, display: `${Math.round(f * 100)}%`, hue: 'var(--ramp-1)' });
+    meters.push({ label: `추적한 날 (${trackedDays}/${days})`, frac: f, display: `${Math.round(f * 100)}%`, hue: 'var(--ramp-1)' });
   }
   if (x.followers != null && peak != null && peak > 0) {
     meters.push({
-      label: 'Of all-time peak',
+      label: '역대 최고치 대비',
       frac: Math.max(0, Math.min(1, x.followers / peak)),
-      display: `${x.followers.toLocaleString('en-US')} of ${peak.toLocaleString('en-US')}`,
+      display: `${peak.toLocaleString('en-US')} 중 ${x.followers.toLocaleString('en-US')}`,
       hue: 'var(--accent)',
     });
   }
 
   const latest = snaps.at(-1);
-  const foot = latest ? `${n} snapshot${n === 1 ? '' : 's'} · latest ${isoLabel(latest.capturedAt)} · ${latest.source}` : 'no snapshots yet';
+  const foot = latest ? `스냅샷 ${n}개 · 최신 ${isoLabel(latest.capturedAt)} · ${latest.source}` : '아직 스냅샷이 없습니다';
 
   const bestDay = best as { label: string; gain: number } | null;
   const insight: PlatformVolume['insight'] =
     intervals === 0
-      ? { value: 0, display: 'none', headline: 'Not enough history for a trend yet.', body: 'Two snapshots make a line; the next sync adds one.', frac: 0 }
+      ? { value: 0, display: '없음', headline: '아직 추세를 볼 만큼 기록이 없습니다.', body: '스냅샷이 2개 있어야 선이 그려집니다. 다음 동기화 때 하나가 추가됩니다.', frac: 0 }
       : {
           value: net,
           display: signed(net),
           headline:
             net > 0
-              ? `Gained ${net.toLocaleString('en-US')} followers in the last ${days} days.`
+              ? `최근 ${days}일간 팔로워 ${net.toLocaleString('en-US')}명 증가.`
               : net < 0
-                ? `Lost ${Math.abs(net).toLocaleString('en-US')} followers in the last ${days} days.`
-                : `Flat over the last ${days} days.`,
-          body: `up on ${gainedDays} of ${intervals} tracked days${bestDay ? ` · best day ${bestDay.label} (+${bestDay.gain.toLocaleString('en-US')})` : ''}`,
+                ? `최근 ${days}일간 팔로워 ${Math.abs(net).toLocaleString('en-US')}명 감소.`
+                : `최근 ${days}일간 변동 없음.`,
+          body: `추적한 ${intervals}일 중 ${gainedDays}일 증가${bestDay ? ` · 최고의 날 ${bestDay.label} (+${bestDay.gain.toLocaleString('en-US')})` : ''}`,
           frac: gainedDays / intervals,
         };
 

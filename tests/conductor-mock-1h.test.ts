@@ -33,7 +33,7 @@ describe('/conductor mock-1h: the dock geometry', () => {
 
   test('one edge control only: the mock has a single slide-away arrow', () => {
     expect(panel).not.toContain('ChevronLeft');
-    expect(panel).toContain('Slide away');
+    expect(panel).toContain('숨기기');
   });
 });
 
@@ -78,15 +78,15 @@ describe('/conductor mock-1h: quick actions come from the route', () => {
 
   test('they live in their own band under the header, not inside the empty state', () => {
     const panel = read('components/ConductorPanel.tsx');
-    expect(panel).toContain('quick actions · this screen');
+    expect(panel).toContain('빠른 실행 · 이 화면');
     // the band sits above the transcript, so it renders before the scroll pane
-    expect(panel.indexOf('quick actions · this screen')).toBeLessThan(panel.indexOf('ref={scrollRef}'));
-    expect(panel).toContain('ask about this screen, or pick a quick action above');
+    expect(panel.indexOf('빠른 실행 · 이 화면')).toBeLessThan(panel.indexOf('ref={scrollRef}'));
+    expect(panel).toContain('이 화면에 대해 묻거나 위의 빠른 실행을 고르세요');
   });
 
   test('each action is a lens control on the control radius', () => {
     const panel = read('components/ConductorPanel.tsx');
-    const band = panel.slice(panel.indexOf('quick actions · this screen'), panel.indexOf('ref={scrollRef}'));
+    const band = panel.slice(panel.indexOf('빠른 실행 · 이 화면'), panel.indexOf('ref={scrollRef}'));
     expect(band).toContain('data-lens="c"');
     expect(band).toContain('pressable');
     expect(band).toContain('rounded-ctl');
@@ -97,14 +97,14 @@ describe('/conductor mock-1h: the header states and clears', () => {
   const panel = read('components/ConductorPanel.tsx');
 
   test('a clear control empties the transcript', () => {
-    expect(panel).toContain('Clear transcript');
+    expect(panel).toContain('대화 기록 지우기');
     expect(panel).toContain('clearTurns');
   });
 
   test('the model chip reads the live seat, never a hardcoded id', () => {
     expect(panel).toContain('model');
     expect(panel).not.toMatch(/claude-(fable|opus|sonnet|haiku|mythos)-[\d.-]+/);
-    expect(panel).toMatch(/model unknown|unknown model/i);
+    expect(panel).toMatch(/모델 알 수 없음/);
     const route = read('app/api/conductor/context/route.ts');
     expect(route).toContain("name === 'Conductor'");
   });
@@ -122,12 +122,12 @@ describe('/conductor mock-1h: receipts and shimmer', () => {
     const card = panel.slice(panel.indexOf('t.receipt'));
     expect(card).toContain('✓');
     expect(card).toContain('text-os-ok');
-    expect(card).toContain('open →');
+    expect(card).toContain('열기 →');
     expect(card).toContain('rounded-ctl');
   });
 
   test('the dispatch turn files a real receipt', () => {
-    expect(panel).toContain('Workspace opened on an isolated branch');
+    expect(panel).toContain('분리된 브랜치에서 작업 공간을 열었습니다');
   });
 
   test('the shimmer reads "synthesizing · Ns" with a blinking square', () => {

@@ -16,10 +16,10 @@ import type { AgentTask } from '@/lib/schemas';
 const ADVANCE: Partial<Record<AgentTask['status'], AgentTask['status']>> = { open: 'doing', doing: 'review', review: 'done' };
 
 const COLUMNS: { status: AgentTask['status']; label: string; tone: string }[] = [
-  { status: 'open', label: 'To do', tone: 'var(--text-3)' },
-  { status: 'doing', label: 'In progress', tone: 'var(--warn)' },
-  { status: 'review', label: 'In review', tone: 'var(--accent)' },
-  { status: 'done', label: 'Done', tone: 'var(--ok)' },
+  { status: 'open', label: '할 일', tone: 'var(--text-3)' },
+  { status: 'doing', label: '진행 중', tone: 'var(--warn)' },
+  { status: 'review', label: '검토 중', tone: 'var(--accent)' },
+  { status: 'done', label: '완료', tone: 'var(--ok)' },
 ];
 
 export function TaskBoard({
@@ -74,9 +74,9 @@ export function TaskBoard({
     <SlabCard
       i={i}
       className="mt-6"
-      title="Local kanban"
+      title="로컬 칸반"
       sub={tasks.length}
-      action={<span className="font-mono text-[11px] text-os-dim">drag between lanes · or click ▸ to advance</span>}
+      action={<span className="font-mono text-[11px] text-os-dim">레인 사이로 끌어서 옮기거나 ▸ 를 눌러 다음 단계로</span>}
     >
       <div className="grid gap-4 px-6 pb-6 pt-4 md:grid-cols-2 xl:grid-cols-4">
         {COLUMNS.map((col) => {
@@ -141,7 +141,7 @@ export function TaskBoard({
                     {nextStatus && (
                       <button
                         onClick={() => void move(task.id, nextStatus)}
-                        title={`Advance to ${COLUMNS.find((c) => c.status === nextStatus)?.label ?? nextStatus}`}
+                        title={`다음 단계로: ${COLUMNS.find((c) => c.status === nextStatus)?.label ?? nextStatus}`}
                         data-lens="c"
                         className="pressable shrink-0 rounded-full border border-os-border px-2 py-0.5 text-[10px] text-os-dim hover:text-os-text"
                       >
@@ -155,7 +155,7 @@ export function TaskBoard({
 
               {colTasks.length === 0 && (
                 <div className="rounded-[10px] border border-dashed border-os-border px-3 py-6 text-center font-mono text-[10.5px] text-os-dim">
-                  drop here
+                  여기에 놓기
                 </div>
               )}
             </div>

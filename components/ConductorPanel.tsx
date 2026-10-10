@@ -47,9 +47,9 @@ const clampW = (w: number) => Math.min(MAX_W, Math.max(MIN_W, Math.round(w)));
  * per-screen set (and if the board is unreachable it never does).
  */
 const QUICK_ACTIONS = [
-  { label: 'What needs me?', prompt: 'What needs my attention right now across the OS?' },
-  { label: 'Board status', prompt: 'Give me the current board status: what is running, blocked, and done today.' },
-  { label: "Today's digest", prompt: 'Summarize today: comms, agents, money, anything unusual.' },
+  { label: '확인할 일은?', prompt: '지금 OS 전체에서 내가 신경 써야 할 일이 뭐야? 한국어로 답해줘.' },
+  { label: '보드 현황', prompt: '현재 보드 현황을 알려줘: 실행 중인 것, 막힌 것, 오늘 끝난 것. 한국어로 답해줘.' },
+  { label: '오늘 요약', prompt: '오늘을 요약해줘: 커뮤니케이션, 에이전트, 돈, 특이사항. 한국어로 답해줘.' },
 ] as const;
 
 export function ConductorPanel() {
@@ -163,7 +163,7 @@ export function ConductorPanel() {
         role: m.authorType === 'agent' ? ('assistant' as const) : ('user' as const),
         content: m.body,
         createdAt: m.createdAt,
-        routedTo: m.authorType === 'agent' ? 'Conductor · board' : undefined,
+        routedTo: m.authorType === 'agent' ? '컨덕터 · 보드' : undefined,
       }));
   }, []);
 
@@ -197,7 +197,7 @@ export function ConductorPanel() {
       }
       if (awaitingRef.current && Date.now() - awaitingSinceRef.current > 150_000) {
         setAwaiting(false);
-        setError('The CEO run is taking a while. Its reply lands in this thread automatically.');
+        setError('CEO 실행이 오래 걸리고 있습니다. 답변은 이 대화에 자동으로 도착합니다.');
       }
     }, 4000);
     return () => clearInterval(id);
@@ -233,9 +233,9 @@ export function ConductorPanel() {
       {
         id: `dispatch-${Date.now()}`,
         role: 'assistant',
-        content: `Dispatched a coding agent for: "${request}"\n\nBranch: ${body?.branch}\nWorkspace: ${body?.workspaceId}`,
-        routedTo: 'Superset · coding agent',
-        receipt: { text: 'Workspace opened on an isolated branch', href: '/agents' },
+        content: `코딩 에이전트를 보냈습니다: "${request}"\n\n브랜치: ${body?.branch}\n작업 공간: ${body?.workspaceId}`,
+        routedTo: 'Superset · 코딩 에이전트',
+        receipt: { text: '분리된 브랜치에서 작업 공간을 열었습니다', href: '/agents' },
       },
     ]);
   }
@@ -281,8 +281,8 @@ export function ConductorPanel() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          aria-label="Open the Conductor agent panel"
-          title="Ask the Conductor about this screen"
+          aria-label="컨덕터 에이전트 패널 열기"
+          title="이 화면에 대해 컨덕터에게 물어보기"
           className="pressable group fixed bottom-5 right-5 z-40 flex items-center rounded-full border border-os-border-strong bg-os-surface/90 p-2.5 opacity-60 backdrop-blur hover:opacity-100"
           style={{ transitionTimingFunction: 'var(--ease)', boxShadow: 'none' }}
         >
@@ -291,7 +291,7 @@ export function ConductorPanel() {
             className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[10.5px] tracking-wide text-os-muted transition-[max-width,margin-left] duration-300 group-hover:ml-2 group-hover:max-w-[130px]"
             style={{ transitionTimingFunction: 'var(--ease)' }}
           >
-            Ask Conductor
+            컨덕터에게 묻기
           </span>
         </button>
       )}
@@ -310,7 +310,7 @@ export function ConductorPanel() {
           onPointerDown={onHandleDown}
           onPointerMove={onHandleMove}
           onPointerUp={onHandleUp}
-          title="Drag to resize"
+          title="드래그해서 크기 조절"
           className="absolute inset-y-0 left-0 z-10 w-1.5 cursor-col-resize hover:bg-os-accent/30"
           style={{ touchAction: 'none' }}
         />
@@ -325,8 +325,8 @@ export function ConductorPanel() {
           <button
             data-lens="c"
             onClick={() => setOpen(false)}
-            aria-label="Slide the panel away"
-            title="Slide away"
+            aria-label="패널 밀어서 숨기기"
+            title="숨기기"
             className="pressable is-dark grid h-7 w-7 place-items-center rounded-full border border-os-border-strong bg-os-surface text-os-dim"
           >
             <ChevronRight className="h-3.5 w-3.5" />
@@ -336,30 +336,30 @@ export function ConductorPanel() {
           <ConductorEmblem size={32} thinking={sending} className="shrink-0" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-[12.5px] font-bold tracking-[0.12em]">CONDUCTOR</span>
+              <span className="text-[12.5px] font-bold tracking-[0.12em]">컨덕터</span>
               {/* whatever is actually in the seat on the board — never a
                   hardcoded id, and honest when the board can't be reached */}
               <span className="truncate rounded-ctl border border-os-border px-1.5 py-px font-mono text-[9px] text-os-dim">
-                {ctx?.model ?? 'model unknown'}
+                {ctx?.model ?? '모델 알 수 없음'}
               </span>
             </div>
             <div className="truncate font-mono text-[9.5px] uppercase tracking-wide text-os-dim">
-              seeing: {ctx?.title ?? '…'}
+              보고 있는 화면: {ctx?.title ?? '…'}
             </div>
           </div>
           <button
             data-lens="c"
             onClick={clearTurns}
-            aria-label="Clear the transcript"
-            title="Clear transcript"
+            aria-label="대화 기록 지우기"
+            title="대화 기록 지우기"
             className="pressable is-dark shrink-0 rounded-ctl px-1.5 py-1 font-mono text-[9px] uppercase tracking-wider text-os-dim"
           >
-            clear
+            지우기
           </button>
           <button
             data-lens="c"
             onClick={() => setOpen(false)}
-            aria-label="Close Conductor"
+            aria-label="컨덕터 닫기"
             className="pressable is-dark shrink-0 rounded-ctl p-1 text-os-dim"
           >
             <X className="h-4 w-4" />
@@ -379,7 +379,7 @@ export function ConductorPanel() {
             transcript is never the only thing on offer */}
         <div className="border-b border-os-border px-4 py-2.5">
           <div className="mb-1.5 font-mono text-[8.5px] uppercase tracking-[0.2em] text-os-dim">
-            quick actions · this screen
+            빠른 실행 · 이 화면
           </div>
           <div className="flex flex-wrap gap-1.5">
             {(ctx?.quickActions ?? [...QUICK_ACTIONS]).map((a) => (
@@ -400,9 +400,9 @@ export function ConductorPanel() {
           {turns.length === 0 && (
             <div className="pt-6 text-center">
               <p className="font-mono text-[10.5px] leading-relaxed text-os-dim">
-                Nothing yet.
+                아직 대화가 없습니다.
                 <br />
-                ask about this screen, or pick a quick action above
+                이 화면에 대해 묻거나 위의 빠른 실행을 고르세요
               </p>
             </div>
           )}
@@ -435,7 +435,7 @@ export function ConductorPanel() {
                         href={t.receipt.href}
                         className="pressable is-dark shrink-0 rounded-ctl px-1 text-os-text"
                       >
-                        open →
+                        열기 →
                       </a>
                     )}
                   </div>
@@ -456,7 +456,7 @@ export function ConductorPanel() {
           <ConductorComposer
             onSend={send}
             disabled={sending}
-            placeholder={`Ask about ${ctx?.title ?? 'this screen'}… (/ui to dispatch a change)`}
+            placeholder={`${ctx?.title ?? '이 화면'}에 대해 물어보세요… (/ui 로 변경 요청 보내기)`}
             lastReply={[...turns].reverse().find((t) => t.role === 'assistant')?.content ?? null}
             model={ctx?.model ?? null}
             onError={setError}

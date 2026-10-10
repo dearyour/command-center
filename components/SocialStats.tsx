@@ -27,12 +27,12 @@ export function GrowthBadge({ label, value }: { label: string; value: number | n
 /** Tiny grayscale bar series of follower history. */
 export function Sparkline({ series }: { series: { date: string; followers: number }[] }) {
   if (series.length === 0) {
-    return <div className="text-[10px] text-os-dim">no history yet — syncs daily</div>;
+    return <div className="text-[10px] text-os-dim">아직 기록 없음 — 매일 동기화됩니다</div>;
   }
   const min = Math.min(...series.map((s) => s.followers));
   const max = Math.max(...series.map((s) => s.followers));
   return (
-    <div className="flex h-8 items-end gap-px" title={`${series.length} snapshots`}>
+    <div className="flex h-8 items-end gap-px" title={`스냅샷 ${series.length}개`}>
       {series.map((s) => {
         const pct = max === min ? 100 : 30 + ((s.followers - min) / (max - min)) * 70;
         return (

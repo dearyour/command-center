@@ -42,25 +42,25 @@ describe('socialVolume', () => {
   test('headline is the whole audience, chips carry growth, replies owed and the queue', () => {
     expect(v.headline).toBe(10_000);
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '+1.23% 7d' },
-      { tone: 'warn', text: '2 need reply' },
-      { tone: 'accent', text: '2 queued' },
+      { tone: 'ok', text: '+1.23% (7일)' },
+      { tone: 'warn', text: '답장 필요 2' },
+      { tone: 'accent', text: '대기 2' },
     ]);
-    expect(v.caption).toBe('across 5 live channels · TikTok leads 7-day growth');
+    expect(v.caption).toBe('활성 채널 5개 합계 · 7일 성장 1위 TikTok');
   });
 
   test('meters are the four biggest channels as shares of total reach', () => {
     expect(v.meters.map((m) => m.label)).toEqual(['Instagram', 'TikTok', 'YouTube', 'X']);
     expect(v.meters[0]).toMatchObject({ frac: 0.6, display: '6,000 · 60%', hue: 'var(--ramp-1)' });
     expect(v.meters[3]).toMatchObject({ frac: 0.05, display: '500 · 5%', hue: 'var(--ramp-4)' });
-    expect(v.foot).toBe('share of total reach · 2 smaller channels');
+    expect(v.foot).toBe('전체 도달 대비 비중 · 작은 채널 2개 더 있음');
   });
 
   test('posting series: one point per day for 30 days, ending today', () => {
     expect(v.series).toHaveLength(30);
-    expect(v.series.at(-1)).toEqual({ label: 'Sep 24', count: 2 });
-    expect(v.series.find((s) => s.label === 'Sep 20')?.count).toBe(1);
-    expect(v.series[0].label).toBe('Aug 26');
+    expect(v.series.at(-1)).toEqual({ label: '9월 24일', count: 2 });
+    expect(v.series.find((s) => s.label === '9월 20일')?.count).toBe(1);
+    expect(v.series[0].label).toBe('8월 26일');
     expect(v.postsInWindow).toBe(3);
   });
 
@@ -76,15 +76,15 @@ describe('socialVolume', () => {
 
   test('the one insight card is the DMs waiting on Alex', () => {
     expect(v.insight.value).toBe(2);
-    expect(v.insight.headline).toBe('2 of 4 Instagram threads need a reply.');
+    expect(v.insight.headline).toBe('Instagram 스레드 4개 중 2개에 답장이 필요합니다.');
     expect(v.insight.body).toBe('Ava · Cy');
     expect(v.insight.frac).toBeCloseTo(0.5);
   });
 
   test('negative growth is an err chip', () => {
     const d = socialVolume({ channels: CHANNELS, total: 10_000, growth7: -12.5, leader: null, dmThreads: [], queued: 0, postDays: [], today: '2026-09-24' });
-    expect(d.chips).toEqual([{ tone: 'err', text: '-12.5% 7d' }]);
-    expect(d.caption).toBe('across 5 live channels');
+    expect(d.chips).toEqual([{ tone: 'err', text: '-12.5% (7일)' }]);
+    expect(d.caption).toBe('활성 채널 5개 합계');
   });
 });
 
@@ -95,9 +95,9 @@ describe('socialVolume with nothing to show', () => {
     expect(e.headline).toBe(0);
     expect(e.chips).toEqual([]);
     expect(e.meters).toEqual([]);
-    expect(e.caption).toBe('no channels reporting yet');
+    expect(e.caption).toBe('아직 보고 중인 채널이 없습니다');
     expect(e.series.every((s) => s.count === 0)).toBe(true);
-    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: 'Inbox clear.', body: 'No Instagram threads yet.' });
+    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: '받은편지함이 비었습니다.', body: '아직 Instagram 스레드가 없습니다.' });
   });
 
   test('a channel with no reading is an empty meter, not a zero pretending to be data', () => {
@@ -111,6 +111,6 @@ describe('socialVolume with nothing to show', () => {
       postDays: [],
       today: '2026-09-24',
     });
-    expect(o.meters).toEqual([{ label: 'LinkedIn', frac: 0, display: 'offline', hue: 'var(--ramp-1)' }]);
+    expect(o.meters).toEqual([{ label: 'LinkedIn', frac: 0, display: '오프라인', hue: 'var(--ramp-1)' }]);
   });
 });

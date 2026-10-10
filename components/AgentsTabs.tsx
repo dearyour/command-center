@@ -109,14 +109,14 @@ export function AgentsTabs({
       <div className="mb-4 flex shrink-0 items-center gap-1">
         <SlidingTabs<TabId>
           tabs={[
-            { id: 'roster', label: 'Roster' },
+            { id: 'roster', label: '명단' },
             {
               id: 'needsyou',
               label: (
                 <>
-                  Needs You
+                  확인 필요
                   {waiting > 0 && (
-                    <TabBadge n={waiting} tone="warn" title={`${waiting} agent files are waiting on you`} />
+                    <TabBadge n={waiting} tone="warn" title={`에이전트 파일 ${waiting}개가 확인을 기다리는 중`} />
                   )}
                 </>
               ),
@@ -125,12 +125,12 @@ export function AgentsTabs({
               id: 'deliverables',
               label: (
                 <>
-                  Deliverables
+                  산출물
                   {changedCount > 0 && (
-                    <TabBadge n={changedCount} tone="err" title={`${changedCount} changed since you last looked`} />
+                    <TabBadge n={changedCount} tone="err" title={`마지막으로 본 이후 ${changedCount}개 변경됨`} />
                   )}
                   {unseenCount > 0 && (
-                    <TabBadge n={unseenCount} tone="ok" title={`${unseenCount} new since you last looked`} />
+                    <TabBadge n={unseenCount} tone="ok" title={`마지막으로 본 이후 ${unseenCount}개 새로 생김`} />
                   )}
                 </>
               ),
@@ -149,7 +149,7 @@ export function AgentsTabs({
             data-lens="c"
             className="pressable is-dark ml-auto flex items-center gap-1 rounded-ctl px-2 py-1 font-mono text-[10px] text-os-dim hover:text-os-text"
           >
-            Open full dashboard <ArrowUpRight className="h-3 w-3" />
+            전체 대시보드 열기 <ArrowUpRight className="h-3 w-3" />
           </a>
         )}
       </div>
@@ -199,12 +199,12 @@ export function AgentsTabs({
         <div className={tab === 'hermes' ? '' : 'hidden'}>
           <iframe
             src={hermesUrl}
-            title="Hermes worker-pool dashboard"
+            title="Hermes 작업자 풀 대시보드"
             className="h-[calc(100dvh-14rem)] min-h-[480px] w-full rounded-panel border border-os-border bg-os-bg"
           />
           <div className="mt-1.5 font-mono text-[9.5px] text-os-dim">
-            Stock Hermes dashboard, embedded live from the host. Blank or erroring? The dashboard
-            process may be down on os-host (the VPN serve answers 502).
+            호스트에서 실시간으로 불러온 기본 Hermes 대시보드입니다. 비어 있거나 오류가 나면
+            os-host의 대시보드 프로세스가 꺼져 있을 수 있습니다 (VPN 서버가 502를 응답).
           </div>
         </div>
       )}

@@ -69,7 +69,7 @@ export function limitMeter(name: string, window: string, w: OfficialWindow, now:
   };
 }
 
-const dayLabel = (day: string) => new Date(`${day}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const dayLabel = (day: string) => new Date(`${day}T12:00:00`).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
 
 export function usageVolume(x: { claude: PlanUsage | null; codex: PlanUsage | null; ollama: OllamaBoard; now?: number }): UsageVolume {
   const now = x.now ?? Date.now();

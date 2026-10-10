@@ -45,8 +45,8 @@ const pct = (f: number) => `${Math.round(f * 100)}%`;
 const usd = (n: number) => `$${Math.round(n).toLocaleString('en-US')}`;
 const hours = (n: number) => Math.round(n * 10) / 10;
 const localDay = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-const dayLabel = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const dayLabel = (d: Date) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
 
 
 export function workflowsVolume(x: {
@@ -68,10 +68,10 @@ export function workflowsVolume(x: {
   const okAll = x.jobs.reduce((n, j) => n + j.ok, 0);
 
   const chips: WorkflowsVolume['chips'] = [];
-  if (counts.healthy) chips.push({ tone: 'ok', text: `${counts.healthy} healthy` });
-  if (counts.overdue) chips.push({ tone: 'warn', text: `${counts.overdue} overdue` });
-  if (counts.failing) chips.push({ tone: 'err', text: `${counts.failing} failing` });
-  if (counts.paused) chips.push({ text: `${counts.paused} paused` });
+  if (counts.healthy) chips.push({ tone: 'ok', text: `정상 ${counts.healthy}` });
+  if (counts.overdue) chips.push({ tone: 'warn', text: `지연 ${counts.overdue}` });
+  if (counts.failing) chips.push({ tone: 'err', text: `실패 중 ${counts.failing}` });
+  if (counts.paused) chips.push({ text: `일시정지 ${counts.paused}` });
 
   // Process map: hours and money straight off the workflow steps.
   const stats = x.workflows.map(workflowStats);
@@ -89,27 +89,27 @@ export function workflowsVolume(x: {
   const leakF = frac(recovered, leak);
   const meters: Meter[] = [
     {
-      label: `Crons healthy (${counts.healthy}/${counts.enabled})`,
+      label: `정상 크론 (${counts.healthy}/${counts.enabled})`,
       frac: healthyF,
-      display: counts.enabled ? pct(healthyF) : 'none enabled',
+      display: counts.enabled ? pct(healthyF) : '활성화된 항목 없음',
       hue: counts.enabled > 0 && counts.healthy === counts.enabled ? 'var(--ok)' : 'var(--warn)',
     },
     {
-      label: `Runs OK (${okAll}/${runsAll})`,
+      label: `성공한 실행 (${okAll}/${runsAll})`,
       frac: runsF,
-      display: runsAll ? `${okAll} ok · ${runsAll - okAll} failed` : 'no runs yet',
+      display: runsAll ? `성공 ${okAll} · 실패 ${runsAll - okAll}` : '아직 실행 없음',
       hue: 'var(--accent)',
     },
     {
-      label: `Hours carried by agents (${agentHours}/${totalHours}h per wk)`,
+      label: `에이전트가 담당하는 시간 (주당 ${agentHours}/${totalHours}시간)`,
       frac: hoursF,
-      display: totalHours ? pct(hoursF) : 'no steps mapped',
+      display: totalHours ? pct(hoursF) : '매핑된 단계 없음',
       hue: 'var(--ramp-1)',
     },
     {
-      label: `Leak recovered (${usd(recovered)}/${usd(leak)} mo)`,
+      label: `회수한 누수 금액 (월 ${usd(recovered)}/${usd(leak)})`,
       frac: leakF,
-      display: leak ? pct(leakF) : 'no leaks mapped',
+      display: leak ? pct(leakF) : '매핑된 누수 없음',
       hue: 'var(--ramp-4)',
     },
   ];
@@ -141,22 +141,22 @@ export function workflowsVolume(x: {
   }
   const series = labels.map(([key, label]) => ({ label, count: buckets.get(key) ?? 0 }));
 
-  const names = shortLabels(x.workflows.map((w) => w.name), /\s+/, Infinity, 'Workflow');
+  const names = shortLabels(x.workflows.map((w) => w.name), /\s+/, Infinity, '워크플로');
   const perWorkflow = stats.map((s, i) => ({ label: names[i], count: hours(s.manualHours) }));
 
   // The one gradient card: what is waiting on Alex right now.
   const needs = x.jobs.filter((_, i) => states[i] === 'overdue' || states[i] === 'failing');
   const insight = {
     value: needs.length,
-    headline: needs.length ? `${counts.overdue} overdue · ${counts.failing} failing.` : 'Every enabled task ran on its slot.',
+    headline: needs.length ? `지연 ${counts.overdue} · 실패 중 ${counts.failing}.` : '활성화된 모든 작업이 제시간에 실행됐습니다.',
     body: needs.length
       ? needs
           .slice(0, 3)
           .map((j) => j.description)
           .join(' · ')
       : x.jobs.length
-        ? `${counts.healthy} healthy, nothing waiting on you.`
-        : 'No scheduled tasks yet.',
+        ? `정상 ${counts.healthy}개, 기다리는 일 없음.`
+        : '아직 예약된 작업이 없습니다.',
     frac: frac(needs.length, counts.enabled),
   };
 
@@ -164,9 +164,9 @@ export function workflowsVolume(x: {
     headline: x.jobs.length,
     counts,
     chips,
-    caption: `${counts.enabled} enabled · ${runsAll} runs recorded`,
+    caption: `활성 ${counts.enabled}개 · 실행 기록 ${runsAll}회`,
     meters,
-    foot: `${x.workflows.length} workflows · ${steps} steps · ${tools} tools`,
+    foot: `워크플로 ${x.workflows.length}개 · 단계 ${steps}개 · 도구 ${tools}개`,
     series,
     runsInWindow,
     failedInWindow,

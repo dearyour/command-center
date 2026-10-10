@@ -51,7 +51,7 @@ function useLastMessage(node: FunnelSpaceNode): LastMsg {
 
 const agoDays = (ts: string): string => {
   const d = Math.max(0, Math.floor((Date.now() - Date.parse(ts)) / 86_400_000));
-  return d === 0 ? 'today' : `${d}d ago`;
+  return d === 0 ? '오늘' : `${d}일 전`;
 };
 
 function BlockLabel({ children }: { children: React.ReactNode }) {
@@ -103,10 +103,10 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
           )}
           <div className="mt-0.5 truncate font-mono text-[9.5px] uppercase tracking-wide text-os-dim">
             {node.venture === 'vantage' ? 'Vantage' : 'Launchpad Cohort'} · {stageLabel}
-            {dealDiffers ? ` · deal: ${node.name}` : ''}
+            {dealDiffers ? ` · 거래: ${node.name}` : ''}
           </div>
         </div>
-        <button onClick={onClose} className="pressable shrink-0 font-mono text-[12px] text-os-dim hover:text-os-text" aria-label="Close">
+        <button onClick={onClose} className="pressable shrink-0 font-mono text-[12px] text-os-dim hover:text-os-text" aria-label="닫기">
           ×
         </button>
       </div>
@@ -114,15 +114,15 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
       {/* status strip */}
       <div className="mt-2.5 grid grid-cols-3 gap-2 border-t border-os-border pt-2 font-mono text-[10px]">
         <div>
-          <div className="text-os-dim">likelihood</div>
+          <div className="text-os-dim">가능성</div>
           <div className="text-[12px] text-os-text">{node.likelihood}%</div>
         </div>
         <div>
-          <div className="text-os-dim">relationship</div>
-          <div className="text-[12px] capitalize" style={{ color: RELATIONSHIP_COLOR[node.relationship] }}>{node.relationship}</div>
+          <div className="text-os-dim">관계</div>
+          <div className="text-[12px] capitalize" style={{ color: RELATIONSHIP_COLOR[node.relationship] }}>{({ hot: '뜨거움', warm: '미지근함', cold: '차가움' } as const)[node.relationship] ?? node.relationship}</div>
         </div>
         <div>
-          <div className="text-os-dim">quiet for</div>
+          <div className="text-os-dim">조용한 기간</div>
           <div
             className="text-[12px]"
             style={
@@ -133,7 +133,7 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
                   : undefined
             }
           >
-            {node.daysSinceLastTouch}d
+            {node.daysSinceLastTouch}일
           </div>
         </div>
       </div>
@@ -143,17 +143,17 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
         </div>
       )}
       {node.state !== 'converted' && (node.amountUsd ?? 0) > 0 && (
-        <div className="mt-2 font-mono text-[10px] text-os-muted">deal value · {usd(node.amountUsd ?? 0)}</div>
+        <div className="mt-2 font-mono text-[10px] text-os-muted">거래 금액 · {usd(node.amountUsd ?? 0)}</div>
       )}
       {node.state === 'stalled' && (
         <div className="mt-2 rounded-sm-t border border-[color-mix(in_oklab,var(--err)_35%,transparent)] bg-[color-mix(in_oklab,var(--err)_9%,transparent)] px-2 py-1 font-mono text-[10px] text-os-err">
-          stalled — quiet past {STALL_DAYS}d before converting
+          정체됨 — 전환 전에 {STALL_DAYS}일 넘게 조용함
         </div>
       )}
 
       {/* WHERE THEY CAME FROM */}
       <div className="mt-2.5 border-t border-os-border pt-2">
-        <BlockLabel>origin</BlockLabel>
+        <BlockLabel>유입 경로</BlockLabel>
         <div className="flex items-baseline gap-2 text-[11px]">
           <span className="shrink-0 font-semibold text-os-text">{origin.segment}</span>
           {origin.at && <span className="shrink-0 font-mono text-[9.5px] text-os-dim">{origin.at}</span>}
@@ -172,10 +172,10 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
 
       {/* HOW TO REACH THEM */}
       <div className="mt-2.5 border-t border-os-border pt-2">
-        <BlockLabel>contact</BlockLabel>
+        <BlockLabel>연락처</BlockLabel>
         <div className="flex flex-col gap-1">
-          {node.email && <ContactLine label="email" value={node.email} href={`mailto:${node.email}`} />}
-          {node.phone && <ContactLine label="phone" value={node.phone} href={`tel:${node.phone}`} />}
+          {node.email && <ContactLine label="이메일" value={node.email} href={`mailto:${node.email}`} />}
+          {node.phone && <ContactLine label="전화" value={node.phone} href={`tel:${node.phone}`} />}
           {node.linkedin && (
             <ContactLine label="li" value={node.linkedin.replace(/^https?:\/\/(www\.)?/, '')} href={node.linkedin} />
           )}
@@ -188,29 +188,29 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
               )}
               {node.phone && (
                 <a href={`sms:${node.phone}`} className="text-os-muted hover:text-os-accent">
-                  sms
+                  문자
                 </a>
               )}
               {node.url && (
                 <a href={node.url} target="_blank" rel="noopener noreferrer" className="text-os-muted hover:text-os-accent">
-                  {isGhl ? 'open in GHL ↗' : 'open in Attio ↗'}
+                  {isGhl ? 'GHL에서 열기 ↗' : 'Attio에서 열기 ↗'}
                 </a>
               )}
             </div>
           )}
           {!node.email && !node.phone && !node.linkedin && !node.url && (
-            <div className="font-mono text-[10px] text-os-dim">no contact info on record</div>
+            <div className="font-mono text-[10px] text-os-dim">기록된 연락처 없음</div>
           )}
         </div>
         {/* last thread with them, fetched live on pin */}
         <div className="mt-1.5 flex items-baseline gap-2 font-mono text-[9.5px]">
-          <span className="shrink-0 uppercase tracking-wide text-os-dim">last msg</span>
-          {lastMsg.kind === 'loading' && <span className="text-os-dim">checking comms…</span>}
-          {lastMsg.kind === 'unavailable' && <span className="text-os-dim">comms feed unavailable</span>}
-          {lastMsg.kind === 'none' && <span className="text-os-dim">no thread on record</span>}
+          <span className="shrink-0 uppercase tracking-wide text-os-dim">마지막 메시지</span>
+          {lastMsg.kind === 'loading' && <span className="text-os-dim">커뮤니케이션 확인 중…</span>}
+          {lastMsg.kind === 'unavailable' && <span className="text-os-dim">커뮤니케이션 피드 사용 불가</span>}
+          {lastMsg.kind === 'none' && <span className="text-os-dim">기록된 대화 없음</span>}
           {lastMsg.kind === 'found' && (
             <span className="min-w-0 truncate text-os-muted" title={lastMsg.item.preview}>
-              via {lastMsg.item.source} · {agoDays(lastMsg.item.ts)} · “{lastMsg.item.preview.slice(0, 60)}”
+              {lastMsg.item.source} 경유 · {agoDays(lastMsg.item.ts)} · “{lastMsg.item.preview.slice(0, 60)}”
             </span>
           )}
         </div>
@@ -218,7 +218,7 @@ export function FunnelNodeCard({ node, onClose }: { node: FunnelSpaceNode; onClo
 
       {/* the raw trail */}
       <div className="mt-2.5 border-t border-os-border pt-2">
-        <BlockLabel>journey</BlockLabel>
+        <BlockLabel>여정</BlockLabel>
         <ol className="flex flex-col gap-1">
           {node.touches.map((t) => (
             <li key={t.id} className="flex items-baseline gap-1.5 text-[11px] text-os-muted">

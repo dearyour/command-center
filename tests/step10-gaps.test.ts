@@ -17,18 +17,18 @@ describe('step 10 gap fills', () => {
   test('TaskBoard cards can advance without dragging', () => {
     const board = read('components/TaskBoard.tsx');
     expect(board).toContain('nextStatus');
-    expect(board).toMatch(/title=\{`Advance to/);
+    expect(board).toMatch(/title=\{`다음 단계로/);
   });
 
   test('WorkflowTree steps click-select and open the step-detail drawer (Slab tree, 2026-09-17)', () => {
     const tree = read('components/WorkflowTree.tsx');
     expect(tree).toContain('selectedStepId');
-    expect(tree).toMatch(/view step detail/i);
+    expect(tree).toMatch(/단계 상세 보기/);
   });
 
   test('PostComposer confirms the queue on the button', () => {
     const composer = read('components/PostComposer.tsx');
-    expect(composer).toMatch(/queued ·/);
+    expect(composer).toMatch(/대기열에 추가 ·/);
     expect(composer).toContain('setDone');
   });
 });

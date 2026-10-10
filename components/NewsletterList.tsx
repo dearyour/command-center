@@ -7,7 +7,7 @@ import type { Newsletter } from '@/lib/newsletters';
 const fmt = (n: number) => n.toLocaleString('en-US');
 const pct = (n: number) => `${n.toFixed(n < 10 ? 2 : 1)}%`;
 const dateLabel = (iso: string) =>
-  new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  new Date(iso).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', year: 'numeric' });
 
 /** A labeled metric cell inside the expanded analytics grid. */
 function Metric({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: 'ok' | 'warn' | 'err' }) {
@@ -30,7 +30,7 @@ export function NewsletterList({ newsletters }: { newsletters: Newsletter[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   if (newsletters.length === 0) {
-    return <p className="py-6 text-center text-[12.5px] text-os-dim">No newsletters yet.</p>;
+    return <p className="py-6 text-center text-[12.5px] text-os-dim">아직 뉴스레터가 없습니다.</p>;
   }
 
   return (
@@ -50,14 +50,14 @@ export function NewsletterList({ newsletters }: { newsletters: Newsletter[] }) {
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13.5px] font-medium">{n.title}</span>
                 <span className="mt-0.5 block font-mono text-[11px] text-os-dim">
-                  {dateLabel(n.publishedAt)} · {fmt(n.recipients)} sent
+                  {dateLabel(n.publishedAt)} · {fmt(n.recipients)}명 발송
                 </span>
               </span>
-              <span className="hidden shrink-0 font-mono text-[11px] tabular-nums text-os-dim sm:inline">{pct(n.clickRate)} click</span>
+              <span className="hidden shrink-0 font-mono text-[11px] tabular-nums text-os-dim sm:inline">클릭 {pct(n.clickRate)}</span>
               <span
                 className="shrink-0 rounded-full px-2.5 py-0.5 font-mono text-[11px] tabular-nums tracking-[0.04em]"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
-                title="open rate"
+                title="오픈율"
               >
                 {pct(n.openRate)} open
               </span>
@@ -66,14 +66,14 @@ export function NewsletterList({ newsletters }: { newsletters: Newsletter[] }) {
             {expanded && (
               <div className="border-t border-os-border px-5 pb-5 pt-4">
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
-                  <Metric label="Recipients" value={fmt(n.recipients)} />
-                  <Metric label="Delivered" value={fmt(n.delivered)} sub={pct(n.deliveryRate) + ' delivery'} tone="ok" />
-                  <Metric label="Open rate" value={pct(n.openRate)} sub={fmt(n.opens) + ' opens'} tone="ok" />
-                  <Metric label="Click rate" value={pct(n.clickRate)} sub={fmt(n.clicks) + ' clicks'} />
-                  <Metric label="Unsubscribes" value={fmt(n.unsubscribes)} sub={pct(n.unsubscribeRate)} tone={n.unsubscribeRate > 1 ? 'warn' : undefined} />
-                  <Metric label="Spam reports" value={fmt(n.spamReports)} tone={n.spamReports > 0 ? 'warn' : undefined} />
-                  <Metric label="Web views" value={fmt(n.webViews)} />
-                  <Metric label="Delivered %" value={pct(n.deliveryRate)} />
+                  <Metric label="수신자" value={fmt(n.recipients)} />
+                  <Metric label="전달됨" value={fmt(n.delivered)} sub={'전달률 ' + pct(n.deliveryRate)} tone="ok" />
+                  <Metric label="오픈율" value={pct(n.openRate)} sub={'열람 ' + fmt(n.opens)} tone="ok" />
+                  <Metric label="클릭률" value={pct(n.clickRate)} sub={'클릭 ' + fmt(n.clicks)} />
+                  <Metric label="구독 해지" value={fmt(n.unsubscribes)} sub={pct(n.unsubscribeRate)} tone={n.unsubscribeRate > 1 ? 'warn' : undefined} />
+                  <Metric label="스팸 신고" value={fmt(n.spamReports)} tone={n.spamReports > 0 ? 'warn' : undefined} />
+                  <Metric label="웹 조회" value={fmt(n.webViews)} />
+                  <Metric label="전달률" value={pct(n.deliveryRate)} />
                 </div>
                 {n.webUrl && (
                   <a

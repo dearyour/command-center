@@ -10,7 +10,7 @@ import { formatFollowers } from '@/components/SocialStats';
 export function FollowerBarChart({ series }: { series: FollowerPoint[] }) {
   const model = followerBarModel(series);
   if (model.bars.length === 0) {
-    return <p className="mt-4 text-xs text-os-dim">No snapshots yet — counts appear once a sync or scrape records this account.</p>;
+    return <p className="mt-4 text-xs text-os-dim">아직 스냅샷이 없습니다 — 동기화나 수집으로 이 계정이 기록되면 숫자가 표시됩니다.</p>;
   }
 
   const W = 920;
@@ -29,7 +29,7 @@ export function FollowerBarChart({ series }: { series: FollowerPoint[] }) {
       viewBox={`0 0 ${W} ${H}`}
       className="mt-2 block w-full"
       role="img"
-      aria-label="Follower count over time as a bar chart"
+      aria-label="시간에 따른 팔로워 수 막대 차트"
     >
       {/* y gridlines + labels on round follower values */}
       {model.yTicks.map((v) => {

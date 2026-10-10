@@ -20,12 +20,12 @@ export function AudiencePie({
     <SharePie
       items={items}
       total={total}
-      centerLabel="total reach"
+      centerLabel="전체 도달"
       format={formatFollowers}
       framed={framed}
       stacked={stacked}
       donutPx={donutPx}
-      ariaLabel="Audience share by account"
+      ariaLabel="계정별 오디언스 비중"
     />
   );
 }

@@ -28,13 +28,13 @@ const opp = (over: Partial<GhlOpportunity>): GhlOpportunity => ({
 describe('GHL source attribution reaches the radial classifier', () => {
   test('threads the opportunity source into the entry-touch label', () => {
     const { journeys } = mapGhlOpportunities([PIPELINE], [opp({ source: 'Instagram DM' })], NOW);
-    expect(journeys[0].touches[0].label).toBe('Opportunity created in GHL · via: Instagram DM');
+    expect(journeys[0].touches[0].label).toBe('GHL에서 영업 기회 생성 · 경유: Instagram DM');
     expect(acquisitionFor(journeys[0])).toBe('instagram');
   });
 
   test('no source → plain label → honest word_of_mouth', () => {
     const { journeys } = mapGhlOpportunities([PIPELINE], [opp({})], NOW);
-    expect(journeys[0].touches[0].label).toBe('Opportunity created in GHL');
+    expect(journeys[0].touches[0].label).toBe('GHL에서 영업 기회 생성');
     expect(acquisitionFor(journeys[0])).toBe('word_of_mouth');
   });
 
@@ -44,7 +44,7 @@ describe('GHL source attribution reaches the radial classifier', () => {
       [opp({ source: 'LC - Opt In', attributions: [{ medium: 'form' }, { medium: 'form' }] })],
       NOW,
     );
-    expect(journeys[0].touches[0].label).toBe('Opportunity created in GHL · via: LC - Opt In, form');
+    expect(journeys[0].touches[0].label).toBe('GHL에서 영업 기회 생성 · 경유: LC - Opt In, form');
     expect(acquisitionFor(journeys[0])).toBe('form');
   });
 
@@ -60,7 +60,7 @@ describe('GHL source attribution reaches the radial classifier', () => {
     );
     for (const j of journeys) expect(acquisitionFor(j)).toBe('word_of_mouth');
     const ts = journeys.find((j) => j.id === 'ghl-o-ts');
-    expect(ts?.touches[0].label).toBe('Opportunity created in GHL'); // garbage filtered out
+    expect(ts?.touches[0].label).toBe('GHL에서 영업 기회 생성'); // garbage filtered out
   });
 
   test('a utmSource beats a generic medium for attribution', () => {

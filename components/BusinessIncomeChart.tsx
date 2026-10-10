@@ -23,7 +23,7 @@ const metricCents = (m: MonthPoint, metric: Metric): number =>
 const usd = (cents: number) =>
   (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 const signedUsd = (cents: number) => `${cents < 0 ? '−' : '+'}${usd(Math.abs(cents))}`;
-const fmtMonth = (m: string) => new Date(`${m}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+const fmtMonth = (m: string) => new Date(`${m}-01T00:00:00Z`).toLocaleDateString('ko-KR', { month: 'short', timeZone: 'UTC' });
 
 /** Per-business bank-statement money with range + metric dropdowns — money
     in (deposits), money out (outflow), or the net that's left after it, as a

@@ -37,7 +37,7 @@ describe('sidebar collapse and resize', () => {
   });
 
   test('the drag handle is bounded and resets on double click', () => {
-    expect(sidebar).toMatch(/aria-label="Resize sidebar"/);
+    expect(sidebar).toMatch(/aria-label="사이드바 크기 조절"/);
     expect(sidebar).toMatch(/cursor-col-resize/);
     expect(sidebar).toMatch(/Math\.min\(MAX_W, Math\.max\(MIN_W, ev\.clientX\)\)/);
     expect(sidebar).toMatch(/onDoubleClick=\{\(\) => setWidth\(DEFAULT_W\)\}/);
@@ -55,7 +55,7 @@ describe('sidebar collapse and resize', () => {
   });
 
   test('the toggle is reachable without a mouse', () => {
-    expect(sidebar).toMatch(/aria-label=\{collapsed \? 'Expand sidebar' : 'Collapse sidebar'\}/);
+    expect(sidebar).toMatch(/aria-label=\{collapsed \? '사이드바 펼치기' : '사이드바 접기'\}/);
     expect(sidebar).toMatch(/aria-expanded=\{!collapsed\}/);
   });
 });

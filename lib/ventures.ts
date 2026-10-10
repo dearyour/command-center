@@ -34,15 +34,15 @@ export const VENTURES: Venture[] = [
   {
     id: 'vantage',
     label: 'Vantage',
-    kind: 'AI agency',
+    kind: 'AI 에이전시',
     // Brand green sampled from the Vantage logo.
     color: '#00ffaa',
-    detail: 'Client AI builds and delivery — the agency arm.',
+    detail: '고객사 AI 구축 및 납품 — 에이전시 부문.',
     brainTag: 'vantage',
     focus: [
-      'Active client builds shipped on schedule',
-      'Pipeline: proposals out, deals advanced in Ledger',
-      'Delivery quality — every handoff documented in G-Brain',
+      '진행 중인 고객 프로젝트를 일정대로 납품',
+      '파이프라인: 제안서 발송, Ledger에서 거래 진전',
+      '납품 품질 — 모든 인수인계를 G-Brain에 기록',
     ],
     areaAgents: {
       marketing: ['social-agent', 'postly-publisher', 'reelkit-editor', 'renderly-creative'],
@@ -56,15 +56,15 @@ export const VENTURES: Venture[] = [
   {
     id: 'launchpad-cohort',
     label: 'Launchpad Cohort',
-    kind: 'Mentorship program',
+    kind: '멘토십 프로그램',
     // Brand crimson — hsl(355 70% 50%) from the live LC site theme + brand guide.
     color: '#d9263f',
-    detail: 'The mentorship — students, curriculum, community.',
+    detail: '멘토십 — 수강생, 커리큘럼, 커뮤니티.',
     brainTag: 'launchpad-cohort',
     focus: [
-      'Student results — track wins, unblock stuck students fast',
-      'Content + newsletter cadence for enrollment',
-      'Community pulse on WhatsApp; T1 response times hold',
+      '수강생 성과 — 성과를 추적하고 막힌 수강생을 빠르게 도와주기',
+      '등록을 위한 콘텐츠 + 뉴스레터 발행 주기 유지',
+      'WhatsApp 커뮤니티 분위기 관리, T1 응답 시간 유지',
     ],
     areaAgents: {
       marketing: ['social-agent', 'adsmith-creative', 'postly-publisher', 'dmflow-mcp', 'reelkit-editor'],

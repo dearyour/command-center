@@ -42,7 +42,7 @@ export type DoctorVolume = {
 const frac = (n: number, d: number) => (d > 0 ? Math.max(0, Math.min(1, n / d)) : 0);
 const pct = (f: number) => `${Math.round(f * 100)}%`;
 const localDay = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-const dayLabel = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const dayLabel = (d: Date) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
 const clip = (s: string) => (s.length > 10 ? `${s.slice(0, 9)}…` : s);
 const STORE_COLS = 7;
 

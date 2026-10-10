@@ -61,7 +61,6 @@ export type PulseFacts = {
   failedRuns: number;
 };
 
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 /**
  * One honest sentence about what needs the operator, worst-first: failed runs,
@@ -72,11 +71,11 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 export function stateOfWorld(f: PulseFacts): StateSegment[] {
   const segs: StateSegment[] = [];
 
-  if (f.failedRuns > 0) segs.push({ text: `${plural(f.failedRuns, 'run')} failed`, tone: 'err' });
-  if (!f.brainConnected) segs.push({ text: 'G-Brain offline', tone: 'err' });
-  else if (f.health != null && f.health < 70) segs.push({ text: `G-Brain degraded ${f.health}/100`, tone: 'warn' });
-  if (f.connectorsDown > 0) segs.push({ text: `${plural(f.connectorsDown, 'connector')} down`, tone: 'warn' });
-  if (f.inbound > 0) segs.push({ text: `${f.inbound} inbound need reply`, tone: 'accent' });
+  if (f.failedRuns > 0) segs.push({ text: `실행 ${f.failedRuns}건 실패`, tone: 'err' });
+  if (!f.brainConnected) segs.push({ text: 'G-Brain 오프라인', tone: 'err' });
+  else if (f.health != null && f.health < 70) segs.push({ text: `G-Brain 성능 저하 ${f.health}/100`, tone: 'warn' });
+  if (f.connectorsDown > 0) segs.push({ text: `커넥터 ${f.connectorsDown}개 다운`, tone: 'warn' });
+  if (f.inbound > 0) segs.push({ text: `답장 필요한 수신 ${f.inbound}건`, tone: 'accent' });
 
   const hadAttention = segs.length > 0;
 
@@ -85,18 +84,18 @@ export function stateOfWorld(f: PulseFacts): StateSegment[] {
   // "19/32" a fraction the reader has to do arithmetic on to learn the only
   // thing it is actually saying: thirteen seats are sitting still.
   const idle = Math.max(0, f.totalAgents - f.activeAgents);
-  segs.push({ text: `${f.activeAgents} agents live`, tone: f.activeAgents > 0 ? 'ok' : 'dim' });
-  segs.push({ text: `${idle} idle`, tone: 'dim' });
+  segs.push({ text: `에이전트 ${f.activeAgents}개 가동 중`, tone: f.activeAgents > 0 ? 'ok' : 'dim' });
+  segs.push({ text: `${idle}개 대기`, tone: 'dim' });
 
   // The artboard states the brain score at every health ("brain 78/100"),
   // not only when it has gone bad. A number that appears only on failure
   // teaches the reader to read its absence as "fine", which is exactly the
   // habit that let /api/metrics report a null page count for two weeks.
   if (f.brainConnected && f.health != null && f.health >= 70) {
-    segs.push({ text: `brain ${f.health}/100`, tone: 'ok' });
+    segs.push({ text: `브레인 ${f.health}/100`, tone: 'ok' });
   }
 
-  if (!hadAttention) segs.unshift({ text: 'All nominal', tone: 'ok' });
+  if (!hadAttention) segs.unshift({ text: '모두 정상', tone: 'ok' });
 
   return segs;
 }
@@ -138,19 +137,17 @@ export function operatingVolume(x: {
     failedToday: today.length - ok,
     agentsToday: new Set(today.map((r) => r.agentId)).size,
     meters: [
-      { label: `Systems connected (${x.connected}/${x.totalConnections})`, frac: pct(x.connected, x.totalConnections), display: `${Math.round(pct(x.connected, x.totalConnections) * 100)}%`, hue: 'var(--accent)' },
-      { label: `Agents live (${x.activeAgents}/${x.totalAgents})`, frac: pct(x.activeAgents, x.totalAgents), display: `${Math.round(pct(x.activeAgents, x.totalAgents) * 100)}%`, hue: 'var(--ramp-1)' },
-      { label: `Runs OK today (${ok}/${today.length})`, frac: pct(ok, today.length), display: today.length ? `${ok} ok · ${today.length - ok} failed` : 'no runs yet', hue: today.length - ok > 0 ? 'var(--warn)' : 'var(--ok)' },
-      { label: 'G-Brain health', frac: x.health === null ? 0 : Math.max(0, Math.min(1, x.health / 100)), display: x.health === null ? 'offline' : `${x.health} / 100`, hue: 'var(--ramp-4)' },
+      { label: `연결된 시스템 (${x.connected}/${x.totalConnections})`, frac: pct(x.connected, x.totalConnections), display: `${Math.round(pct(x.connected, x.totalConnections) * 100)}%`, hue: 'var(--accent)' },
+      { label: `가동 중인 에이전트 (${x.activeAgents}/${x.totalAgents})`, frac: pct(x.activeAgents, x.totalAgents), display: `${Math.round(pct(x.activeAgents, x.totalAgents) * 100)}%`, hue: 'var(--ramp-1)' },
+      { label: `오늘 성공한 실행 (${ok}/${today.length})`, frac: pct(ok, today.length), display: today.length ? `${ok}건 성공 · ${today.length - ok}건 실패` : '아직 실행 없음', hue: today.length - ok > 0 ? 'var(--warn)' : 'var(--ok)' },
+      { label: 'G-Brain 상태', frac: x.health === null ? 0 : Math.max(0, Math.min(1, x.health / 100)), display: x.health === null ? '오프라인' : `${x.health} / 100`, hue: 'var(--ramp-4)' },
     ],
   };
 }
 
 // ── Home's second row (the Brand Deals activity line, dots and insight) ─────
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-/** The last `days` LOCAL days, oldest first, each labelled "Sep 3" and counted
+/** The last `days` LOCAL days, oldest first, each labelled "9월 3일" and counted
     from real timestamps. Quiet days stay in as zeros so the line is honest. */
 export function dailySeries(timestamps: (string | undefined)[], days = 14, now: Date = new Date()): { label: string; count: number }[] {
   const start = new Date(now);
@@ -158,7 +155,7 @@ export function dailySeries(timestamps: (string | undefined)[], days = 14, now: 
   const out = Array.from({ length: days }, (_, i) => {
     const d = new Date(start);
     d.setDate(d.getDate() - (days - 1 - i));
-    return { key: d.getTime(), label: `${MONTHS[d.getMonth()]} ${d.getDate()}`, count: 0 };
+    return { key: d.getTime(), label: `${d.getMonth() + 1}월 ${d.getDate()}일`, count: 0 };
   });
   for (const ts of timestamps) {
     if (!ts) continue;
@@ -172,10 +169,11 @@ export function dailySeries(timestamps: (string | undefined)[], days = 14, now: 
 }
 
 const SOURCES = ['email', 'whatsapp', 'slack'] as const;
+const SOURCE_LABEL: Record<(typeof SOURCES)[number], string> = { email: '이메일', whatsapp: 'WhatsApp', slack: 'Slack' };
 
 /** Inbound per source, in a fixed order, zeros kept (the DotMatrix columns). */
 export function sourceMix(items: { source: string }[]): { label: string; count: number }[] {
-  return SOURCES.map((s) => ({ label: s, count: items.filter((i) => i.source === s).length }));
+  return SOURCES.map((s) => ({ label: SOURCE_LABEL[s], count: items.filter((i) => i.source === s).length }));
 }
 
 /** Home's one gradient card: everything waiting on Alex right now, and
@@ -183,13 +181,13 @@ export function sourceMix(items: { source: string }[]): { label: string; count: 
 export function homeAttention(x: { inbound: number; failedToday: number; connectorsDown: number; doneToday: number }): { count: number; headline: string; frac: number } {
   const count = x.inbound + x.failedToday + x.connectorsDown;
   const parts = [
-    x.inbound > 0 ? `${x.inbound} inbound` : null,
-    x.failedToday > 0 ? plural(x.failedToday, 'failed run') : null,
-    x.connectorsDown > 0 ? `${plural(x.connectorsDown, 'connector')} down` : null,
+    x.inbound > 0 ? `수신 ${x.inbound}건` : null,
+    x.failedToday > 0 ? `실패한 실행 ${x.failedToday}건` : null,
+    x.connectorsDown > 0 ? `커넥터 ${x.connectorsDown}개 다운` : null,
   ].filter(Boolean);
   return {
     count,
-    headline: count === 0 ? 'Nothing is waiting on you.' : parts.join(' · '),
+    headline: count === 0 ? '기다리고 있는 일이 없습니다.' : parts.join(' · '),
     frac: count === 0 ? 0 : count / (count + Math.max(0, x.doneToday)),
   };
 }

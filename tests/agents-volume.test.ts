@@ -81,28 +81,28 @@ describe('agentsVolume: the Agent Volume card', () => {
     expect(v.headline).toBe(4);
     expect(v.counts).toEqual({ running: 1, idle: 1, paused: 1, error: 1 });
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '1 running' },
-      { text: '1 idle' },
-      { tone: 'warn', text: '1 paused' },
-      { tone: 'err', text: '1 in error' },
+      { tone: 'ok', text: '실행 중 1' },
+      { text: '대기 1' },
+      { tone: 'warn', text: '일시정지 1' },
+      { tone: 'err', text: '오류 1' },
     ]);
-    const total = v.chips.reduce((n, c) => n + Number(c.text.split(' ')[0]), 0);
+    const total = v.chips.reduce((n, c) => n + Number(c.text.split(' ').at(-1)), 0);
     expect(total).toBe(v.headline);
   });
 
   test('the caption names how many distinct models hold seats', () => {
-    expect(v.caption).toContain('2 models');
+    expect(v.caption).toContain('모델 2개');
   });
 
   test('four meters, each an honest fraction of a real whole', () => {
     expect(v.meters.map((m) => m.label)).toEqual([
-      'Seats running (1/4)',
-      'Heartbeat in 24h (2/4)',
-      'Runs OK · 14d (3/5)',
-      'Tasks done (3/8)',
+      '실행 중인 자리 (1/4)',
+      '24시간 내 하트비트 (2/4)',
+      '성공한 실행 · 14일 (3/5)',
+      '완료한 작업 (3/8)',
     ]);
     expect(v.meters.map((m) => m.frac)).toEqual([0.25, 0.5, 0.6, 3 / 8]);
-    expect(v.meters[2].display).toBe('3 ok · 2 failed');
+    expect(v.meters[2].display).toBe('성공 3 · 실패 2');
     for (const m of v.meters) {
       expect(m.frac).toBeGreaterThanOrEqual(0);
       expect(m.frac).toBeLessThanOrEqual(1);
@@ -112,7 +112,7 @@ describe('agentsVolume: the Agent Volume card', () => {
 
   test('the foot counts the open queue and the day of runs', () => {
     expect(v.openTasks).toBe(5);
-    expect(v.foot).toBe('5 open tasks · 4 runs in 24h');
+    expect(v.foot).toBe('열린 작업 5개 · 24시간 내 실행 4회');
   });
 });
 
@@ -121,7 +121,7 @@ describe('agentsVolume: run activity and the second row', () => {
 
   test('the step line buckets stamped runs by local day over 14 days', () => {
     expect(v.series).toHaveLength(14);
-    expect(v.series.at(-1)?.label).toBe('Sep 24');
+    expect(v.series.at(-1)?.label).toBe('9월 24일');
     expect(v.series.reduce((n, s) => n + s.count, 0)).toBe(6);
     expect(v.runsInWindow).toBe(6);
     expect(v.failedInWindow).toBe(2);
@@ -137,19 +137,19 @@ describe('agentsVolume: run activity and the second row', () => {
 
   test('task lanes: the open stages, always all five, review folded together', () => {
     expect(v.lanes).toEqual([
-      { label: 'doing', count: 1 },
-      { label: 'review', count: 1 },
-      { label: 'todo', count: 2 },
-      { label: 'blocked', count: 1 },
-      { label: 'backlog', count: 0 },
+      { label: '진행 중', count: 1 },
+      { label: '검토', count: 1 },
+      { label: '할 일', count: 2 },
+      { label: '막힘', count: 1 },
+      { label: '백로그', count: 0 },
     ]);
   });
 
   test('the one insight: tasks waiting on review or unblocking', () => {
     expect(v.insight.value).toBe(2);
-    expect(v.insight.headline).toMatch(/2 tasks/);
-    expect(v.insight.body).toContain('1 seat in error');
-    expect(v.insight.body).toContain('1 failed run in 24h');
+    expect(v.insight.headline).toMatch(/작업 2개/);
+    expect(v.insight.body).toContain('오류 자리 1개');
+    expect(v.insight.body).toContain('24시간 내 실패한 실행 1회');
     expect(v.insight.frac).toBeCloseTo(2 / 5);
   });
 });
@@ -159,20 +159,20 @@ describe('agentsVolume: honest when there is nothing', () => {
     const v = agentsVolume({ connected: false, agents: [], issues: [], runs: [] }, NOW);
     expect(v.headline).toBe(0);
     expect(v.meters).toEqual([]);
-    expect(v.chips).toEqual([{ tone: 'err', text: 'board unreachable' }]);
+    expect(v.chips).toEqual([{ tone: 'err', text: '보드 연결 불가' }]);
     expect(v.series.every((s) => s.count === 0)).toBe(true);
     expect(v.bySeat).toEqual([]);
     expect(v.insight.value).toBe(0);
     expect(v.insight.frac).toBe(0);
-    expect(v.insight.headline).toMatch(/unreachable/i);
+    expect(v.insight.headline).toMatch(/연결할 수 없습니다/);
   });
 
   test('a quiet board never divides by zero or lights a meter it cannot back', () => {
     const v = agentsVolume({ connected: true, agents: [seat('Conductor')], issues: [], runs: [] }, NOW);
     expect(v.meters.map((m) => m.frac)).toEqual([0, 0, 0, 0]);
-    expect(v.meters[2].display).toBe('no finished runs');
-    expect(v.meters[3].display).toBe('no tasks');
-    expect(v.insight.headline).toMatch(/nothing/i);
+    expect(v.meters[2].display).toBe('끝난 실행 없음');
+    expect(v.meters[3].display).toBe('작업 없음');
+    expect(v.insight.headline).toMatch(/기다리는 것이 없습니다/);
   });
 });
 
@@ -190,11 +190,11 @@ describe('the window says what the fetched runs actually cover (review 2026-09-2
   test('a full page of runs that starts inside the window relabels it "since <day>"', () => {
     const runs = Array.from({ length: 120 }, (_, i) => run('sales-agent', 'succeeded', hoursAgo(i * 0.5)));
     const v = agentsVolume(board(runs), NOW, 14);
-    expect(v.window).toBe('since Sep 22');
-    expect(v.meters.find((m) => m.label.startsWith('Runs OK'))!.label).toMatch(/^Runs OK · since Sep 22/);
+    expect(v.window).toBe('9월 22일부터');
+    expect(v.meters.find((m) => m.label.startsWith('성공한 실행'))!.label).toMatch(/^성공한 실행 · 9월 22일부터/);
   });
   test('fewer runs than the fetch cap cover the whole window', () => {
     const v = agentsVolume(board([run('sales-agent', 'succeeded', hoursAgo(2))]), NOW, 14);
-    expect(v.window).toBe('14d');
+    expect(v.window).toBe('14일');
   });
 });

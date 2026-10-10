@@ -43,11 +43,10 @@ export function filterLeadMagnets<T extends Pick<LeadMagnet, 'status'>>(rows: T[
 
 const DAY_MS = 86_400_000;
 const DEST_COLS = 6;
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-const utcLabel = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const utcLabel = (d: Date) => d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 /** "Beehiiv · newsletter + Cohort 2" reads as "Beehiiv" under a dot column. */
 const shortDestination = (d: string) => {
-  const head = d.split(/\s*[·|(]\s*/)[0].trim() || 'Other';
+  const head = d.split(/\s*[·|(]\s*/)[0].trim() || '기타';
   return head.length > 12 ? head.split(/\s+/)[0] : head;
 };
 /** launchedAt is at least a year; pad it to a comparable UTC day. */
@@ -68,17 +67,17 @@ export function leadMagnetVolume(x: { rows: LeadMagnetVolumeRow[]; today: string
   const none = cap('none');
 
   const chips: LeadMagnetVolume['chips'] = [];
-  if (counts.draft) chips.push({ tone: 'warn', text: `${counts.draft} draft` });
-  if (counts.paused) chips.push({ tone: 'err', text: `${counts.paused} paused` });
-  if (counts.archived) chips.push({ text: `${counts.archived} archived` });
+  if (counts.draft) chips.push({ tone: 'warn', text: `초안 ${counts.draft}` });
+  if (counts.paused) chips.push({ tone: 'err', text: `일시정지 ${counts.paused}` });
+  if (counts.archived) chips.push({ text: `보관 ${counts.archived}` });
 
   const meters: Meter[] = [];
   if (total > 0) {
-    const m = (label: string, n: number, hue: string): Meter => ({ label: `${label} (${n}/${total})`, frac: n / total, display: `${n} of ${total}`, hue });
-    meters.push(m('Live', counts.live, 'var(--ok)'));
-    meters.push(m('Capturing email', email, 'var(--ramp-1)'));
-    meters.push(m('Capturing bookings', booking, 'var(--ramp-3)'));
-    meters.push(m('No capture yet', none, 'var(--warn)'));
+    const m = (label: string, n: number, hue: string): Meter => ({ label: `${label} (${n}/${total})`, frac: n / total, display: `${total}개 중 ${n}개`, hue });
+    meters.push(m('운영 중', counts.live, 'var(--ok)'));
+    meters.push(m('이메일 수집', email, 'var(--ramp-1)'));
+    meters.push(m('예약 수집', booking, 'var(--ramp-3)'));
+    meters.push(m('아직 수집 없음', none, 'var(--warn)'));
   }
 
   const destMap = new Map<string, number>();
@@ -111,13 +110,13 @@ export function leadMagnetVolume(x: { rows: LeadMagnetVolumeRow[]; today: string
     .sort((a, b) => b.key.localeCompare(a.key))[0];
   let insight: LeadMagnetVolume['insight'];
   if (!newest) {
-    insight = { value: 0, display: 'none', headline: 'Nothing shipped yet.', body: 'The next landing page lands here.', frac: 0 };
+    insight = { value: 0, display: '없음', headline: '아직 출시한 것이 없습니다.', body: '다음 랜딩 페이지가 여기에 표시됩니다.', frac: 0 };
   } else {
     const quiet = Math.max(0, Math.round((end.getTime() - new Date(`${newest.key}T00:00:00Z`).getTime()) / DAY_MS));
     insight = {
       value: quiet,
-      headline: quiet === 0 ? `${newest.name} went live today.` : `${plural(quiet, 'day')} since ${newest.name} shipped.`,
-      body: `${counts.live} of ${total} live · ticks light with the live share.`,
+      headline: quiet === 0 ? `${newest.name}이(가) 오늘 출시됐습니다.` : `${newest.name} 출시 이후 ${quiet}일 지났습니다.`,
+      body: `${total}개 중 ${counts.live}개 운영 중 · 운영 비율만큼 눈금이 켜집니다.`,
       frac: total > 0 ? counts.live / total : 0,
     };
   }
@@ -127,15 +126,15 @@ export function leadMagnetVolume(x: { rows: LeadMagnetVolumeRow[]; today: string
     total,
     counts,
     chips,
-    caption: total > 0 ? `of ${plural(total, 'landing page')} shipped` : 'no landing pages recorded yet',
+    caption: total > 0 ? `출시한 랜딩 페이지 ${total}개 중` : '아직 기록된 랜딩 페이지가 없습니다',
     meters,
-    foot: `${plural(destMap.size, 'destination')} · ${plural(campaigns, 'campaign')}`,
+    foot: `도착지 ${destMap.size}곳 · 캠페인 ${campaigns}개`,
     series,
     shippedInWindow,
     captures: [
-      { label: 'Email', count: email },
-      { label: 'Booking', count: booking },
-      { label: 'None', count: none },
+      { label: '이메일', count: email },
+      { label: '예약', count: booking },
+      { label: '없음', count: none },
     ],
     destinations,
     insight,

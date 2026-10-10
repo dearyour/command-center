@@ -39,10 +39,10 @@ export type SimpleAgent = { id: string; name: string };
 type BuilderTarget = 'new' | Workflow | null;
 
 function stepTone(step: WorkflowStep): { color: string; word: string } {
-  if (step.ownerKind === 'human') return { color: 'var(--text-2)', word: 'human step' };
-  if (step.automation?.state === 'live') return { color: 'var(--accent)', word: 'automated · live' };
-  if (step.automation?.state === 'suggested') return { color: 'var(--warn)', word: 'automation planned' };
-  return { color: 'var(--text-2)', word: 'agent step' };
+  if (step.ownerKind === 'human') return { color: 'var(--text-2)', word: '사람 단계' };
+  if (step.automation?.state === 'live') return { color: 'var(--accent)', word: '자동화 · 운영 중' };
+  if (step.automation?.state === 'suggested') return { color: 'var(--warn)', word: '자동화 예정' };
+  return { color: 'var(--text-2)', word: '에이전트 단계' };
 }
 
 function stepIcon(step: WorkflowStep): LucideIcon {
@@ -55,12 +55,12 @@ function stepIcon(step: WorkflowStep): LucideIcon {
 function relativeTime(iso: string): string {
   const diffMs = Date.now() - new Date(iso).getTime();
   const mins = Math.round(diffMs / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return '방금';
+  if (mins < 60) return `${mins}분 전`;
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `${hours}시간 전`;
   const days = Math.round(hours / 24);
-  return `${days}d ago`;
+  return `${days}일 전`;
 }
 
 export function WorkflowTree({
@@ -126,10 +126,10 @@ export function WorkflowTree({
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
         <span className="text-[12.5px] text-os-dim">
-          {workflows.length} workflow{workflows.length === 1 ? '' : 's'} mapped
+          워크플로 {workflows.length}개 매핑됨
         </span>
         <button type="button" onClick={() => setBuilderTarget('new')} className="pressable c-btn c-btn-primary">
-          <Plus className="h-[13px] w-[13px]" strokeWidth={2} /> New workflow
+          <Plus className="h-[13px] w-[13px]" strokeWidth={2} /> 새 워크플로
         </button>
       </div>
 
@@ -223,7 +223,7 @@ function WorkflowCard({
   const toolIds = workflowToolIds(wf.steps);
   const liveAutos = wf.steps.filter((s) => s.automation?.state === 'live').length;
   const suggested = wf.steps.filter((s) => s.automation?.state === 'suggested').length;
-  const trigger = wf.steps[0]?.title ?? 'no steps recorded';
+  const trigger = wf.steps[0]?.title ?? '기록된 단계 없음';
   const selectedStep = expanded ? (wf.steps.find((s) => s.id === selectedStepId) ?? null) : null;
 
   return (
@@ -249,7 +249,7 @@ function WorkflowCard({
       <div className="flex items-start justify-between gap-3 px-5 pt-4">
         <div className="min-w-0">
           <div className="truncate text-[15px] font-medium">{wf.name}</div>
-          <div className="mt-1 truncate font-mono text-[11px] text-os-dim">trigger: {trigger}</div>
+          <div className="mt-1 truncate font-mono text-[11px] text-os-dim">트리거: {trigger}</div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <button
@@ -260,7 +260,7 @@ function WorkflowCard({
             className={`pressable glass-chip grid h-7 w-7 place-items-center text-os-dim transition-opacity hover:text-os-text ${
               expanded ? '' : 'opacity-0 focus-visible:opacity-100 group-hover:opacity-100'
             }`}
-            aria-label={`Edit ${wf.name}`}
+            aria-label={`${wf.name} 편집`}
           >
             <Pencil className="h-3.5 w-3.5" strokeWidth={1.8} />
           </button>
@@ -271,7 +271,7 @@ function WorkflowCard({
                 onClose();
               }}
               className="pressable glass-chip grid h-7 w-7 place-items-center text-os-dim hover:text-os-text"
-              aria-label="Collapse workflow"
+              aria-label="워크플로 접기"
             >
               <X className="h-3.5 w-3.5" strokeWidth={1.8} />
             </button>
@@ -313,18 +313,18 @@ function WorkflowCard({
         <div className="wft-expand flex flex-col gap-5 px-5 pb-5">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10.5px] text-os-dim">
             <span>
-              {stats.agentSteps}/{wf.steps.length} agent-run
+              {stats.agentSteps}/{wf.steps.length} 에이전트 실행
             </span>
             <span>·</span>
             <span>
-              <span style={{ color: 'var(--accent)' }}>{liveAutos} live</span>
-              {suggested > 0 && <span style={{ color: 'var(--warn)' }}> · {suggested} planned</span>}
+              <span style={{ color: 'var(--accent)' }}>운영 중 {liveAutos}</span>
+              {suggested > 0 && <span style={{ color: 'var(--warn)' }}> · 예정 {suggested}</span>}
             </span>
             {stats.manualHours + stats.agentHours > 0 && (
               <>
                 <span>·</span>
                 <span>
-                  {stats.manualHours}h human / {stats.agentHours}h agent · wk
+                  주당 사람 {stats.manualHours}시간 / 에이전트 {stats.agentHours}시간
                 </span>
               </>
             )}
@@ -360,7 +360,7 @@ function WorkflowCard({
 /** Compact horizontal fingerprint: root + steps as dots on a hairline. */
 function MiniTree({ steps }: { steps: WorkflowStep[] }) {
   if (steps.length === 0) {
-    return <div className="pb-1 text-[11px] text-os-dim">no steps recorded</div>;
+    return <div className="pb-1 text-[11px] text-os-dim">기록된 단계 없음</div>;
   }
   return (
     <div className="flex min-w-max items-center pb-1">
@@ -404,7 +404,7 @@ function ExpandedTree({
   onSelectStep: (id: string | null) => void;
 }) {
   const tree = buildWorkflowTree(steps, workflowStepParent);
-  if (!tree.root) return <div className="text-[11px] text-os-dim">no steps recorded</div>;
+  if (!tree.root) return <div className="text-[11px] text-os-dim">기록된 단계 없음</div>;
   return (
     <TreeBranch
       node={tree.root}
@@ -439,8 +439,8 @@ function TreeBranch({
   const automationNote = step.automation
     ? step.automation.title
     : step.ownerKind === 'human'
-      ? `${step.hoursPerWeek}h/week, no automation attached`
-      : 'no automation attached';
+      ? `주당 ${step.hoursPerWeek}시간, 연결된 자동화 없음`
+      : '연결된 자동화 없음';
   const selected = selectedStepId === step.id;
   const fan = node.children.length > 1;
 
@@ -450,7 +450,7 @@ function TreeBranch({
         type="button"
         onClick={() => onSelectStep(selected ? null : step.id)}
         aria-pressed={selected}
-        aria-label={`${step.title}: view step detail`}
+        aria-label={`${step.title}: 단계 상세 보기`}
         className="pressable wft-node flex w-full items-start gap-3 px-3.5 py-3 text-left"
         style={selected ? { borderColor: tone.color } : undefined}
       >
@@ -470,7 +470,7 @@ function TreeBranch({
             {presence && (
               <span
                 className="h-1.5 w-1.5 shrink-0 rounded-full"
-                title={presence === 'active' ? 'agent live' : 'agent waiting on keys'}
+                title={presence === 'active' ? '에이전트 가동 중' : '에이전트가 키를 기다리는 중'}
                 style={{ background: presence === 'active' ? 'var(--ok)' : 'var(--warn)' }}
               />
             )}
@@ -553,7 +553,7 @@ function StepDetailPanel({
   if (!step) {
     return (
       <div className="glass-panel-violet flex min-h-[220px] flex-col items-center justify-center gap-1 px-5 py-8 text-center">
-        <span className="text-[12px] text-os-dim">Select a step to see its detail.</span>
+        <span className="text-[12px] text-os-dim">단계를 선택하면 상세 내용을 볼 수 있습니다.</span>
       </div>
     );
   }
@@ -564,7 +564,7 @@ function StepDetailPanel({
   const runs = runsByOwner[step.owner] ?? [];
 
   return (
-    <div className="glass-panel-violet flex min-h-[220px] flex-col gap-4 px-5 py-5" role="region" aria-label={`${step.title} detail`}>
+    <div className="glass-panel-violet flex min-h-[220px] flex-col gap-4 px-5 py-5" role="region" aria-label={`${step.title} 상세`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-2.5">
           <span
@@ -582,7 +582,7 @@ function StepDetailPanel({
         </div>
         <button
           onClick={onClose}
-          aria-label="Close step detail"
+          aria-label="단계 상세 닫기"
           className="pressable glass-chip grid h-6 w-6 shrink-0 place-items-center text-os-dim hover:text-os-text"
         >
           <X className="h-3 w-3" strokeWidth={1.8} />
@@ -591,34 +591,34 @@ function StepDetailPanel({
 
       {step.branch && (
         <div className="glass-chip inline-flex w-fit items-center gap-1.5 px-2.5 py-1 font-mono text-[10.5px] text-os-dim">
-          runs when: {step.branch.condition}
+          실행 조건: {step.branch.condition}
         </div>
       )}
 
       {step.detail && <p className="text-[12.5px] leading-relaxed text-os-muted">{step.detail}</p>}
 
       <div>
-        <span className="glass-label">Owner</span>
+        <span className="glass-label">담당</span>
         <div className="mt-2 flex items-center gap-2">
           <AgentAvatar src={avatarByOwner[step.owner] ?? null} name={step.owner} size={22} />
           <span className="text-[12.5px] text-os-text">{step.owner}</span>
-          <span className="text-[11px] text-os-dim">{step.ownerKind === 'human' ? 'human' : 'agent'}</span>
+          <span className="text-[11px] text-os-dim">{step.ownerKind === 'human' ? '사람' : '에이전트'}</span>
           {presence && (
             <span className="ml-auto flex shrink-0 items-center gap-1.5 text-[10.5px] text-os-dim">
               <span
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ background: presence === 'active' ? 'var(--ok)' : 'var(--warn)' }}
               />
-              {presence === 'active' ? 'live' : 'waiting on keys'}
+              {presence === 'active' ? '가동 중' : '키 대기 중'}
             </span>
           )}
         </div>
-        <div className="mt-1.5 font-mono text-[11px] text-os-dim">{step.hoursPerWeek}h / week</div>
+        <div className="mt-1.5 font-mono text-[11px] text-os-dim">주당 {step.hoursPerWeek}시간</div>
       </div>
 
       {step.tools.length > 0 && (
         <div>
-          <span className="glass-label">Tools</span>
+          <span className="glass-label">도구</span>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {step.tools.map((t) => (
               <span key={t} className="glass-chip flex items-center gap-1.5 px-2 py-1 text-[11px] text-os-muted">
@@ -631,11 +631,11 @@ function StepDetailPanel({
       )}
 
       <div>
-        <span className="glass-label">Recent runs</span>
+        <span className="glass-label">최근 실행</span>
         <div className="mt-2 flex flex-col gap-1.5">
           {step.ownerKind === 'human' && <div className="text-[11.5px] text-os-dim">Human step: no run history.</div>}
           {step.ownerKind === 'agent' && runs.length === 0 && (
-            <div className="text-[11.5px] text-os-dim">No runs recorded for {step.owner}.</div>
+            <div className="text-[11.5px] text-os-dim">{step.owner}의 실행 기록이 없습니다.</div>
           )}
           {runs.map((run) => (
             <div key={run.id} className="flex items-center gap-2.5 text-[11.5px]">

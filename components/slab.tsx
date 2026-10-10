@@ -128,7 +128,7 @@ export function BigStat({
   );
 }
 
-export function MeterStack({ meters, foot, empty = 'nothing to measure yet', baseDelay = 500 }: { meters: Meter[]; foot?: ReactNode; empty?: string; baseDelay?: number }) {
+export function MeterStack({ meters, foot, empty = '아직 측정할 항목이 없습니다', baseDelay = 500 }: { meters: Meter[]; foot?: ReactNode; empty?: string; baseDelay?: number }) {
   return (
     <div className="mt-5 flex flex-1 flex-col">
       <div className="flex flex-1 flex-col justify-around gap-6 border-t border-os-border pt-5">

@@ -23,33 +23,33 @@ describe('leadMagnetVolume: the Magnet Volume card', () => {
     expect(v.headline).toBe(2);
     expect(v.total).toBe(4);
     expect(v.counts).toEqual({ live: 2, draft: 1, paused: 0, archived: 1 });
-    expect(v.chips).toEqual([{ tone: 'warn', text: '1 draft' }, { text: '1 archived' }]);
-    expect(v.caption).toBe('of 4 landing pages shipped');
+    expect(v.chips).toEqual([{ tone: 'warn', text: '초안 1' }, { text: '보관 1' }]);
+    expect(v.caption).toBe('출시한 랜딩 페이지 4개 중');
   });
 
   test('meters: the live share and what each page captures, all of the same whole', () => {
     expect(v.meters).toEqual([
-      { label: 'Live (2/4)', frac: 0.5, display: '2 of 4', hue: 'var(--ok)' },
-      { label: 'Capturing email (2/4)', frac: 0.5, display: '2 of 4', hue: 'var(--ramp-1)' },
-      { label: 'Capturing bookings (1/4)', frac: 0.25, display: '1 of 4', hue: 'var(--ramp-3)' },
-      { label: 'No capture yet (1/4)', frac: 0.25, display: '1 of 4', hue: 'var(--warn)' },
+      { label: '운영 중 (2/4)', frac: 0.5, display: '4개 중 2개', hue: 'var(--ok)' },
+      { label: '이메일 수집 (2/4)', frac: 0.5, display: '4개 중 2개', hue: 'var(--ramp-1)' },
+      { label: '예약 수집 (1/4)', frac: 0.25, display: '4개 중 1개', hue: 'var(--ramp-3)' },
+      { label: '아직 수집 없음 (1/4)', frac: 0.25, display: '4개 중 1개', hue: 'var(--warn)' },
     ]);
-    expect(v.foot).toBe('2 destinations · 3 campaigns');
+    expect(v.foot).toBe('도착지 2곳 · 캠페인 3개');
   });
 
   test('pages shipped: a cumulative weekly line over 12 weeks, ending today', () => {
     expect(v.series).toHaveLength(12);
-    expect(v.series.at(-1)).toEqual({ label: 'Sep 24', count: 4 });
-    expect(v.series.at(-2)).toEqual({ label: 'Sep 17', count: 3 });
-    expect(v.series[0]).toEqual({ label: 'Jul 9', count: 1 });
+    expect(v.series.at(-1)).toEqual({ label: '9월 24일', count: 4 });
+    expect(v.series.at(-2)).toEqual({ label: '9월 17일', count: 3 });
+    expect(v.series[0]).toEqual({ label: '7월 9일', count: 1 });
     expect(v.shippedInWindow).toBe(3);
   });
 
   test('captures and destinations as dot-matrix columns, destinations by short name', () => {
     expect(v.captures).toEqual([
-      { label: 'Email', count: 2 },
-      { label: 'Booking', count: 1 },
-      { label: 'None', count: 1 },
+      { label: '이메일', count: 2 },
+      { label: '예약', count: 1 },
+      { label: '없음', count: 1 },
     ]);
     expect(v.destinations).toEqual([
       { label: 'Beehiiv', count: 3 },
@@ -60,8 +60,8 @@ describe('leadMagnetVolume: the Magnet Volume card', () => {
   test('the one insight card is how long since the newest page shipped', () => {
     expect(v.insight).toEqual({
       value: 4,
-      headline: '4 days since Call Kit shipped.',
-      body: '2 of 4 live · ticks light with the live share.',
+      headline: 'Call Kit 출시 이후 4일 지났습니다.',
+      body: '4개 중 2개 운영 중 · 운영 비율만큼 눈금이 켜집니다.',
       frac: 0.5,
     });
   });
@@ -75,7 +75,7 @@ describe('leadMagnetVolume: the Magnet Volume card', () => {
       today: TODAY,
     });
     expect(t.insight.value).toBe(0);
-    expect(t.insight.headline).toBe('Agent Stack went live today.');
+    expect(t.insight.headline).toBe('Agent Stack이(가) 오늘 출시됐습니다.');
   });
 });
 
@@ -86,10 +86,10 @@ describe('leadMagnetVolume with nothing shipped', () => {
     expect(e.headline).toBe(0);
     expect(e.chips).toEqual([]);
     expect(e.meters).toEqual([]);
-    expect(e.caption).toBe('no landing pages recorded yet');
+    expect(e.caption).toBe('아직 기록된 랜딩 페이지가 없습니다');
     expect(e.destinations).toEqual([]);
     expect(e.series.every((s) => s.count === 0)).toBe(true);
-    expect(e.insight).toMatchObject({ display: 'none', headline: 'Nothing shipped yet.', frac: 0 });
+    expect(e.insight).toMatchObject({ display: '없음', headline: '아직 출시한 것이 없습니다.', frac: 0 });
   });
 });
 

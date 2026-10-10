@@ -48,7 +48,7 @@ const HEADING_SIZE = ['text-[15px]', 'text-[14px]', 'text-[13px]', 'text-[12px]'
 export function Markdown({ text }: { text: string }) {
   const blocks = parseMarkdown(text);
   if (blocks.length === 0) {
-    return <p className="font-mono text-[10.5px] text-os-dim">This file is empty.</p>;
+    return <p className="font-mono text-[10.5px] text-os-dim">이 파일은 비어 있습니다.</p>;
   }
 
   return (

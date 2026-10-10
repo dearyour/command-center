@@ -17,12 +17,21 @@ import type { DigestSourceState } from '@/lib/comms-digest-run';
  * instant; "run now" regenerates against live connectors.
  */
 const TIER_LABEL: Record<DigestTier, string> = {
-  call: 'You have a call with them',
-  client: 'Clients and deals',
-  people: 'People · personal and community contacts',
-  branddeal: 'Brand deals',
-  group: 'Group chats',
-  noise: 'Companies and software',
+  call: '통화 예정인 상대',
+  client: '고객 및 거래',
+  people: '사람 · 개인 및 커뮤니티 연락처',
+  branddeal: '브랜드 협찬',
+  group: '단체 채팅',
+  noise: '회사 및 소프트웨어',
+};
+
+const TIER_SHORT: Record<DigestTier, string> = {
+  call: '통화',
+  client: '고객',
+  people: '사람',
+  branddeal: '협찬',
+  group: '단체',
+  noise: '광고성',
 };
 
 const TIER_TONE: Record<DigestTier, string> = {
@@ -40,9 +49,9 @@ function when(iso: string): string {
   const ms = Date.now() - Date.parse(iso);
   if (!Number.isFinite(ms)) return '';
   const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${Math.max(m, 1)}m ago`;
+  if (m < 60) return `${Math.max(m, 1)}분 전`;
   const h = Math.floor(m / 60);
-  return h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`;
+  return h < 24 ? `${h}시간 전` : `${Math.floor(h / 24)}일 전`;
 }
 
 function Row({ e, read, onToggle }: { e: DigestEntry; read: boolean; onToggle: (k: string) => void }) {
@@ -60,7 +69,7 @@ function Row({ e, read, onToggle }: { e: DigestEntry; read: boolean; onToggle: (
           is keyed to the message, so tomorrow's rebuild does not resurrect it. */}
       <button
         onClick={() => onToggle(key)}
-        title={read ? 'Mark unread' : 'Mark read'}
+        title={read ? '안 읽음으로 표시' : '읽음으로 표시'}
         className={`pressable mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-ctl border ${
  read ? 'border-os-ok text-os-ok' : 'border-os-border text-transparent hover:border-os-dim hover:text-os-dim'
  }`}
@@ -78,9 +87,9 @@ function Row({ e, read, onToggle }: { e: DigestEntry; read: boolean; onToggle: (
           {e.carried && (
             <span
               className="shrink-0 rounded-md border border-os-warn/40 px-1 font-mono text-[8.5px] uppercase tracking-[0.1em] text-os-warn"
-              title={`Still open since ${new Date(e.firstSeenAt ?? e.ts).toLocaleDateString()}`}
+              title={`${new Date(e.firstSeenAt ?? e.ts).toLocaleDateString('ko-KR')}부터 아직 열려 있음`}
             >
-              held {when(e.firstSeenAt ?? e.ts).replace(' ago', '')}
+              보류 {when(e.firstSeenAt ?? e.ts).replace(' 전', '')}
             </span>
           )}
         </div>
@@ -181,33 +190,33 @@ export function CommsDigestPanel({
         <button onClick={() => setOpen((o) => !o)} className="pressable text-os-dim hover:text-os-text">
           {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
         </button>
-        <Label>Morning report</Label>
+        <Label>아침 보고서</Label>
         {digest ? (
           <span className="font-mono text-[10px] text-os-dim">
-            {digest.entries.filter((e) => e.tier !== 'noise' && !read.has(entryKey(e))).length} left to clear ·{' '}
+            {digest.entries.filter((e) => e.tier !== 'noise' && !read.has(entryKey(e))).length}개 남음 ·{' '}
             {/* the report stacks, so "in 24h" would be a lie once anything is
                 held over: say how much is new and how much is carried */}
             {(() => {
               const held = digest.entries.filter((e) => e.carried).length;
               return held
-                ? `${digest.total - held} new · ${held} held over`
-                : `${digest.total} in ${digest.windowHours}h`;
+                ? `새 항목 ${digest.total - held} · 이월 ${held}`
+                : `${digest.windowHours}시간 동안 ${digest.total}건`;
             })()}
             {at ? ` · ${when(at)}` : ''}
           </span>
         ) : (
-          <span className="font-mono text-[10px] text-os-dim">no report yet — runs daily at 09:00</span>
+          <span className="font-mono text-[10px] text-os-dim">아직 보고서 없음 — 매일 09:00에 실행됩니다</span>
         )}
         {dead.length > 0 && (
-          <span className="font-mono text-[10px] text-os-err">{dead.map((d) => d.source).join(', ')} unavailable</span>
+          <span className="font-mono text-[10px] text-os-err">{dead.map((d) => d.source).join(', ')} 사용 불가</span>
         )}
         {digest && (
           <button
             onClick={() => setHideRead((h) => !h)}
             className="pressable ml-auto flex shrink-0 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim hover:text-os-text"
-            title={hideRead ? 'Show what you already cleared' : 'Hide what you cleared'}
+            title={hideRead ? '이미 정리한 항목 보기' : '정리한 항목 숨기기'}
           >
-            <Undo2 className="h-3 w-3" /> {hideRead ? 'show cleared' : 'hide cleared'}
+            <Undo2 className="h-3 w-3" /> {hideRead ? '정리한 항목 보기' : '정리한 항목 숨기기'}
           </button>
         )}
         <button
@@ -215,15 +224,15 @@ export function CommsDigestPanel({
           disabled={busy}
           className="pressable flex shrink-0 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim hover:text-os-text disabled:opacity-40"
         >
-          <RefreshCw className={`h-3 w-3 ${busy ? 'animate-spin' : ''}`} /> {busy ? 'scraping' : 'run now'}
+          <RefreshCw className={`h-3 w-3 ${busy ? 'animate-spin' : ''}`} /> {busy ? '수집 중' : '지금 실행'}
         </button>
       </div>
 
       {open &&
         (digest === null || digest.total === 0 ? (
           <p className="px-4 py-3 font-mono text-[10.5px] text-os-dim">
-            Nothing in the last 24 hours{digest ? '' : ' yet'}. The 09:00 job writes this report; hit run now to build it
-            on demand.
+            최근 24시간 동안 {digest ? '' : '아직 '}아무것도 없습니다. 이 보고서는 09:00 작업이 작성하며, 지금 실행을 누르면
+            바로 만들 수 있습니다.
           </p>
         ) : (
           <div className="p-3">
@@ -233,7 +242,7 @@ export function CommsDigestPanel({
                   <div className="font-mono text-[16px] font-semibold leading-none" style={{ color: TIER_TONE[t] }}>
                     {digest.counts[t]}
                   </div>
-                  <div className="mt-1 truncate font-mono text-[8.5px] uppercase tracking-[0.1em] text-os-dim">{t}</div>
+                  <div className="mt-1 truncate font-mono text-[8.5px] uppercase tracking-[0.1em] text-os-dim">{TIER_SHORT[t]}</div>
                 </div>
               ))}
             </div>
@@ -252,20 +261,20 @@ export function CommsDigestPanel({
                         {TIER_LABEL[t]}
                       </span>
                       <span className="ml-auto font-mono text-[9.5px] text-os-dim">
-                        {left === 0 ? 'cleared' : `${left} left`}
+                        {left === 0 ? '정리됨' : `${left}개 남음`}
                       </span>
                       {left > 0 && (
                         <button
                           onClick={() => clearTier(all)}
-                          title="Mark this whole group read"
+                          title="이 그룹 전체를 읽음으로 표시"
                           className="pressable shrink-0 font-mono text-[9px] uppercase tracking-[0.1em] text-os-dim hover:text-os-ok"
                         >
-                          clear
+                          정리
                         </button>
                       )}
                     </div>
                     {rows.length === 0 ? (
-                      <p className="px-3 py-2 font-mono text-[10px] text-os-dim">all clear</p>
+                      <p className="px-3 py-2 font-mono text-[10px] text-os-dim">모두 정리됨</p>
                     ) : (
                       rows
                         .slice(0, 12)
@@ -288,7 +297,7 @@ export function CommsDigestPanel({
                 <div className="flex items-center gap-2 border-b border-os-border px-3 py-1.5">
                   <BellOff className="h-3 w-3 shrink-0 text-os-dim" />
                   <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-os-muted">
-                    Unsubscribe candidates
+                    구독 해지 후보
                   </span>
                   <span className="ml-auto font-mono text-[9.5px] text-os-dim">{digest.unsubscribes.length}</span>
                 </div>

@@ -23,7 +23,7 @@ export function NewLeadMagnet() {
     url: '',
     offer: '',
     source: '',
-    destination: 'Beehiiv · newsletter',
+    destination: 'Beehiiv · 뉴스레터',
     captures: 'email',
     status: 'live',
     launchedAt: today,
@@ -48,7 +48,7 @@ export function NewLeadMagnet() {
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: unknown };
-        setError(typeof body.error === 'string' ? body.error : 'Check the name and the URL.');
+        setError(typeof body.error === 'string' ? body.error : '이름과 URL을 확인하세요.');
         return;
       }
       const body = (await res.json()) as { leadMagnet?: { name?: string } };
@@ -57,7 +57,7 @@ export function NewLeadMagnet() {
       setOpen(false);
       router.refresh(); // the table is a server component; pull the new row
     } catch {
-      setError('Network error. Try again.');
+      setError('네트워크 오류입니다. 다시 시도하세요.');
     } finally {
       setBusy(false);
     }
@@ -76,11 +76,11 @@ export function NewLeadMagnet() {
           }}
           className={`pressable ${PILL_ACCENT}`}
         >
-          <Plus className="h-3.5 w-3.5" /> New lead magnet
+          <Plus className="h-3.5 w-3.5" /> 새 리드 마그넷
         </button>
         {done && (
           <span className="font-mono text-[11px] text-os-ok">
-            Added {done} to the register.
+            {done}을(를) 목록에 추가했습니다.
           </span>
         )}
       </div>
@@ -90,62 +90,62 @@ export function NewLeadMagnet() {
   return (
     <form onSubmit={submit} className="mb-4 rounded-[10px] border border-os-border bg-os-bg p-5">
       <div className="mb-3 flex items-center">
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-os-dim">Register a page</span>
-        <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="pressable ml-auto text-os-dim hover:text-os-text">
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-os-dim">페이지 등록</span>
+        <button type="button" onClick={() => setOpen(false)} aria-label="닫기" className="pressable ml-auto text-os-dim hover:text-os-text">
           <X className="h-3.5 w-3.5" />
         </button>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
-          <label className={label} htmlFor="lm-name">Name</label>
+          <label className={label} htmlFor="lm-name">이름</label>
           <input id="lm-name" className={field} value={form.name} onChange={set('name')} required placeholder="The Claude Trading Setup" />
         </div>
         <div>
-          <label className={label} htmlFor="lm-url">Live URL</label>
+          <label className={label} htmlFor="lm-url">공개 URL</label>
           <input id="lm-url" className={field} value={form.url} onChange={set('url')} required type="url" placeholder="https://…" />
         </div>
         <div className="sm:col-span-2">
-          <label className={label} htmlFor="lm-offer">What they get</label>
-          <input id="lm-offer" className={field} value={form.offer} onChange={set('offer')} placeholder="The setup, the prompt, and the guardrails" />
+          <label className={label} htmlFor="lm-offer">제공하는 것</label>
+          <input id="lm-offer" className={field} value={form.offer} onChange={set('offer')} placeholder="세팅, 프롬프트, 안전장치" />
         </div>
         <div>
-          <label className={label} htmlFor="lm-source">Campaign it was built for</label>
-          <input id="lm-source" className={field} value={form.source} onChange={set('source')} placeholder="IG reel (comment TRADE)" />
+          <label className={label} htmlFor="lm-source">만든 목적인 캠페인</label>
+          <input id="lm-source" className={field} value={form.source} onChange={set('source')} placeholder="IG 릴스 (댓글 TRADE)" />
         </div>
         <div>
-          <label className={label} htmlFor="lm-dest">Where leads land</label>
+          <label className={label} htmlFor="lm-dest">리드 도착지</label>
           <input id="lm-dest" className={field} value={form.destination} onChange={set('destination')} />
         </div>
         <div>
-          <label className={label} htmlFor="lm-captures">Captures</label>
+          <label className={label} htmlFor="lm-captures">수집 항목</label>
           <select id="lm-captures" className={field} value={form.captures} onChange={set('captures')}>
-            <option value="email">Email</option>
-            <option value="booking">Booking</option>
-            <option value="none">Nothing yet</option>
+            <option value="email">이메일</option>
+            <option value="booking">예약</option>
+            <option value="none">아직 없음</option>
           </select>
         </div>
         <div>
-          <label className={label} htmlFor="lm-launched">Went live</label>
+          <label className={label} htmlFor="lm-launched">출시일</label>
           <input id="lm-launched" className={field} type="date" value={form.launchedAt} onChange={set('launchedAt')} />
         </div>
         <div>
-          <label className={label} htmlFor="lm-status">Status</label>
+          <label className={label} htmlFor="lm-status">상태</label>
           <select id="lm-status" className={field} value={form.status} onChange={set('status')}>
-            <option value="live">Live</option>
-            <option value="draft">Draft</option>
-            <option value="paused">Paused</option>
-            <option value="archived">Archived</option>
+            <option value="live">운영 중</option>
+            <option value="draft">초안</option>
+            <option value="paused">일시정지</option>
+            <option value="archived">보관됨</option>
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label className={label} htmlFor="lm-notes">Notes</label>
+          <label className={label} htmlFor="lm-notes">메모</label>
           <textarea
             id="lm-notes"
             rows={2}
             className={`${field} resize-y`}
             value={form.notes}
             onChange={set('notes')}
-            placeholder="Anything future-you needs to know: what is gated, what still needs wiring, which automation feeds it"
+            placeholder="나중에 알아야 할 것: 무엇이 잠겨 있는지, 아직 연결이 필요한 것, 어떤 자동화가 연결되는지"
           />
         </div>
       </div>
@@ -155,7 +155,7 @@ export function NewLeadMagnet() {
         disabled={busy}
         className={`${PILL} mt-4 disabled:opacity-40`}
       >
-        {busy ? 'saving…' : 'add to the register'}
+        {busy ? '저장 중…' : '목록에 추가'}
       </button>
     </form>
   );

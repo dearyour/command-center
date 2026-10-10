@@ -47,12 +47,14 @@ const PLATFORM_ICONS: Record<SocialPlatform, PlatformIcon> = {
 // lands (the publish queue below is the real, wired path). views/likes carry
 // the like-to-view (engagement) ratio shown per post + averaged in the header.
 const RECENT_POSTS = [
-  { tag: 'Instagram · Reel', ago: '2h', caption: '3 agents that run my business while I sleep', kind: 'views', views: 12400, likes: 1104 },
-  { tag: 'TikTok · Video', ago: '6h', caption: 'POV: your operating system has a command palette', kind: 'views', views: 8100, likes: 640 },
-  { tag: 'X · Thread', ago: '1d', caption: 'How I wired 7 real connectors into one OS', kind: 'impressions', views: 1200, likes: 74 },
-  { tag: 'YouTube · Long', ago: '2d', caption: 'Command Center walkthrough  -  building in public #4', kind: 'views', views: 940, likes: 88 },
-  { tag: 'Instagram · Carousel', ago: '3d', caption: 'The larp-first, real-ready architecture', kind: 'reach', views: 6700, likes: 717 },
+  { tag: 'Instagram · 릴스', ago: '2시간', caption: '내가 자는 동안 사업을 굴리는 에이전트 3개', kind: 'views', views: 12400, likes: 1104 },
+  { tag: 'TikTok · 동영상', ago: '6시간', caption: 'POV: 내 운영체제에 명령 팔레트가 있다', kind: 'views', views: 8100, likes: 640 },
+  { tag: 'X · 스레드', ago: '1일', caption: '실제 커넥터 7개를 하나의 OS로 연결한 방법', kind: 'impressions', views: 1200, likes: 74 },
+  { tag: 'YouTube · 롱폼', ago: '2일', caption: '커맨드 센터 둘러보기  -  공개 개발기 #4', kind: 'views', views: 940, likes: 88 },
+  { tag: 'Instagram · 캐러셀', ago: '3일', caption: '데모 우선, 실전 대비 아키텍처', kind: 'reach', views: 6700, likes: 717 },
 ];
+
+const POST_METRIC: Record<string, string> = { views: '조회', impressions: '노출', reach: '도달' };
 
 // Human label for a raw Zernio platform string (falls back to capitalising it).
 function platformLabel(platform: string): string {
@@ -64,7 +66,7 @@ function platformLabel(platform: string): string {
 function RecencyDots({ rank, of }: { rank: number; of: number }) {
   const lit = of - rank;
   return (
-    <div className="mt-1.5 flex items-center gap-1" title={`#${rank + 1} most recent of ${of}`}>
+    <div className="mt-1.5 flex items-center gap-1" title={`${of}개 중 ${rank + 1}번째로 최근`}>
       {Array.from({ length: of }, (_, d) => (
         <span
           key={d}
@@ -85,10 +87,10 @@ function agoFrom(iso: string | null): string {
   const ms = Date.now() - new Date(iso).getTime();
   if (!Number.isFinite(ms) || ms < 0) return '';
   const mins = Math.round(ms / 60_000);
-  if (mins < 60) return `${Math.max(1, mins)}m`;
+  if (mins < 60) return `${Math.max(1, mins)}분`;
   const hrs = Math.round(mins / 60);
-  if (hrs < 48) return `${hrs}h`;
-  return `${Math.round(hrs / 24)}d`;
+  if (hrs < 48) return `${hrs}시간`;
+  return `${Math.round(hrs / 24)}일`;
 }
 
 export default async function SocialPage() {
@@ -138,7 +140,7 @@ export default async function SocialPage() {
   const v = socialVolume({
     channels: [
       ...dash.platforms.map((p) => ({ key: p.platform, label: PLATFORM_LABELS[p.platform], value: p.followers })),
-      { key: 'email', label: 'Email list', value: email.subscribers },
+      { key: 'email', label: '이메일 리스트', value: email.subscribers },
     ],
     total,
     growth7: audienceGrowthNow.d7,
@@ -153,17 +155,17 @@ export default async function SocialPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="audience"
-        title="Social"
-        meta={`${formatFollowers(total)} reach · ${postsKnown ? v.postsInWindow : '?'} posts in 30 days · ${queued} queued · ${dmInbox.length} DM threads`}
+        eyebrow="오디언스"
+        title="소셜"
+        meta={`도달 ${formatFollowers(total)} · 30일간 게시물 ${postsKnown ? v.postsInWindow : '?'}개 · 대기 ${queued}개 · DM 스레드 ${dmInbox.length}개`}
         right={
           <>
-            <Chip tone="ok">zernio live</Chip>
+            <Chip tone="ok">zernio 실시간</Chip>
             <Link href="/social/beehiiv" className={PILL}>
               Beehiiv
             </Link>
             <Link href="/agents" className={PILL_ACCENT}>
-              Social agent
+              소셜 에이전트
             </Link>
           </>
         }
@@ -172,7 +174,7 @@ export default async function SocialPage() {
       {/* Hero row, Brand Deals' shape: every account + the volume card.
           Every account stays on the first screen; click through for detail. */}
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={1} title="Accounts" sub={`${formatFollowers(total)} total`}>
+        <SlabCard i={1} title="계정" sub={`총 ${formatFollowers(total)}`}>
       <div className="grid grid-cols-2 gap-3 px-6 pb-6 pt-4 sm:grid-cols-3">
         {dash.platforms.map((p, i) => {
           const Icon = PLATFORM_ICONS[p.platform];
@@ -181,7 +183,7 @@ export default async function SocialPage() {
             <Link
               key={p.platform}
               href={`/social/${p.platform}`}
-              title={`${share.toFixed(0)}% of reach`}
+              title={`도달의 ${share.toFixed(0)}%`}
               data-lens="r"
               className="pressable is-row rise group rounded-[10px] border border-os-border bg-os-bg px-4 py-4"
               style={{ '--rise-i': i } as React.CSSProperties}
@@ -195,7 +197,7 @@ export default async function SocialPage() {
                   className={`ml-auto shrink-0 font-mono text-[10px] ${
                     p.growth.d7 == null ? 'text-os-dim' : p.growth.d7 >= 0 ? 'text-os-ok' : 'text-os-err'
                   }`}
-                  title="7-day growth"
+                  title="7일 성장률"
                 >
                   {formatPct(p.growth.d7)}
                 </span>
@@ -214,19 +216,19 @@ export default async function SocialPage() {
         {/* Email list  -  same cell, Beehiiv-backed; opens the Beehiiv dashboard */}
         <Link
           href="/social/beehiiv"
-          title={`${total > 0 && email.subscribers != null ? ((email.subscribers / total) * 100).toFixed(0) : 0}% of reach · open Beehiiv analytics`}
+          title={`${total > 0 && email.subscribers != null ? ((email.subscribers / total) * 100).toFixed(0) : 0}% 도달 · Beehiiv 분석 열기`}
           data-lens="r"
           className="pressable is-row rise rounded-[10px] border border-os-border bg-os-bg px-4 py-4"
           style={{ '--rise-i': dash.platforms.length } as React.CSSProperties}
         >
           <div className="flex items-center gap-2">
             <Mail className="h-4 w-4 shrink-0 text-os-accent" />
-            <span className="truncate font-mono text-[10px] uppercase tracking-[0.1em] text-os-dim">Email list</span>
+            <span className="truncate font-mono text-[10px] uppercase tracking-[0.1em] text-os-dim">이메일 리스트</span>
             <span
               className={`ml-auto shrink-0 font-mono text-[10px] ${
                 email.growth.d7 == null ? 'text-os-dim' : email.growth.d7 >= 0 ? 'text-os-ok' : 'text-os-err'
               }`}
-              title="7-day growth"
+              title="7일 성장률"
             >
               {formatPct(email.growth.d7)}
             </span>
@@ -234,7 +236,7 @@ export default async function SocialPage() {
           <div className="mt-3 font-mono text-[26px] font-semibold leading-none tracking-[-0.02em]">
             {email.subscribers == null ? formatFollowers(null) : <CountUp value={email.subscribers} kind="followers" />}
           </div>
-          <div className="mt-1.5 truncate font-mono text-[9.5px] text-os-dim">Beehiiv · Alex&apos;s Newsletter</div>
+          <div className="mt-1.5 truncate font-mono text-[9.5px] text-os-dim">Beehiiv · Alex의 뉴스레터</div>
           <div className="mt-3 h-1 overflow-hidden rounded-sm-t bg-os-surface2">
             <div
               className="fill h-full bg-os-accent opacity-60"
@@ -245,39 +247,39 @@ export default async function SocialPage() {
       </div>
         </SlabCard>
 
-        <SlabCard i={2} title="Audience Volume" className="flex flex-col">
+        <SlabCard i={2} title="오디언스 규모" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat value={v.headline} kind="followers" chips={v.chips} caption={v.caption} />
-            <MeterStack meters={v.meters} foot={v.foot} empty="no channel is reporting followers yet" />
+            <MeterStack meters={v.meters} foot={v.foot} empty="아직 팔로워를 보고하는 채널이 없습니다" />
           </div>
         </SlabCard>
       </div>
 
       {/* Second row: posting line, platform mix, THE gradient card */}
       <div className="mb-6 mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Posting Activity" sub="last 30 days">
+        <SlabCard i={3} title="게시 활동" sub="최근 30일">
           <div className="px-6 pt-3">
             <BigStat
               size={30}
               value={v.postsInWindow}
               display={postsKnown ? undefined : ' - '}
-              caption={postsKnown ? 'posts out through Zernio' : 'Zernio not answering · posting history unknown'}
+              caption={postsKnown ? 'Zernio로 발행한 게시물' : 'Zernio 응답 없음 · 게시 기록 알 수 없음'}
             />
           </div>
           <StepLine
             series={v.series}
             hue="var(--send-activity)"
-            unit=" posts"
-            empty={postsKnown ? 'No posts in the last 30 days.' : 'Posting history unavailable right now.'}
+            unit="개"
+            empty={postsKnown ? '최근 30일간 게시물이 없습니다.' : '지금은 게시 기록을 불러올 수 없습니다.'}
           />
         </SlabCard>
 
-        <SlabCard i={4} title="Platform Mix" sub="posts per platform">
+        <SlabCard i={4} title="플랫폼 구성" sub="플랫폼별 게시물">
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={topPlatform.count > 0 ? topPlatform.label : postsKnown ? 'none' : ' - '}
-              caption={topPlatform.count > 0 ? `most posted · ${topPlatform.count} posts` : postsKnown ? 'nothing posted in 30 days' : 'posting history unknown'}
+              display={topPlatform.count > 0 ? topPlatform.label : postsKnown ? '없음' : ' - '}
+              caption={topPlatform.count > 0 ? `가장 많이 게시 · ${topPlatform.count}개` : postsKnown ? '30일간 게시물 없음' : '게시 기록 알 수 없음'}
             />
             <DotMatrix cols={v.mix} hue="var(--ramp-1)" />
           </div>
@@ -285,7 +287,7 @@ export default async function SocialPage() {
 
         <InsightCard
           i={5}
-          badge="Needs reply"
+          badge="답장 필요"
           value={v.insight.value}
           headline={v.insight.headline}
           body={v.insight.body}
@@ -327,7 +329,7 @@ export default async function SocialPage() {
                   label: PLATFORM_LABELS[p.platform],
                   value: p.followers,
                 })),
-                { key: 'email', label: 'Email list', value: email.subscribers },
+                { key: 'email', label: '이메일 리스트', value: email.subscribers },
               ]}
               total={total}
             />
@@ -339,11 +341,11 @@ export default async function SocialPage() {
           (all dots lit = most recent, fading down to the oldest). */}
       <SlabCard
         i={8}
-        title="Recent posts"
+        title="최근 게시물"
         sub={
           recentLive
-            ? `${livePosts.length} live · zernio`
-            : `${formatRatioPct(averageLikeToView(RECENT_POSTS))} avg L/V · sample`
+            ? `실시간 ${livePosts.length}개 · zernio`
+            : `평균 좋아요/조회 ${formatRatioPct(averageLikeToView(RECENT_POSTS))} · 샘플`
         }
       >
         <div className="grid gap-3 px-6 pb-6 pt-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -370,7 +372,7 @@ export default async function SocialPage() {
                         rel="noreferrer"
                         className="ml-auto rounded-sm-t border border-os-border px-1.5 py-0.5 text-os-accent hover:border-os-border-strong"
                       >
-                        view →
+                        보기 →
                       </a>
                     )}
                   </div>
@@ -386,13 +388,13 @@ export default async function SocialPage() {
                   <div className="mt-2 line-clamp-3 text-[12px] [text-wrap:pretty]">{p.caption}</div>
                   <div className="mt-auto flex items-center gap-1.5 pt-2 font-mono text-[10px] text-os-dim">
                     <span>
-                      {formatFollowers(p.views)} {p.kind}
+                      {POST_METRIC[p.kind] ?? p.kind} {formatFollowers(p.views)}
                     </span>
                     <span aria-hidden>·</span>
-                    <span>{formatFollowers(p.likes)} likes</span>
+                    <span>좋아요 {formatFollowers(p.likes)}</span>
                     <span
                       className="ml-auto rounded-sm-t border border-os-border px-1.5 py-0.5 text-os-accent"
-                      title="like-to-view ratio"
+                      title="조회 대비 좋아요 비율"
                     >
                       {formatRatioPct(likeToViewRatio(p.likes, p.views))}
                     </span>
@@ -405,12 +407,12 @@ export default async function SocialPage() {
       {/* Publish  -  compose a post that queues for the Social agent */}
       <SlabCard
         i={9}
-        title="Publish"
-        sub={`${queued} queued`}
+        title="게시"
+        sub={`대기 ${queued}개`}
         className="mt-6"
         action={
           <Link href="/agents" className={PILL}>
-            Social agent
+            소셜 에이전트
           </Link>
         }
       >

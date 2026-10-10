@@ -51,13 +51,13 @@ export type Classified = DeliverableItem & {
  * a row can be answered without knowing the board's vocabulary.
  */
 export const ACTION_TEXT: Record<ApprovalKind, string> = {
-  staged: 'The agent already wrote this. Approve to send it. Dismiss to bin it.',
-  decision: 'Only you can make this call. Approve to go ahead. Dismiss to drop it.',
-  gate: 'Work is paused until you answer. Approve to unblock it. Dismiss to keep it closed.',
-  request: 'Someone asked you for something. Approve to act on it. Dismiss to decline.',
-  draft: 'A draft is waiting on you. Approve to publish it. Dismiss to send it back.',
-  done: 'Finished work. Nothing is being asked of you.',
-  output: 'Reference output. Nothing is being asked of you.',
+  staged: '에이전트가 이미 작성했습니다. 승인하면 전송되고, 넘기면 폐기됩니다.',
+  decision: '당신만 결정할 수 있습니다. 승인하면 진행하고, 넘기면 취소합니다.',
+  gate: '답할 때까지 작업이 멈춰 있습니다. 승인하면 차단이 풀리고, 넘기면 계속 닫혀 있습니다.',
+  request: '누군가 요청을 보냈습니다. 승인하면 처리하고, 넘기면 거절합니다.',
+  draft: '초안이 기다리고 있습니다. 승인하면 게시하고, 넘기면 돌려보냅니다.',
+  done: '완료된 작업입니다. 요청받은 것은 없습니다.',
+  output: '참고용 결과물입니다. 요청받은 것은 없습니다.',
 };
 
 /**
@@ -68,17 +68,17 @@ export const ACTION_TEXT: Record<ApprovalKind, string> = {
  * is a clause, not a sentence: the row reads "why here · someone is waiting".
  */
 export const WHY_TEXT: Record<ApprovalKind, string> = {
-  staged: 'a reply is written and unsent',
-  decision: 'nobody else can make this call',
-  gate: 'work is paused behind it',
-  request: 'someone asked you directly',
-  draft: 'a draft is waiting to go out',
-  done: 'finished, kept for the record',
-  output: 'reference only',
+  staged: '답장이 작성됐지만 아직 안 보냄',
+  decision: '다른 사람은 결정할 수 없음',
+  gate: '이것 때문에 작업이 멈춰 있음',
+  request: '누군가 직접 요청함',
+  draft: '초안이 발행을 기다리는 중',
+  done: '완료됨, 기록용으로 보관',
+  output: '참고용',
 };
 
 /** A blown deadline explains itself before its kind does. */
-const WHY_OVERDUE = 'the deadline the agent set has passed';
+const WHY_OVERDUE = '에이전트가 정한 마감이 지남';
 
 const GLYPH: Record<ApprovalKind, string> = {
   staged: '\u2709',
@@ -100,11 +100,11 @@ const MONEY = /(invoice|refund|payment|stripe|pricing|quote|contract|proposal)/i
 const DONE = /(UNBLOCKED|RESOLVED|FINAL|COMPLETE)/i;
 
 const ACTION: [RegExp, ApprovalKind, string][] = [
-  [/STAGED/i, 'staged', 'staged · send it'],
-  [/\bdecision\b|-decision-/i, 'decision', 'your call'],
-  [/-gate-|\bgate\b/i, 'gate', 'gate'],
-  [/-request-|\brequest\b/i, 'request', 'request'],
-  [/-draft-|\bdraft\b/i, 'draft', 'draft to approve'],
+  [/STAGED/i, 'staged', '대기 중 · 보내기'],
+  [/\bdecision\b|-decision-/i, 'decision', '결정 필요'],
+  [/-gate-|\bgate\b/i, 'gate', '승인 관문'],
+  [/-request-|\brequest\b/i, 'request', '요청'],
+  [/-draft-|\bdraft\b/i, 'draft', '승인할 초안'],
 ];
 
 /** `DELIVER-BEFORE-1430Z` → 14:30 UTC on the file's own day. */
@@ -125,11 +125,11 @@ export function classifyDeliverable(item: DeliverableItem, now = Date.now()): Cl
   const done = DONE.test(name);
 
   let ask: ApprovalKind = 'output';
-  let label = 'output';
+  let label = '결과물';
   let person = false;
   if (done) {
     ask = 'done';
-    label = 'done';
+    label = '완료';
   } else {
     for (const [re, k, l] of ACTION) {
       if (re.test(name)) {
@@ -148,7 +148,7 @@ export function classifyDeliverable(item: DeliverableItem, now = Date.now()): Cl
   // deadline promotes the file into the queue rather than sitting in outputs.
   if (ask === 'output' && deadline && !done) {
     ask = 'request';
-    label = 'due';
+    label = '마감';
   }
 
   const needsYou = !done && ask !== 'output';

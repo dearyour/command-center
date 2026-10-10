@@ -15,13 +15,13 @@ describe('/social mock-5b: audience chart ranges', () => {
   const chart = read('components/AudienceConsistency.tsx');
 
   test('chips are 30d / 90d / 1y and 90d starts selected', () => {
-    expect(chart).toContain("'90': '90d'");
-    expect(chart).toContain("'365': '1y'");
+    expect(chart).toContain("'90': '90일'");
+    expect(chart).toContain("'365': '1년'");
     expect(chart).toMatch(/useState<Range>\(90\)/);
   });
 
   test('the card header names the range out loud', () => {
-    expect(chart).toContain('Audience ·');
+    expect(chart).toContain('오디언스 ·');
   });
 });
 
@@ -30,7 +30,7 @@ describe('/social mock-5b: stat cards', () => {
 
   test('the growth card names the real 7-day leader', () => {
     expect(strip).toContain('growthLeader');
-    expect(strip).toMatch(/leads/);
+    expect(strip).toMatch(/1위/);
   });
 
   test('the DM card carries its source: Instagram · ManyChat', () => {
@@ -38,7 +38,7 @@ describe('/social mock-5b: stat cards', () => {
   });
 
   test('the reply tile is Needs reply with the oldest waiting age', () => {
-    expect(strip).toContain('Needs reply');
+    expect(strip).toContain('답장 필요');
     expect(strip).toMatch(/oldest/);
   });
 });

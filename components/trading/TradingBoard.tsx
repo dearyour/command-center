@@ -53,7 +53,7 @@ const timeAgo = (iso: string, now: number) => {
 };
 
 const clock = (iso: string) =>
-  new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  new Date(iso).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 /** Card shell: near-bg surface, stagger-in, 1px hover lift. */
 function Card({ children, delay = 0, className = '', style }: { children: React.ReactNode; delay?: number; className?: string; style?: React.CSSProperties }) {
