@@ -96,8 +96,8 @@ describe('demoMemoryGraph — the centre a fork actually sees', () => {
     }
     // and it is actually about running a business
     const folders = g.nodes.filter((n) => n.type === 'folder').map((n) => n.label);
-    expect(folders).toContain('Sales Playbooks');
-    expect(folders).toContain('Finance');
+    expect(folders).toContain('영업 플레이북');
+    expect(folders).toContain('재무');
     expect(folders.length).toBeGreaterThanOrEqual(6);
   });
 

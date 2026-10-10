@@ -50,14 +50,14 @@ export function demoMemoryGraph(): MemoryGraph {
     return ((h >>> 0) % 100000) / 100000;
   };
   const domains: { folder: string; titles: string[] }[] = [
-    { folder: 'Sales Playbooks', titles: ['Cold Outreach Framework', 'Discovery Call Script', 'Objection Handling', 'Pricing & Packaging', 'Follow-up Cadence', 'Proposal Template', 'Closing Checklist', 'ICP Definition', 'Negotiation Notes', 'Win/Loss Review', 'Referral Program', 'Case Study Bank', 'Sales Deck', 'Territory Plan', 'Commission Structure'] },
-    { folder: 'Growth & Marketing', titles: ['Content Engine', 'Paid Ads Playbook', 'Hook Library', 'Funnel Map', 'SEO Notes', 'Brand Voice', 'Launch Plan', 'Email Sequences', 'UGC Briefs', 'Analytics Notes', 'Landing Pages', 'Webinar Playbook', 'Influencer List', 'Retargeting', 'Newsletter Ops'] },
-    { folder: 'Product', titles: ['Roadmap', 'Feature Specs', 'User Research', 'Onboarding Flow', 'Changelog', 'Design System', 'API Notes', 'Bug Triage', 'Release Process', 'Product Metrics', 'Feature Flags', 'Analytics Events', 'Support Macros', 'Beta Program', 'Integrations'] },
-    { folder: 'Operations', titles: ['SOP Library', 'Hiring Playbook', 'Team Rituals', 'Vendor List', 'Tooling Stack', 'Incident Runbook', 'Weekly Cadence', 'Access & Security', 'Docs Index', 'Onboarding Kit', 'Payroll SOP', 'Legal Templates', 'Meeting Notes', 'OKRs', 'Vendor Contracts'] },
-    { folder: 'Finance', titles: ['Unit Economics', 'Cash Flow Model', 'Pricing Model', 'Invoicing SOP', 'Runway Tracker', 'Expense Policy', 'Revenue Report', 'Forecast', 'Payment Processors', 'Bookkeeping', 'Tax Notes', 'Budget', 'Investor Updates', 'Chargebacks', 'Financial Model'] },
-    { folder: 'Client Delivery', titles: ['Kickoff Template', 'Scope of Work', 'Weekly Report', 'QBR Deck', 'Retention Playbook', 'Escalation Path', 'Deliverables Tracker', 'Health Scores', 'Renewal Motion', 'Case Studies', 'Onboarding Checklist', 'SLA Terms', 'Feedback Loop', 'Upsell Paths', 'Offboarding'] },
-    { folder: 'Research', titles: ['Market Landscape', 'Competitor Teardown', 'Customer Interviews', 'Trends', 'Positioning', 'Whitepaper Notes', 'Data Sources', 'Survey Results', 'Experiment Log', 'Insights', 'Pricing Study', 'Persona Docs', 'Jobs to be Done', 'Churn Analysis', 'Benchmark Report'] },
-    { folder: 'Automation', titles: ['Agent Registry', 'Workflow Map', 'Prompt Library', 'Integration Notes', 'Trigger Rules', 'Eval Harness', 'Guardrails', 'Agent Runbook', 'Model Notes', 'Cost Tracking', 'Webhook Map', 'Retry Logic', 'Data Pipeline', 'Alerting Rules', 'Access Scopes'] },
+    { folder: '영업 플레이북', titles: ['콜드 아웃리치 프레임워크', '탐색 통화 스크립트', '이의 대응', '가격과 패키지', '후속 연락 주기', '제안서 템플릿', '클로징 체크리스트', 'ICP 정의', '협상 메모', '수주·실패 리뷰', '추천 프로그램', '사례 모음', '영업 덱', '영업 구역 계획', '수수료 구조'] },
+    { folder: '성장과 마케팅', titles: ['콘텐츠 엔진', '유료 광고 플레이북', '후크 라이브러리', '퍼널 지도', 'SEO 메모', '브랜드 목소리', '출시 계획', '이메일 시퀀스', 'UGC 브리프', '분석 메모', '랜딩 페이지', '웨비나 플레이북', '인플루언서 목록', '리타깃팅', '뉴스레터 운영'] },
+    { folder: '제품', titles: ['로드맵', '기능 명세', '사용자 리서치', '온보딩 흐름', '변경 기록', '디자인 시스템', 'API 메모', '버그 분류', '릴리스 절차', '제품 지표', '기능 플래그', '분석 이벤트', '지원 매크로', '베타 프로그램', '연동'] },
+    { folder: '운영', titles: ['SOP 라이브러리', '채용 플레이북', '팀 의식', '공급업체 목록', '도구 스택', '장애 대응 런북', '주간 리듬', '접근과 보안', '문서 색인', '온보딩 키트', '급여 SOP', '법무 템플릿', '회의록', 'OKR', '공급업체 계약'] },
+    { folder: '재무', titles: ['단위 경제성', '현금흐름 모델', '가격 모델', '청구 SOP', '런웨이 추적', '지출 정책', '매출 보고서', '예측', '결제 processor', '기장', '세무 메모', '예산', '투자자 업데이트', '차지백', '재무 모델'] },
+    { folder: '고객 납품', titles: ['킥오프 템플릿', '작업 범위', '주간 보고서', 'QBR 덱', '리텐션 플레이북', '에스컬레이션 경로', '산출물 추적', '건강 점수', '재계약 진행', '사례 연구', '온보딩 체크리스트', 'SLA 조건', '피드백 루프', '추가 판매 경로', '오프보딩'] },
+    { folder: '리서치', titles: ['시장 지형', '경쟁사 분석', '고객 인터뷰', '트렌드', '포지셔닝', '백서 메모', '데이터 출처', '설문 결과', '실험 기록', '인사이트', '가격 연구', '페르소나 문서', '해결할 일(JTBD)', '이탈 분석', '벤치마크 보고서'] },
+    { folder: '자동화', titles: ['에이전트 레지스트리', '워크플로 지도', '프롬프트 라이브러리', '연동 메모', '트리거 규칙', '평가 하네스', '가드레일', '에이전트 런북', '모델 메모', '비용 추적', '웹훅 지도', '재시도 로직', '데이터 파이프라인', '알림 규칙', '접근 범위'] },
   ];
   const nodes: MemoryNode[] = [];
   const edges: MemoryEdge[] = [];
@@ -70,7 +70,7 @@ export function demoMemoryGraph(): MemoryGraph {
     nodes.push({ id: `folder:${d.folder}`, type: 'folder', label: d.folder, folder: d.folder, excerpt: '', wordCount: 0, chunks: 0, ...seed(d.folder), cluster: di, links: d.titles.length });
     d.titles.forEach((t) => {
       const id = `page:${d.folder}/${t}`;
-      nodes.push({ id, type: 'page', label: t, folder: d.folder, excerpt: `${t} — a ${d.folder} reference note in the knowledge base.`, wordCount: 200 + Math.floor(rnd(id, 3) * 1400), chunks: 1 + Math.floor(rnd(id, 4) * 5), ...seed(id), cluster: di, links: 0 });
+      nodes.push({ id, type: 'page', label: t, folder: d.folder, excerpt: `${t} — ${d.folder} 참고 메모입니다.`, wordCount: 200 + Math.floor(rnd(id, 3) * 1400), chunks: 1 + Math.floor(rnd(id, 4) * 5), ...seed(id), cluster: di, links: 0 });
       edges.push({ source: `folder:${d.folder}`, target: id, type: 'member' });
     });
   });
