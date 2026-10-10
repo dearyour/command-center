@@ -11,7 +11,7 @@ export async function miroStatus(): Promise<ConnectorStatus> {
       name: 'Miro',
       kind: 'creative',
       state: 'not_configured',
-      detail: 'MIRO_ACCESS_TOKEN not found in env or brain-agent/.env.agents.',
+      detail: '환경 변수나 brain-agent/.env.agents에서 MIRO_ACCESS_TOKEN을 찾을 수 없습니다.',
     };
   }
   try {
@@ -27,7 +27,7 @@ export async function miroStatus(): Promise<ConnectorStatus> {
       name: 'Miro',
       kind: 'creative',
       state: 'connected',
-      detail: `Boards API reachable · ${body.total ?? body.data?.length ?? 0} boards`,
+      detail: `Boards API 연결됨 · 보드 ${body.total ?? body.data?.length ?? 0}개`,
       meta: { boards: body.total ?? 0 },
     };
   } catch (err) {
@@ -36,7 +36,7 @@ export async function miroStatus(): Promise<ConnectorStatus> {
       name: 'Miro',
       kind: 'creative',
       state: 'error',
-      detail: `Token found but API check failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `토큰은 있지만 API 확인 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

@@ -141,7 +141,7 @@ export async function whatsappStatus(): Promise<ConnectorStatus> {
     status = {
       ...base,
       state: 'not_configured',
-      detail: 'ChatStorage.sqlite not found. Is the WhatsApp (or WhatsApp Business) desktop app installed and signed in?',
+      detail: 'ChatStorage.sqlite를 찾을 수 없습니다. WhatsApp(또는 WhatsApp Business) 데스크톱 앱이 설치되어 로그인되어 있나요?',
     };
   } else {
     const read = await boundedRead(dbPath, 'status');
@@ -150,17 +150,17 @@ export async function whatsappStatus(): Promise<ConnectorStatus> {
       status = {
         ...base,
         state: 'connected',
-        detail: `${read.chats} chats · ${read.unread} unread · last activity ${minutesAgo}m ago (local desktop DB, read-only)`,
+        detail: `채팅 ${read.chats}개 · 안 읽음 ${read.unread} · 마지막 활동 ${minutesAgo}분 전 (로컬 데스크톱 DB, 읽기 전용)`,
         meta: { chats: read.chats, unread: read.unread, source: dbPath.includes('SMB') ? 'business' : 'consumer' },
       };
     } else if (read.timedOut) {
       status = {
         ...base,
         state: 'error',
-        detail: `ChatStorage.sqlite found but the read timed out. Likely permissions: ${FDA_HINT}.`,
+        detail: `ChatStorage.sqlite는 있지만 읽기 시간이 초과됐습니다. 권한 문제일 가능성이 높습니다: ${FDA_HINT}.`,
       };
     } else {
-      status = { ...base, state: 'error', detail: `ChatStorage.sqlite exists but read failed: ${read.error}` };
+      status = { ...base, state: 'error', detail: `ChatStorage.sqlite는 있지만 읽기 실패: ${read.error}` };
     }
   }
 

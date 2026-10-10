@@ -16,13 +16,13 @@ export async function foreplayStatus(): Promise<ConnectorStatus> {
     return {
       ...base,
       state: 'not_configured',
-      detail: 'Ad intelligence for Adscout (Spyder watchlist, Discovery search, sponsor dossiers). Set FOREPLAY_API_KEY in .env.local.',
+      detail: 'Adscout용 광고 인텔리전스 (Spyder 관심 목록, Discovery 검색, 스폰서 자료). .env.local에 FOREPLAY_API_KEY를 설정하세요.',
     };
   }
   const usage = adStore.readUsage();
   const meta = adStore.readMeta();
-  const credits = usage ? `${usage.remaining_credits.toLocaleString('en-US')}/${usage.total_credits.toLocaleString('en-US')} credits` : 'credits unknown until first sync';
-  const synced = meta.lastSyncAt ? `last sync ${meta.lastSyncAt.slice(0, 16).replace('T', ' ')}` : 'never synced';
+  const credits = usage ? `크레딧 ${usage.remaining_credits.toLocaleString('en-US')}/${usage.total_credits.toLocaleString('en-US')}` : '첫 동기화 전까지 크레딧 알 수 없음';
+  const synced = meta.lastSyncAt ? `마지막 동기화 ${meta.lastSyncAt.slice(0, 16).replace('T', ' ')}` : '동기화한 적 없음';
   return {
     ...base,
     state: 'connected',

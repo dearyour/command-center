@@ -164,7 +164,7 @@ export function ChatHub({
         {id === CONDUCTOR && <Crown className="h-3 w-3 shrink-0 self-center text-os-accent" />}
         <span className="min-w-0 flex-1 truncate text-[12px] font-semibold">{name}</span>
         <span className="shrink-0 font-mono text-[9px] text-os-dim">
-          {id === CONDUCTOR ? 'pinned' : at ? ago(at) : null}
+          {id === CONDUCTOR ? '고정' : at ? ago(at) : null}
         </span>
       </span>
       <span className="truncate font-mono text-[10px] text-os-dim">{sub}</span>

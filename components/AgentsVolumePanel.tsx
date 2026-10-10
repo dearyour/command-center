@@ -56,7 +56,7 @@ export function AgentsVolumePanel({ initial }: { initial: BoardLivePayload }) {
           <div className="flex flex-col gap-5 px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={busiest ? busiest.label : 'none'}
+              display={busiest ? busiest.label : '없음'}
               caption={busiest ? `가장 바쁜 자리 · ${busiest.count}회` : `${WINDOW_DAYS}일간 실행 없음`}
             />
             <DotMatrix cols={v.bySeat} hue="var(--ramp-1)" />

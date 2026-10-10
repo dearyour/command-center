@@ -176,7 +176,7 @@ describe('robinhoodStatus', () => {
     const now = new Date('2026-08-13T15:05:00.000Z');
     const s = robinhoodStatus(SNAP, now);
     expect(s.state).toBe('connected');
-    expect(s.detail).toMatch(/ago/);
+    expect(s.detail).toMatch(/분 전|시간 전|일 전|방금/);
     expect(s.meta?.accountValueUsd).toBe(SNAP.accountValueUsd);
   });
 
@@ -185,7 +185,7 @@ describe('robinhoodStatus', () => {
     const s = robinhoodStatus([SNAP, AGENTIC], now);
     expect(s.state).toBe('connected');
     expect(s.meta?.accountValueUsd).toBe(10850.42);
-    expect(s.detail).toMatch(/2 accounts/);
+    expect(s.detail).toMatch(/계좌 2개/);
   });
 
   test('not_configured for an empty account list', () => {

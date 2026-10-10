@@ -48,20 +48,20 @@ export async function gatherOperatingMetrics(
   const inputs: MetricInput[] = [
     {
       id: 'audience',
-      label: 'Audience',
+      label: '오디언스',
       unit: 'followers',
-      source: '7d · Zernio',
+      source: '7일 · Zernio',
       value: totalFollowers || null,
       delta: audience7d != null ? Math.round(audience7d * 10) / 10 : 0,
       deltaPct: audience7d != null,
     },
-    { id: 'subscribers', label: 'Subscribers', unit: 'subs', source: 'Beehiiv', value: subs },
-    { id: 'pipeline', label: 'Open Pipeline', unit: 'deals', source: 'Attio', value: pipelineDeals },
-    { id: 'stripe', label: 'Stripe Available', unit: 'usd', source: 'Stripe', value: stripeAvail },
-    { id: 'agent-runs', label: 'Agent Runs', unit: 'runs', source: 'all time', value: runs.length || null, delta: runs7d },
-    { id: 'unread', label: 'Unread · all inboxes', unit: 'emails', source: 'Email', value: emailUnread },
-    { id: 'brain', label: 'Brain-store Pages', unit: 'pages', source: 'GBrain', value: brainPages },
-    { id: 'dictations', label: 'Dictations', unit: 'dictations', source: 'Wispr Flow', value: dictations },
+    { id: 'subscribers', label: '구독자', unit: '명', source: 'Beehiiv', value: subs },
+    { id: 'pipeline', label: '진행 중 파이프라인', unit: '건', source: 'Attio', value: pipelineDeals },
+    { id: 'stripe', label: 'Stripe 사용 가능 잔액', unit: 'usd', source: 'Stripe', value: stripeAvail },
+    { id: 'agent-runs', label: '에이전트 실행', unit: '회', source: '전체 기간', value: runs.length || null, delta: runs7d },
+    { id: 'unread', label: '안 읽음 · 모든 받은편지함', unit: '통', source: '이메일', value: emailUnread },
+    { id: 'brain', label: '브레인 저장소 페이지', unit: '페이지', source: 'GBrain', value: brainPages },
+    { id: 'dictations', label: '받아쓰기', unit: '회', source: 'Wispr Flow', value: dictations },
   ];
   return { inputs, subs };
 }

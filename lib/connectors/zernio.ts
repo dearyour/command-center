@@ -193,13 +193,13 @@ const GATED_RECENT_POSTS: ZernioPost[] = [
   { platform: 'instagram', caption: 'The AI agency stack that runs my whole business (full breakdown) 🧵', url: 'https://instagram.com', publishedAt: gatedIso(0), status: 'published' },
   { platform: 'tiktok', caption: 'POV: your inbox, calendar and CRM run themselves', url: 'https://tiktok.com', publishedAt: gatedIso(1), status: 'published' },
   { platform: 'youtube', caption: 'I automated a 7-figure agency with AI agents — here is how', url: 'https://youtube.com', publishedAt: gatedIso(2), status: 'published' },
-  { platform: 'twitter', caption: '5 agents that replaced 5 hires. Thread 👇', url: 'https://x.com', publishedAt: gatedIso(3), status: 'published' },
-  { platform: 'instagram', caption: 'Vantage case study: 3x pipeline in 60 days', url: 'https://instagram.com', publishedAt: gatedIso(4), status: 'published' },
-  { platform: 'linkedin', caption: 'Why every operator needs a knowledge graph, not another SaaS', url: 'https://linkedin.com', publishedAt: gatedIso(5), status: 'published' },
-  { platform: 'tiktok', caption: 'Building an AI receptionist live (it books the call)', url: 'https://tiktok.com', publishedAt: gatedIso(6), status: 'published' },
-  { platform: 'instagram', caption: 'The 4-inbox triage agent that saves me 10 hrs/week', url: 'https://instagram.com', publishedAt: gatedIso(8), status: 'published' },
-  { platform: 'youtube', caption: 'Full G-Brain walkthrough, my second brain', url: 'https://youtube.com', publishedAt: gatedIso(9), status: 'published' },
-  { platform: 'twitter', caption: 'Ship agents, not dashboards.', url: 'https://x.com', publishedAt: gatedIso(11), status: 'published' },
+  { platform: 'twitter', caption: '직원 5명을 대체한 에이전트 5개. 스레드 👇', url: 'https://x.com', publishedAt: gatedIso(3), status: 'published' },
+  { platform: 'instagram', caption: 'Vantage 사례 연구: 60일 만에 파이프라인 3배', url: 'https://instagram.com', publishedAt: gatedIso(4), status: 'published' },
+  { platform: 'linkedin', caption: '운영자에게 필요한 건 또 다른 SaaS가 아니라 지식 그래프인 이유', url: 'https://linkedin.com', publishedAt: gatedIso(5), status: 'published' },
+  { platform: 'tiktok', caption: 'AI 접수원을 라이브로 만들기 (통화 예약까지 함)', url: 'https://tiktok.com', publishedAt: gatedIso(6), status: 'published' },
+  { platform: 'instagram', caption: '매주 10시간을 아껴 주는 받은편지함 4개 분류 에이전트', url: 'https://instagram.com', publishedAt: gatedIso(8), status: 'published' },
+  { platform: 'youtube', caption: '내 세컨드 브레인, G-Brain 전체 둘러보기', url: 'https://youtube.com', publishedAt: gatedIso(9), status: 'published' },
+  { platform: 'twitter', caption: '대시보드 말고 에이전트를 출시하라.', url: 'https://x.com', publishedAt: gatedIso(11), status: 'published' },
 ];
 function gatedPostDays(): ZernioPostDay[] {
   const plat = ['instagram', 'tiktok', 'twitter', 'youtube', 'linkedin'];
@@ -273,10 +273,10 @@ export async function zernioStatus(): Promise<ConnectorStatus> {
   if (!key) {
     return {
       id: 'zernio',
-      name: 'Zernio (Social)',
+      name: 'Zernio (소셜)',
       kind: 'social',
       state: 'not_configured',
-      detail: 'ZERNIO_API_KEY not found in the environment or the credential file.',
+      detail: '환경 변수나 인증 파일에서 ZERNIO_API_KEY를 찾을 수 없습니다.',
     };
   }
   try {
@@ -292,19 +292,19 @@ export async function zernioStatus(): Promise<ConnectorStatus> {
     );
     return {
       id: 'zernio',
-      name: 'Zernio (Social)',
+      name: 'Zernio (소셜)',
       kind: 'social',
       state: 'connected',
-      detail: `${platforms} platforms${handle ? ` (${handle})` : ''} · ${followers.toLocaleString('en-US')} total followers`,
+      detail: `플랫폼 ${platforms}개${handle ? ` (${handle})` : ''} · 전체 팔로워 ${followers.toLocaleString('en-US')}명`,
       meta: { platforms, followers },
     };
   } catch (err) {
     return {
       id: 'zernio',
-      name: 'Zernio (Social)',
+      name: 'Zernio (소셜)',
       kind: 'social',
       state: 'error',
-      detail: `Key found but API check failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `키는 있지만 API 확인 실패: ${err instanceof Error ? err.message : String(err)}`,
       meta: { platforms: accounts.length },
     };
   }

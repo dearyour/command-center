@@ -93,7 +93,7 @@ export function RoadmapBoard({
               >
                 <div className="mb-[7px] flex items-baseline justify-between gap-2">
                   <span className="font-mono text-[10px] tracking-[0.18em] text-os-accent">
-                    PHASE {String(phase.number).padStart(2, '0')}
+                    {String(phase.number).padStart(2, '0')}단계
                   </span>
                   <span className={`font-mono text-[9.5px] ${pct === 100 ? 'text-os-ok' : 'text-os-dim'}`}>
                     {pct}% · {doneN}/{rows.length}

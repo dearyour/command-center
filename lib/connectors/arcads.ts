@@ -8,10 +8,10 @@ export async function arcadsStatus(): Promise<ConnectorStatus> {
   if (!auth) {
     return {
       id: 'arcads',
-      name: 'Arcads (UGC Ads)',
+      name: 'Arcads (UGC 광고)',
       kind: 'creative',
       state: 'not_configured',
-      detail: 'ARCADS_BASIC_AUTH not found in env or ~/projects/arcads-skills/.env.',
+      detail: '환경 변수나 ~/projects/arcads-skills/.env 에서 ARCADS_BASIC_AUTH를 찾을 수 없습니다.',
     };
   }
   try {
@@ -25,19 +25,19 @@ export async function arcadsStatus(): Promise<ConnectorStatus> {
     const products = Array.isArray(body) ? body.length : (body.results?.length ?? 0);
     return {
       id: 'arcads',
-      name: 'Arcads (UGC Ads)',
+      name: 'Arcads (UGC 광고)',
       kind: 'creative',
       state: 'connected',
-      detail: `Vantage workspace reachable · ${products} product${products === 1 ? '' : 's'}`,
+      detail: `Vantage 워크스페이스 연결됨 · 제품 ${products}개`,
       meta: { products },
     };
   } catch (err) {
     return {
       id: 'arcads',
-      name: 'Arcads (UGC Ads)',
+      name: 'Arcads (UGC 광고)',
       kind: 'creative',
       state: 'error',
-      detail: `Creds found but API check failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `인증 정보는 있지만 API 확인 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

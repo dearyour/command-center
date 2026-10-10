@@ -172,7 +172,7 @@ function InboxReader({
           <span className="text-[13px] font-semibold">{lane.name}</span>
           <span className="font-mono text-[10px] text-os-dim">{lane.detail}</span>
           <span className="ml-auto flex items-center gap-2.5">
-            {lane.unread > 0 ? <Badge tone="accent">{lane.unread} unread</Badge> : null}
+            {lane.unread > 0 ? <Badge tone="accent">안 읽음 {lane.unread}</Badge> : null}
             <button onClick={onClose} aria-label="닫기" className="pressable text-os-dim hover:text-os-text">
               <X className="h-4 w-4" />
             </button>

@@ -192,17 +192,17 @@ export function chat(req: LlmChatRequest): Promise<LlmChatResult> {
 
 export async function llmStatus(): Promise<ConnectorStatus> {
   if (GATED) return gatedConnected('llm', 'LLM Gateway', 'orchestration', 'Claude Sonnet · via AI Gateway');
-  const base = { id: 'llm', name: 'LLM (Gateway)', kind: 'orchestration' } as const;
+  const base = { id: 'llm', name: 'LLM (게이트웨이)', kind: 'orchestration' } as const;
   if (process.env.LLM_PROVIDER === 'stub') {
-    return { ...base, state: 'connected', detail: 'stub provider active (tests)' };
+    return { ...base, state: 'connected', detail: '스텁 제공자 사용 중 (테스트)' };
   }
   const key = resolveGatewayKey();
   if (!key) {
     return {
       ...base,
       state: 'not_configured',
-      detail: 'Set AI_GATEWAY_API_KEY in .env.local to enable agent chat via the Vercel AI Gateway.',
+      detail: 'Vercel AI Gateway로 에이전트 채팅을 쓰려면 .env.local에 AI_GATEWAY_API_KEY를 설정하세요.',
     };
   }
-  return { ...base, state: 'connected', detail: `Vercel AI Gateway · default model ${defaultModel()}` };
+  return { ...base, state: 'connected', detail: `Vercel AI Gateway · 기본 모델 ${defaultModel()}` };
 }

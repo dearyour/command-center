@@ -157,7 +157,7 @@ export async function fetchBrandDeals(
     return {
       deals: SEEDED_DEALS,
       mode: 'seeded',
-      detail: 'Showing examples. Plant NOTION_API_KEY (internal integration secret, shared with Brand Deals Hub) to go live.',
+      detail: '예시를 보여 주는 중입니다. 실제 연동하려면 NOTION_API_KEY(Brand Deals Hub와 공유한 내부 통합 시크릿)를 설정하세요.',
       syncedAt: null,
     };
   }
@@ -166,13 +166,13 @@ export async function fetchBrandDeals(
     return {
       deals: SEEDED_DEALS,
       mode: 'seeded',
-      detail: 'Showing examples. Plant NOTION_BRAND_DEALS_SOURCE (the Brand Deals Hub data-source id) to go live.',
+      detail: '예시를 보여 주는 중입니다. 실제 연동하려면 NOTION_BRAND_DEALS_SOURCE(Brand Deals Hub 데이터 소스 id)를 설정하세요.',
       syncedAt: null,
     };
   }
   const now = Date.now();
   if (cache && now - cache.at < BRAND_DEALS_CACHE_TTL_MS) {
-    return { deals: cache.deals, mode: 'live', detail: `Brand Deals Hub · ${cache.deals.length} deals`, syncedAt: cache.at };
+    return { deals: cache.deals, mode: 'live', detail: `Brand Deals Hub · 거래 ${cache.deals.length}건`, syncedAt: cache.at };
   }
   try {
     const notion = new Client({ auth: key });
@@ -193,16 +193,16 @@ export async function fetchBrandDeals(
     // Successes only: a transient failure must retry, not pin an empty board.
     const at = Date.now();
     if (deals.length > 0) cache = { at, deals };
-    return { deals, mode: 'live', detail: `Brand Deals Hub · ${deals.length} deals`, syncedAt: at };
+    return { deals, mode: 'live', detail: `Brand Deals Hub · 거래 ${deals.length}건`, syncedAt: at };
   } catch (err) {
     if (cache) {
       // A stale board beats an empty one, said honestly.
-      return { deals: cache.deals, mode: 'live', detail: 'Notion unreachable · showing the last good read', syncedAt: cache.at };
+      return { deals: cache.deals, mode: 'live', detail: 'Notion 연결 불가 · 마지막으로 성공한 데이터를 보여 주는 중', syncedAt: cache.at };
     }
     return {
       deals: [],
       mode: 'error',
-      detail: `Key set but the fetch failed: ${err instanceof Error ? err.message : String(err)}. Is the integration shared with Brand Deals Hub?`,
+      detail: `키는 설정됐지만 가져오기 실패: ${err instanceof Error ? err.message : String(err)}. 통합이 Brand Deals Hub와 공유되어 있나요?`,
       syncedAt: null,
     };
   }

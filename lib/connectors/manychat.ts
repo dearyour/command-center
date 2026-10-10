@@ -62,7 +62,7 @@ export async function sendManyChatText(
   doFetch: typeof fetch = fetch,
 ): Promise<ManyChatSendResult> {
   const key = env.MANYCHAT_API_KEY;
-  if (!key) return { ok: false, detail: 'MANYCHAT_API_KEY not set — connect ManyChat to send DMs.' };
+  if (!key) return { ok: false, detail: 'MANYCHAT_API_KEY가 설정되지 않았습니다 — DM을 보내려면 ManyChat을 연결하세요.' };
   try {
     const res = await doFetch(`${MANYCHAT_API}/fb/sending/sendContent`, {
       method: 'POST',
@@ -77,15 +77,15 @@ export async function sendManyChatText(
       signal: AbortSignal.timeout(MANYCHAT_TIMEOUT_MS),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return { ok: true, detail: 'sent' };
+    return { ok: true, detail: '보냄' };
   } catch (err) {
-    return { ok: false, detail: `ManyChat send failed: ${err instanceof Error ? err.message : String(err)}` };
+    return { ok: false, detail: `ManyChat 전송 실패: ${err instanceof Error ? err.message : String(err)}` };
   }
 }
 
 let cache: { at: number; key: string; state: ConnectorStatus['state']; detail: string } | null = null;
 
-const base = { id: 'manychat', name: 'ManyChat (IG DMs)', kind: 'social' as const };
+const base = { id: 'manychat', name: 'ManyChat (IG DM)', kind: 'social' as const };
 
 export async function manychatStatus(
   env: Record<string, string | undefined> = process.env,
@@ -97,7 +97,7 @@ export async function manychatStatus(
     return {
       ...base,
       state: 'not_configured',
-      detail: 'Set MANYCHAT_API_KEY in .env.local (ManyChat → Settings → API).',
+      detail: '.env.local에 MANYCHAT_API_KEY를 설정하세요 (ManyChat → Settings → API).',
     };
   }
   const now = Date.now();
@@ -132,7 +132,7 @@ export async function manychatStatus(
     cache = { at: now, key, state: 'connected', detail };
     return { ...base, state: 'connected', detail, meta: { handle } };
   } catch (err) {
-    const detail = `Key set but API check failed: ${err instanceof Error ? err.message : String(err)}`;
+    const detail = `키는 설정됐지만 API 확인 실패: ${err instanceof Error ? err.message : String(err)}`;
     cache = { at: now, key, state: 'error', detail };
     return { ...base, state: 'error', detail };
   }

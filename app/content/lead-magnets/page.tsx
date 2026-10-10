@@ -75,7 +75,7 @@ export default function LeadMagnetsPage(props: { searchParams?: Record<string, s
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={topCapture.count > 0 ? topCapture.label : 'none'}
+              display={topCapture.count > 0 ? topCapture.label : '없음'}
               caption={topCapture.count > 0 ? `가장 많음 · ${v.total}개 중 ${topCapture.count}개` : '아직 페이지 없음'}
             />
             <DotMatrix cols={v.captures} hue="var(--ramp-1)" />
@@ -87,7 +87,7 @@ export default function LeadMagnetsPage(props: { searchParams?: Record<string, s
           <div className="flex flex-col gap-5 px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={topDest ? topDest.label : 'none'}
+              display={topDest ? topDest.label : '없음'}
               caption={topDest ? `1위 도착지 · 페이지 ${topDest.count}개` : '아직 도착지 없음'}
             />
             {v.destinations.length > 0 && <DotMatrix cols={v.destinations} hue="var(--ramp-3)" />}

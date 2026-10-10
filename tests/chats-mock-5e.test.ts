@@ -34,7 +34,7 @@ describe('/chats mock-5e: rail rows', () => {
   });
 
   test('the Conductor row is pinned, not timestamped', () => {
-    expect(hub).toContain("'pinned'");
+    expect(hub).toContain("'고정'");
   });
 });
 

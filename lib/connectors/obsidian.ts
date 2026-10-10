@@ -72,10 +72,10 @@ export async function obsidianStatus(): Promise<ConnectorStatus> {
   if (!fs.existsSync(VAULT)) {
     return {
       id: 'obsidian',
-      name: 'Obsidian Vault',
+      name: 'Obsidian 보관소',
       kind: 'knowledge',
       state: 'not_configured',
-      detail: `Vault not found at ${VAULT} — set OBSIDIAN_VAULT to override.`,
+      detail: `${VAULT}에서 보관소를 찾을 수 없습니다 — OBSIDIAN_VAULT로 경로를 지정하세요.`,
     };
   }
   try {
@@ -85,20 +85,20 @@ export async function obsidianStatus(): Promise<ConnectorStatus> {
   } catch {
     return {
       id: 'obsidian',
-      name: 'Obsidian Vault',
+      name: 'Obsidian 보관소',
       kind: 'knowledge',
       state: 'error',
       detail:
-        'Vault exists but macOS denied access — grant the terminal "Files and Folders → Documents" in System Settings → Privacy.',
+        '보관소는 있지만 macOS가 접근을 거부했습니다 — 시스템 설정 → 개인정보 보호에서 터미널에 "파일 및 폴더 → 문서" 권한을 주세요.',
     };
   }
   const notes = countMarkdown(VAULT);
   return {
     id: 'obsidian',
-    name: 'Obsidian Vault',
+    name: 'Obsidian 보관소',
     kind: 'knowledge',
     state: 'connected',
-    detail: `${notes.toLocaleString('en-US')} markdown notes at ${VAULT.replace(os.homedir(), '~')}`,
+    detail: `${VAULT.replace(os.homedir(), '~')}의 마크다운 메모 ${notes.toLocaleString('en-US')}개`,
     meta: { notes },
   };
 }

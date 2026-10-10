@@ -175,7 +175,7 @@ export default async function AnalyticsPage() {
               <div className="mt-1 whitespace-nowrap text-[13px] text-os-dim">요일별 실행</div>
               {vol.rhythmTotal > 0 && (
                 <div className="mt-4 w-fit whitespace-nowrap rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted">
-                  Busiest: <span className="font-semibold tabular-nums">{busiest.label}</span>
+                  가장 많음: <span className="font-semibold tabular-nums">{busiest.label}</span>
                 </div>
               )}
             </div>

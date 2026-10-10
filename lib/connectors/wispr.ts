@@ -65,7 +65,7 @@ export async function wisprStatus(): Promise<ConnectorStatus> {
       name: 'Wispr Flow',
       kind: 'local',
       state: 'not_configured',
-      detail: 'flow.sqlite not found — is Wispr Flow installed?',
+      detail: 'flow.sqlite를 찾을 수 없습니다 — Wispr Flow가 설치되어 있나요?',
     };
   }
   try {
@@ -101,7 +101,7 @@ export async function wisprStatus(): Promise<ConnectorStatus> {
       name: 'Wispr Flow',
       kind: 'local',
       state: 'error',
-      detail: `flow.sqlite exists but read failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `flow.sqlite는 있지만 읽기 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

@@ -24,7 +24,7 @@ export async function ghlStatus(): Promise<ConnectorStatus> {
   return {
     ...base,
     state: 'connected',
-    detail: 'Private Integration token present · LC opportunities feed the funnel live.',
+    detail: 'Private Integration 토큰 있음 · LC 영업 기회가 퍼널에 실시간으로 들어갑니다.',
     meta: { keyed: 'yes' },
   };
 }

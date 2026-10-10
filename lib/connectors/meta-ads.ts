@@ -25,7 +25,7 @@ export async function metaAdsStatus(): Promise<ConnectorStatus> {
   return {
     ...base,
     state: 'connected',
-    detail: 'META_ADS_ACCESS_TOKEN present · ad-touch attribution ready (live pull lands with the Meta Ads MCP wiring).',
+    detail: 'META_ADS_ACCESS_TOKEN 있음 · 광고 접점 추적 준비됨 (실시간 수집은 Meta Ads MCP 연결과 함께 제공).',
     meta: { keyed: 'yes' },
   };
 }

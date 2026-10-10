@@ -96,12 +96,12 @@ export async function trakyoStatus(fetchImpl: typeof fetch = fetch): Promise<Con
   try {
     const m = await trakyoMetrics(fetchImpl);
     if (!m) throw new Error('metrics response carried no totals');
-    const money = m.revenueUsd > 0 ? ` · $${m.revenueUsd.toLocaleString('en-US')} revenue` : '';
+    const money = m.revenueUsd > 0 ? ` · 매출 $${m.revenueUsd.toLocaleString('en-US')}` : '';
     const window = m.rangeStart && m.rangeEnd ? ` (${m.rangeStart} → ${m.rangeEnd})` : '';
     return {
       ...base,
       state: 'connected',
-      detail: `${m.clicks} clicks · ${m.visits} visits · ${m.formSubmissions} form submissions${money}${window}`,
+      detail: `클릭 ${m.clicks} · 방문 ${m.visits} · 폼 제출 ${m.formSubmissions}${money}${window}`,
       meta: {
         clicks: m.clicks,
         visits: m.visits,
@@ -114,7 +114,7 @@ export async function trakyoStatus(fetchImpl: typeof fetch = fetch): Promise<Con
     return {
       ...base,
       state: 'error',
-      detail: `TRAKYO_API_KEY set but the Trakyo API call failed: ${
+      detail: `TRAKYO_API_KEY는 설정됐지만 Trakyo API 호출 실패: ${
         err instanceof Error ? err.message : String(err)
       }`,
     };

@@ -88,7 +88,7 @@ export default async function ConnectionsPage() {
           <div className="flex flex-col gap-5 px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={v.topCategory ? v.topCategory.name : 'none'}
+              display={v.topCategory ? categoryKo(v.topCategory.name) : '없음'}
               caption={v.topCategory ? `가장 많이 연결 · ${v.topCategory.count}개` : '연결된 도구가 있는 카테고리가 없습니다'}
             />
             <DotMatrix cols={v.byCategory} hue="var(--ramp-1)" />

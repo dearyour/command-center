@@ -75,7 +75,7 @@ describe('attioStatus retries a timeout once before declaring the CRM down', () 
     expect(status.state).toBe('error');
     expect(status.detail).toMatch(/timeout/i);
     // the wording that told us the key was fine has to survive
-    expect(status.detail).toContain('Key found');
+    expect(status.detail).toContain('키는 있지만');
   });
 
   test('an HTTP error is NOT retried: a scope problem will not fix itself', async () => {

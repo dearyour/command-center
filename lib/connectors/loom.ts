@@ -82,7 +82,7 @@ export async function loomStatus(fetchFn: Fetch = fetch): Promise<ConnectorStatu
     return {
       ...base,
       state: 'error',
-      detail: `Loom oEmbed unreachable: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `Loom oEmbed 연결 불가: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

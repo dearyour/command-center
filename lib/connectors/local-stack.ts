@@ -61,24 +61,24 @@ export async function localStackStatus(): Promise<ConnectorStatus> {
     {
       name: 'gbrain',
       up: Boolean(binExists(gbrainBin(), `${BREW}/gbrain`)),
-      detail: 'knowledge CLI behind /brain',
+      detail: '/brain 뒤의 지식 CLI',
     },
     {
       name: 'ffmpeg',
       up: Boolean(binExists(`${BREW}/ffmpeg`, '/usr/local/bin/ffmpeg')),
-      detail: 'content-gen media processing',
+      detail: '콘텐츠 생성용 미디어 처리',
     },
     {
       name: 'pdftotext',
       up: Boolean(binExists(`${BREW}/pdftotext`, '/usr/local/bin/pdftotext')),
-      detail: 'statement ingestion (/finances)',
+      detail: '명세서 수집 (/finances)',
     },
     {
       name: 'whisper',
       up: Boolean(binExists(`${BREW}/whisper-cli`, '/usr/local/bin/whisper-cli')),
-      detail: 'local transcription',
+      detail: '로컬 음성 전사',
     },
-    { name: 'gh', up: Boolean(binExists(`${BREW}/gh`, '/usr/local/bin/gh')), detail: 'GitHub CLI · deploys' },
+    { name: 'gh', up: Boolean(binExists(`${BREW}/gh`, '/usr/local/bin/gh')), detail: 'GitHub CLI · 배포' },
   ];
 
   const up = checks.filter((c) => c.up);
@@ -88,11 +88,11 @@ export async function localStackStatus(): Promise<ConnectorStatus> {
 
   return {
     id: 'local-stack',
-    name: 'Local Stack',
+    name: '로컬 스택',
     kind: 'local',
     state: up.length > 0 ? 'connected' : 'error',
-    detail: `${up.length}/${checks.length} up — ${up.map((c) => c.name).join(', ')}${
-      downNames.length ? ` · down: ${downNames.join(', ')}` : ''
+    detail: `${up.length}/${checks.length} 가동 — ${up.map((c) => c.name).join(', ')}${
+      downNames.length ? ` · 다운: ${downNames.join(', ')}` : ''
     }`,
     meta,
   };

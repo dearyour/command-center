@@ -474,10 +474,10 @@ export async function paymentsStatus(env: Record<string, string | undefined> = p
   if (configured.length === 0) {
     return {
       id: 'payments',
-      name: 'Payment Processors',
+      name: '결제 수단',
       kind: 'payments',
       state: 'not_configured',
-      detail: `None of ${processors.length} processors configured. Start with STRIPE_SECRET_KEY in .env.local.`,
+      detail: `결제 수단 ${processors.length}개 중 설정된 것이 없습니다. .env.local의 STRIPE_SECRET_KEY부터 시작하세요.`,
       meta: { configured: 0, known: processors.length },
     };
   }
@@ -488,10 +488,10 @@ export async function paymentsStatus(env: Record<string, string | undefined> = p
       const available = snapshot.available[0];
       return {
         id: 'payments',
-        name: 'Payment Processors',
+        name: '결제 수단',
         kind: 'payments',
         state: 'connected',
-        detail: `${configured.map((p) => p.name).join(', ')} · Stripe available balance ${(
+        detail: `${configured.map((p) => p.name).join(', ')} · Stripe 사용 가능 잔액 ${(
           (available?.amount ?? 0) / 100
         ).toFixed(2)} ${(available?.currency ?? 'usd').toUpperCase()}`,
         meta: { configured: configured.length },
@@ -499,20 +499,20 @@ export async function paymentsStatus(env: Record<string, string | undefined> = p
     } catch (err) {
       return {
         id: 'payments',
-        name: 'Payment Processors',
+        name: '결제 수단',
         kind: 'payments',
         state: 'error',
-        detail: `Stripe key set but verification failed: ${err instanceof Error ? err.message : String(err)}`,
+        detail: `Stripe 키는 설정됐지만 확인 실패: ${err instanceof Error ? err.message : String(err)}`,
         meta: { configured: configured.length },
       };
     }
   }
   return {
     id: 'payments',
-    name: 'Payment Processors',
+    name: '결제 수단',
     kind: 'payments',
     state: 'connected',
-    detail: `${configured.map((p) => p.name).join(', ')} configured`,
+    detail: `${configured.map((p) => p.name).join(', ')} 설정됨`,
     meta: { configured: configured.length },
   };
 }

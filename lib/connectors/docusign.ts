@@ -170,14 +170,14 @@ export async function docusignStatus(fetchFn: Fetch = fetch): Promise<ConnectorS
     return {
       ...base,
       state: 'connected',
-      detail: `DocuSign reachable · ${envelopes.length} envelope${envelopes.length === 1 ? '' : 's'} in the last 90 days`,
+      detail: `DocuSign 연결됨 · 최근 90일간 봉투 ${envelopes.length}개`,
       meta: { envelopes: envelopes.length },
     };
   } catch (err) {
     return {
       ...base,
       state: 'error',
-      detail: `DocuSign creds are set but the call failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `DocuSign 인증 정보는 설정됐지만 호출 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

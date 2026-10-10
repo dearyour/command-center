@@ -475,10 +475,10 @@ export async function emailStatus(env: Record<string, string | undefined> = proc
   if (inboxes.length === 0) {
     return {
       id: 'email',
-      name: 'Email Inboxes',
+      name: '이메일 받은편지함',
       kind: 'email',
       state: 'not_configured',
-      detail: 'No inboxes configured. Set INBOX_1_HOST / _USER / _PASS (up to 4 slots) in .env.local.',
+      detail: '설정된 받은편지함이 없습니다. .env.local에 INBOX_1_HOST / _USER / _PASS (최대 4개)를 설정하세요.',
       meta: { configured: 0, slots: MAX_INBOXES },
     };
   }
@@ -488,20 +488,20 @@ export async function emailStatus(env: Record<string, string | undefined> = proc
   if (errors.length === counts.length) {
     return {
       id: 'email',
-      name: 'Email Inboxes',
+      name: '이메일 받은편지함',
       kind: 'email',
       state: 'error',
-      detail: `All ${counts.length} inbox connections failed: ${errors[0].error}`,
+      detail: `받은편지함 연결 ${counts.length}개가 모두 실패했습니다: ${errors[0].error}`,
       meta: { configured: inboxes.length },
     };
   }
   return {
     id: 'email',
-    name: 'Email Inboxes',
+    name: '이메일 받은편지함',
     kind: 'email',
     state: 'connected',
-    detail: `${inboxes.length} inbox${inboxes.length > 1 ? 'es' : ''} · ${totalUnread} unread${
-      errors.length ? ` · ${errors.length} failing` : ''
+    detail: `받은편지함 ${inboxes.length}개 · 안 읽음 ${totalUnread}${
+      errors.length ? ` · 실패 ${errors.length}` : ''
     }`,
     meta: { configured: inboxes.length, unread: totalUnread },
   };

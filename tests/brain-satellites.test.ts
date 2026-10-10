@@ -55,7 +55,7 @@ describe('the satellite layer', () => {
     expect(src).toMatch(/<form[^>]*className=\{`[^`]*left-3 top-3/); // the ask bar sits top-left of the canvas
     expect(src).toMatch(/right-\[124px\] top-3/); // identity sits beside the graph's Fullscreen tab
     expect(src).toContain('MutationObserver'); // quiet mode reads the graph's own DOM, never its code
-    expect(src).toContain('Back to the home view');
+    expect(src).toContain('홈 보기로 돌아가기');
     expect(src).toContain('.kg-panel');
     expect(src).toMatch(/opacity: quiet \? 0 : 1/);
     expect(src).toContain('transition: \'opacity var(--dur-panel) var(--ease)\'');

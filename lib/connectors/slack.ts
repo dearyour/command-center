@@ -17,7 +17,7 @@ export async function slackStatus(env: Record<string, string | undefined> = proc
       name: 'Slack',
       kind: 'slack',
       state: 'not_configured',
-      detail: 'Set SLACK_BOT_TOKEN (xoxb-…) in .env.local. Needs channels:read, channels:history, users:read scopes.',
+      detail: '.env.local에 SLACK_BOT_TOKEN(xoxb-…)을 설정하세요. channels:read, channels:history, users:read 권한이 필요합니다.',
     };
   }
   try {
@@ -27,7 +27,7 @@ export async function slackStatus(env: Record<string, string | undefined> = proc
       name: 'Slack',
       kind: 'slack',
       state: 'connected',
-      detail: `Connected to ${auth.team} as ${auth.user}`,
+      detail: `${auth.team}에 ${auth.user}(으)로 연결됨`,
       meta: { team: String(auth.team ?? ''), user: String(auth.user ?? '') },
     };
   } catch (err) {
@@ -36,7 +36,7 @@ export async function slackStatus(env: Record<string, string | undefined> = proc
       name: 'Slack',
       kind: 'slack',
       state: 'error',
-      detail: `Token set but auth failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `토큰은 설정됐지만 인증 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }
@@ -50,13 +50,13 @@ export async function sendSlackMessage(
   env: Record<string, string | undefined> = process.env,
 ): Promise<SlackSendResult> {
   const slack = client(env);
-  if (!slack) return { ok: false, detail: 'SLACK_BOT_TOKEN not set — add it under Connections → API keys' };
+  if (!slack) return { ok: false, detail: 'SLACK_BOT_TOKEN이 설정되지 않았습니다 — 연결 → API 키에서 추가하세요' };
   try {
     const list = await slack.conversations.list({ types: 'public_channel,private_channel', limit: 200 });
     const channel = list.channels?.find((c) => c.name === channelName.replace(/^#/, ''));
-    if (!channel?.id) return { ok: false, detail: `channel #${channelName} not found or bot not invited` };
+    if (!channel?.id) return { ok: false, detail: `#${channelName} 채널을 찾을 수 없거나 봇이 초대되지 않았습니다` };
     await slack.chat.postMessage({ channel: channel.id, text });
-    return { ok: true, detail: `sent to #${channelName}` };
+    return { ok: true, detail: `#${channelName}에 보냄` };
   } catch (err) {
     return { ok: false, detail: err instanceof Error ? err.message : String(err) };
   }

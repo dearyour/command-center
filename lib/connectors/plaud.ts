@@ -259,7 +259,7 @@ export async function plaudStatus(fetchFn: Fetch = fetch): Promise<ConnectorStat
     return {
       ...base,
       state: 'not_configured',
-      detail: `Set ${REFRESH_TOKEN_KEY} in .env.local (the refresh_token from the Plaud MCP's local token file after \`claude mcp\` signs in to Plaud) to pull recordings, transcripts and AI notes.`,
+      detail: `녹음, 전사, AI 메모를 가져오려면 .env.local에 ${REFRESH_TOKEN_KEY}를 설정하세요 (\`claude mcp\`로 Plaud에 로그인한 뒤 Plaud MCP 로컬 토큰 파일의 refresh_token).`,
     };
   }
   try {
@@ -267,14 +267,14 @@ export async function plaudStatus(fetchFn: Fetch = fetch): Promise<ConnectorStat
     return {
       ...base,
       state: 'connected',
-      detail: `Plaud reachable · ${recordings.length} recording${recordings.length === 1 ? '' : 's'} visible to this account`,
+      detail: `Plaud 연결됨 · 이 계정으로 볼 수 있는 녹음 ${recordings.length}개`,
       meta: { recordings: recordings.length },
     };
   } catch (err) {
     return {
       ...base,
       state: 'error',
-      detail: `Plaud credential is set but the call failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `Plaud 인증 정보는 설정됐지만 호출 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

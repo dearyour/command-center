@@ -42,7 +42,7 @@ describe('phantomStatus', () => {
     delete process.env.PHANTOM_WALLET_ADDRESS;
     const s = phantomStatus(null);
     expect(s.state).toBe('not_configured');
-    expect(s.detail).toMatch(/not a key/i);
+    expect(s.detail).toMatch(/키가 아니라 공개 주소/);
   });
 
   test('error — not connected — when the address is set but the RPC gave nothing', () => {
@@ -63,6 +63,6 @@ describe('phantomStatus', () => {
     process.env.PHANTOM_WALLET_ADDRESS = ADDRESS;
     const s = phantomStatus({ ...balance, usdPerSol: null, usdValue: null });
     expect(s.state).toBe('connected');
-    expect(s.detail).toMatch(/price unavailable/i);
+    expect(s.detail).toMatch(/가격 정보 없음/);
   });
 });

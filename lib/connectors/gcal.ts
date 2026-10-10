@@ -249,10 +249,10 @@ export async function calendarStatus(env: Record<string, string | undefined> = p
   if (accounts.length === 0) {
     return {
       id: 'calendar',
-      name: 'Calendar',
+      name: '캘린더',
       kind: 'calendar',
       state: 'not_configured',
-      detail: 'No Google inboxes configured — calendars reuse the INBOX_* Gmail app passwords.',
+      detail: '설정된 Google 받은편지함이 없습니다 — 캘린더는 INBOX_* Gmail 앱 비밀번호를 재사용합니다.',
       meta: { calendars: 0 },
     };
   }
@@ -260,19 +260,19 @@ export async function calendarStatus(env: Record<string, string | undefined> = p
     const events = await upcomingEvents(env, { days: 14 });
     return {
       id: 'calendar',
-      name: 'Calendar',
+      name: '캘린더',
       kind: 'calendar',
       state: 'connected',
-      detail: `${events.length} upcoming · ${accounts.length} calendar${accounts.length > 1 ? 's' : ''} (next 14 days, CalDAV)`,
+      detail: `예정된 일정 ${events.length}개 · 캘린더 ${accounts.length}개 (앞으로 14일, CalDAV)`,
       meta: { calendars: accounts.length, upcoming: events.length },
     };
   } catch (err) {
     return {
       id: 'calendar',
-      name: 'Calendar',
+      name: '캘린더',
       kind: 'calendar',
       state: 'error',
-      detail: `CalDAV read failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `CalDAV 읽기 실패: ${err instanceof Error ? err.message : String(err)}`,
       meta: { calendars: accounts.length },
     };
   }

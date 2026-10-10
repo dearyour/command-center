@@ -88,14 +88,14 @@ export async function fathomStatus(fetchFn: Fetch = fetch): Promise<ConnectorSta
     return {
       ...base,
       state: 'connected',
-      detail: `Fathom reachable · ${meetings.length} recorded meeting${meetings.length === 1 ? '' : 's'} visible to this key`,
+      detail: `Fathom 연결됨 · 이 키로 볼 수 있는 녹화 회의 ${meetings.length}개`,
       meta: { meetings: meetings.length },
     };
   } catch (err) {
     return {
       ...base,
       state: 'error',
-      detail: `FATHOM_API_KEY is set but the call failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `FATHOM_API_KEY는 설정됐지만 호출 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

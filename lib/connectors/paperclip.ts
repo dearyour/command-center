@@ -492,10 +492,10 @@ export async function paperclipStatus(): Promise<ConnectorStatus> {
   if (!creds()) {
     return {
       id: 'paperclip',
-      name: 'Paperclip (agent harness)',
+      name: 'Paperclip (에이전트 하네스)',
       kind: 'orchestration',
       state: 'not_configured',
-      detail: 'PAPERCLIP_API_URL / PAPERCLIP_BOARD_KEY / PAPERCLIP_COMPANY_ID not set in .env.local.',
+      detail: '.env.local에 PAPERCLIP_API_URL / PAPERCLIP_BOARD_KEY / PAPERCLIP_COMPANY_ID가 설정되지 않았습니다.',
     };
   }
   try {
@@ -506,19 +506,19 @@ export async function paperclipStatus(): Promise<ConnectorStatus> {
     const running = agents.filter((a) => a.status === 'running').length;
     return {
       id: 'paperclip',
-      name: 'Paperclip (agent harness)',
+      name: 'Paperclip (에이전트 하네스)',
       kind: 'orchestration',
       state: 'connected',
-      detail: `Board live · ${agents.length} agents · ${running} running`,
+      detail: `보드 실시간 · 에이전트 ${agents.length}개 · 실행 중 ${running}`,
       meta: { agents: agents.length, running },
     };
   } catch (err) {
     return {
       id: 'paperclip',
-      name: 'Paperclip (agent harness)',
+      name: 'Paperclip (에이전트 하네스)',
       kind: 'orchestration',
       state: 'error',
-      detail: `Creds set but board call failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `인증 정보는 설정됐지만 보드 호출 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

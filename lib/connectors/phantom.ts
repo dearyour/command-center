@@ -83,17 +83,17 @@ export function phantomStatus(balance: PhantomBalance | null): ConnectorStatus {
     return {
       ...base,
       state: 'not_configured',
-      detail: 'No PHANTOM_WALLET_ADDRESS set. It is a public address, not a key — no signing capability is involved.',
+      detail: 'PHANTOM_WALLET_ADDRESS가 설정되지 않았습니다. 키가 아니라 공개 주소이므로 서명 권한은 필요 없습니다.',
     };
   }
   if (!balance) {
-    return { ...base, state: 'error', detail: 'Solana RPC did not return a balance.' };
+    return { ...base, state: 'error', detail: 'Solana RPC가 잔액을 돌려주지 않았습니다.' };
   }
   return {
     ...base,
     state: 'connected',
     detail: `${shortAddress(balance.address)} · ${balance.sol} SOL${
-      balance.usdValue === null ? ' (price unavailable)' : ''
+      balance.usdValue === null ? ' (가격 정보 없음)' : ''
     }`,
     meta: { sol: balance.sol, usdValue: balance.usdValue ?? 0 },
   };

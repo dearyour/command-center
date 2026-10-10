@@ -58,10 +58,10 @@ export async function beehiivStatus(
   if (!key || !pub) {
     return {
       id: 'beehiiv',
-      name: 'Beehiiv (Email List)',
+      name: 'Beehiiv (이메일 리스트)',
       kind: 'social',
       state: 'not_configured',
-      detail: 'Set BEEHIIV_API_KEY + BEEHIIV_PUBLICATION_ID in .env.local.',
+      detail: '.env.local에 BEEHIIV_API_KEY + BEEHIIV_PUBLICATION_ID를 설정하세요.',
     };
   }
   try {
@@ -75,19 +75,19 @@ export async function beehiivStatus(
     if (!parsed) throw new Error('no subscriber stats in response');
     return {
       id: 'beehiiv',
-      name: 'Beehiiv (Email List)',
+      name: 'Beehiiv (이메일 리스트)',
       kind: 'social',
       state: 'connected',
-      detail: `${parsed.subscribers.toLocaleString('en-US')} subscribers`,
+      detail: `구독자 ${parsed.subscribers.toLocaleString('en-US')}명`,
       meta: { subscribers: parsed.subscribers },
     };
   } catch (err) {
     return {
       id: 'beehiiv',
-      name: 'Beehiiv (Email List)',
+      name: 'Beehiiv (이메일 리스트)',
       kind: 'social',
       state: 'error',
-      detail: `Key set but API check failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `키는 설정됐지만 API 확인 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

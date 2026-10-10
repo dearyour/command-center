@@ -234,7 +234,7 @@ function storeFolders(storePath: string): { name: string; files: number }[] {
 
 export function createGBrainProvider(opts: { exec?: ExecFn; storePath?: string } = {}): GBrainProvider {
   if (isGated()) {
-    const detail = 'Demo mode: local knowledge and diagnostics are private.';
+    const detail = '데모 모드: 로컬 지식과 진단 정보는 비공개입니다.';
     return {
       name: 'demo',
       async status() { return { connected: false, provider: 'demo', detail }; },
@@ -247,7 +247,7 @@ export function createGBrainProvider(opts: { exec?: ExecFn; storePath?: string }
         };
       },
       async stats() { return null; },
-      async capture() { return { ok: false, error: 'Capture is disabled in the public demo.' }; },
+      async capture() { return { ok: false, error: '공개 데모에서는 저장 기능이 꺼져 있습니다.' }; },
     };
   }
   const exec = opts.exec ?? defaultExec;
@@ -265,7 +265,7 @@ export function createGBrainProvider(opts: { exec?: ExecFn; storePath?: string }
           return {
             connected: true,
             provider: 'gbrain',
-            detail: `gbrain ${doctor.status ?? 'ok'} · health ${doctor.health_score ?? '?'}/100 · ${localFiles} local pages in brain-store`,
+            detail: `gbrain ${doctor.status ?? 'ok'} · 상태 ${doctor.health_score ?? '?'}/100 · 브레인 저장소 로컬 페이지 ${localFiles}개`,
           };
         } catch {
           // fall through to the error path below
@@ -275,7 +275,7 @@ export function createGBrainProvider(opts: { exec?: ExecFn; storePath?: string }
       return {
         connected: false,
         provider: 'gbrain',
-        detail: `${firstError.trim().slice(0, 200)} · local fallback active (${localFiles} markdown pages)`,
+        detail: `${firstError.trim().slice(0, 200)} · 로컬 대체 검색 사용 중 (마크다운 페이지 ${localFiles}개)`,
       };
     },
 
@@ -321,7 +321,7 @@ export function createGBrainProvider(opts: { exec?: ExecFn; storePath?: string }
                 status: c.status ?? 'unknown',
                 message: c.message ?? '',
               })),
-              detail: `gbrain ${doctor.status ?? 'ok'} · health ${doctor.health_score ?? '?'}/100`,
+              detail: `gbrain ${doctor.status ?? 'ok'} · 상태 ${doctor.health_score ?? '?'}/100`,
             },
           };
         } catch {

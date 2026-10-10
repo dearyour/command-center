@@ -48,7 +48,7 @@ export function BrainSatellites() {
   useEffect(() => {
     const frame = box.current?.parentElement;
     if (!frame) return;
-    const check = () => setQuiet(Boolean(frame.querySelector('[aria-label="Back to the home view"], .kg-panel')));
+    const check = () => setQuiet(Boolean(frame.querySelector('[aria-label="홈 보기로 돌아가기"], .kg-panel')));
     check();
     const obs = new MutationObserver(check);
     obs.observe(frame, { childList: true, subtree: true });

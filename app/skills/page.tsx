@@ -83,7 +83,7 @@ export default function SkillsPage() {
             <BigStat
               size={30}
               value={v.groupCount}
-              unit="groups"
+              unit="그룹"
               chips={[{ tone: 'accent', text: `플러그인 ${v.counts.plugin}` }, { text: `사용자 ${v.counts.user}` }]}
               caption={v.groups.length > 0 ? `가장 큼 · ${v.groups[0].label} ${v.groups[0].count}개` : '이 컴퓨터에는 아직 스킬이 없습니다'}
             />

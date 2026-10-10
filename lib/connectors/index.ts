@@ -30,7 +30,7 @@ import type { ConnectorStatus } from '@/lib/connectors/types';
 
 async function brainConnectorStatus(): Promise<ConnectorStatus> {
   if (GATED)
-    return { id: 'gbrain', name: 'G-Brain', kind: 'brain', state: 'connected', detail: 'knowledge base · 900+ pages · live', meta: { provider: 'gbrain' } };
+    return { id: 'gbrain', name: 'G-Brain', kind: 'brain', state: 'connected', detail: '지식 베이스 · 900+ 페이지 · 실시간', meta: { provider: 'gbrain' } };
   const status = await getBrainProvider().status();
   return {
     id: 'gbrain',

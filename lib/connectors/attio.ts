@@ -58,7 +58,7 @@ export async function attioStatus(
       name: 'Attio (CRM)',
       kind: 'crm',
       state: 'not_configured',
-      detail: 'ATTIO_API_KEY not found in env or ~/.claude.json mcpServers.',
+      detail: '환경 변수나 ~/.claude.json mcpServers에서 ATTIO_API_KEY를 찾을 수 없습니다.',
     };
   }
   try {
@@ -70,7 +70,7 @@ export async function attioStatus(
       name: 'Attio (CRM)',
       kind: 'crm',
       state: 'connected',
-      detail: `Vantage + LC pipeline reachable · ${deals}${deals === 50 ? '+' : ''} deals on record`,
+      detail: `Vantage + LC 파이프라인 연결됨 · 기록된 거래 ${deals}${deals === 50 ? '+' : ''}건`,
       meta: { deals },
     };
   } catch (err) {
@@ -79,7 +79,7 @@ export async function attioStatus(
       name: 'Attio (CRM)',
       kind: 'crm',
       state: 'error',
-      detail: `Key found but query failed: ${err instanceof Error ? err.message : String(err)}`,
+      detail: `키는 있지만 조회 실패: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }
