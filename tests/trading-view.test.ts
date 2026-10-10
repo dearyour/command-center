@@ -49,11 +49,11 @@ describe('freshness', () => {
     expect(freshness([], NOW).state).toBe('none');
   });
   test('a push inside 90 minutes is live', () => {
-    expect(freshness([snap({})], NOW)).toEqual({ state: 'live', label: 'synced 30m ago' });
+    expect(freshness([snap({})], NOW)).toEqual({ state: 'live', label: '30분 전 동기화' });
   });
   test('the freshest account decides, and anything older than 90 minutes is stale', () => {
     const old = snap({ accountId: 'individual', capturedAt: '2026-08-21T19:22:00.000Z' });
-    expect(freshness([old], NOW)).toEqual({ state: 'stale', label: 'synced 27d ago' });
+    expect(freshness([old], NOW)).toEqual({ state: 'stale', label: '27일 전 동기화' });
     expect(freshness([old, snap({})], NOW).state).toBe('live');
   });
   test('a seeded snapshot is never live, however recent', () => {
@@ -63,10 +63,10 @@ describe('freshness', () => {
 
 describe('syncAge', () => {
   test('reads in minutes, hours, then days', () => {
-    expect(syncAge('2026-09-18T14:59:40.000Z', NOW)).toBe('synced just now');
-    expect(syncAge('2026-09-18T14:30:00.000Z', NOW)).toBe('synced 30m ago');
-    expect(syncAge('2026-09-18T09:00:00.000Z', NOW)).toBe('synced 6h ago');
-    expect(syncAge('2026-09-11T15:00:00.000Z', NOW)).toBe('synced 7d ago');
+    expect(syncAge('2026-09-18T14:59:40.000Z', NOW)).toBe('방금 동기화');
+    expect(syncAge('2026-09-18T14:30:00.000Z', NOW)).toBe('30분 전 동기화');
+    expect(syncAge('2026-09-18T09:00:00.000Z', NOW)).toBe('6시간 전 동기화');
+    expect(syncAge('2026-09-11T15:00:00.000Z', NOW)).toBe('7일 전 동기화');
   });
 });
 

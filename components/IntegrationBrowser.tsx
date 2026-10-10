@@ -21,7 +21,7 @@ export function IntegrationBrowser({ categories }: { categories: BrowseCategory[
     <div>
       <div className="mb-4 flex flex-wrap gap-2">
         <button type="button" className={chipClass(active === 'all')} onClick={() => setActive('all')} aria-pressed={active === 'all'}>
-          All · {categories.reduce((n, c) => n + c.count, 0)}
+          전체 · {categories.reduce((n, c) => n + c.count, 0)}
         </button>
         {categories.map((c) => (
           <button
@@ -30,7 +30,7 @@ export function IntegrationBrowser({ categories }: { categories: BrowseCategory[
             className={chipClass(active === c.label)}
             onClick={() => setActive(c.label)}
             aria-pressed={active === c.label}
-            title={`${c.connected} of ${c.count} connected`}
+            title={`${c.count}개 중 ${c.connected}개 연결됨`}
           >
             {c.label} · {c.count}
           </button>

@@ -192,9 +192,9 @@ describe('/roadmap mock-5h: the board', () => {
   });
 
   test('an item expands on click into description and actions', () => {
-    expect(board).toContain('open task');
+    expect(board).toContain('작업 열기');
     expect(board).toContain('AsyncButton');
-    expect(board).toMatch(/mark (done|now)|markLabel/);
+    expect(board).toMatch(/(완료|진행 중)으로 표시/);
     expect(board).toContain("method: 'PATCH'");
     expect(board).toContain('/api/roadmap');
   });

@@ -127,7 +127,7 @@ describe('volume and the funnel hero', () => {
     expect(s.map((x) => x.value)).toEqual([7, 2, 2, 1]);
     expect(s[0].usd).toBe(6000 + 8500 + 2500 + 1200 + 12000);
     expect(s[3].usd).toBe(2500);
-    expect(s[3].note).toContain('1 declined');
+    expect(s[3].note).toContain('거절 1');
   });
 });
 
@@ -158,9 +158,9 @@ describe('activity, sizes, what needs you', () => {
   });
 
   test('timeAgo reads in minutes, hours, then days', () => {
-    expect(timeAgo('2026-09-17T11:30:00.000Z', NOW)).toBe('30m ago');
-    expect(timeAgo('2026-09-16T12:00:00.000Z', NOW)).toBe('24h ago');
-    expect(timeAgo('2026-09-10T12:00:00.000Z', NOW)).toBe('7d ago');
+    expect(timeAgo('2026-09-17T11:30:00.000Z', NOW)).toBe('30분 전');
+    expect(timeAgo('2026-09-16T12:00:00.000Z', NOW)).toBe('24시간 전');
+    expect(timeAgo('2026-09-10T12:00:00.000Z', NOW)).toBe('7일 전');
     expect(timeAgo(null, NOW)).toBe('');
   });
 });

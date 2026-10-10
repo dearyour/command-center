@@ -39,7 +39,7 @@ describe('the trading slab', () => {
     expect(board).toMatch(/^'use client';/);
     expect(board).toContain("fetch('/api/trading')");
     expect(board).toMatch(/setInterval\(refresh, 60_000\)/);
-    expect(board).toMatch(/Refresh feed/);
+    expect(board).toMatch(/피드 새로고침/);
   });
 
   // Since 2026-09-24 the slab, the meters and the gradient card come from the
@@ -56,8 +56,8 @@ describe('the trading slab', () => {
     expect(board).toMatch(/accountLabel/);
     expect(board).toMatch(/tradingVolume\(/);
     const view = read('lib/trading-view.ts');
-    expect(view).toMatch(/agent may trade/);
-    expect(view).toMatch(/read-only to agents/);
+    expect(view).toMatch(/에이전트 거래 가능/);
+    expect(view).toMatch(/에이전트는 읽기만 가능/);
   });
 
   test('gives the agent its own value graph fed by the agentic account, and says plainly when it has not traded', () => {
@@ -65,7 +65,7 @@ describe('the trading slab', () => {
     expect(board).toMatch(/agentSummary\(/);
     expect(board).toMatch(/AGENTIC_ID/);
     expect(board).toMatch(/hasActed/);
-    expect(board).toMatch(/sitting in cash/);
+    expect(board).toMatch(/현금으로 들어 있습니다/);
   });
 
   test('the sleeve and the reasoning share one row, sleeve first, on a grid that keeps them level', () => {
@@ -91,8 +91,8 @@ describe('the trading slab', () => {
 
   test('open orders say who placed them, agent vs you, in the same badge language as the sleeve', () => {
     expect(board).toMatch(/placedAgent === 'agentic' \? 'ok' : 'default'/);
-    expect(board).toMatch(/placedAgent === 'agentic' \? 'agent' : 'you'/);
-    expect(board).toMatch(/nothing working/);
+    expect(board).toMatch(/placedAgent === 'agentic' \? '에이전트' : '나'/);
+    expect(board).toMatch(/진행 중 없음/);
   });
 
   test('the trade log is filterable by who and outcome, and the full rationale lives in a drawer, never truncated away', () => {

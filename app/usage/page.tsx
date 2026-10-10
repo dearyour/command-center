@@ -9,12 +9,12 @@ export default function UsagePage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="token burn · one plan per provider"
-        title="Usage"
-        meta="Claude · ChatGPT / Codex · Ollama · local file parsing only · no paid calls · refreshes every 10s"
+        eyebrow="토큰 소모 · 제공자별 요금제"
+        title="사용량"
+        meta="Claude · ChatGPT / Codex · Ollama · 로컬 파일만 분석 · 유료 호출 없음 · 10초마다 새로고침"
         right={
           <a href="/api/usage" target="_blank" rel="noreferrer" className={PILL}>
-            Raw reading
+            원본 데이터
           </a>
         }
       />

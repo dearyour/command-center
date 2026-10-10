@@ -52,7 +52,7 @@ function PersonaCard({ p, cover = true }: { p: Persona; cover?: boolean }) {
         <div className="mt-3 flex items-start gap-2 rounded-md-t border border-os-border bg-os-surface2 px-3 py-2">
           <Star className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: p.accent }} />
           <div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">North star</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-os-dim">북극성 목표</span>
             <div className="text-[12.5px] font-semibold">{p.northStar}</div>
           </div>
         </div>
@@ -120,7 +120,7 @@ function PersonaCard({ p, cover = true }: { p: Persona; cover?: boolean }) {
           <Zap className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: p.accent }} />
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: p.accent }}>
-              Signature play
+              대표 전략
             </span>
             <p className="mt-0.5 text-[12px] leading-relaxed [text-wrap:pretty]">{p.signaturePlay}</p>
           </div>
@@ -167,14 +167,14 @@ export function PersonasViewer({ personas }: { personas: Persona[] }) {
         <div className="flex shrink-0 items-center gap-1.5">
           <button
             onClick={() => go(-1)}
-            aria-label="Previous persona"
+            aria-label="이전 페르소나"
             className="pressable flex h-9 w-9 items-center justify-center rounded-sm-t border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => go(1)}
-            aria-label="Next persona"
+            aria-label="다음 페르소나"
             className="pressable flex h-9 w-9 items-center justify-center rounded-sm-t border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
           >
             <ChevronRight className="h-4 w-4" />
@@ -219,10 +219,10 @@ export function PersonasViewer({ personas }: { personas: Persona[] }) {
         >
           <div className="flex shrink-0 items-center justify-between border-b border-os-border px-4 py-2.5">
             <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-os-dim">
-              G-Brain · knowledge graph
+              G-Brain · 지식 그래프
             </span>
             <span className="font-mono text-[9.5px] text-os-dim">
-              {current.pillars.length} depts · {current.pillars.reduce((s, p) => s + p.agents.length, 0)} agents
+              부서 {current.pillars.length}개 · 에이전트 {current.pillars.reduce((s, p) => s + p.agents.length, 0)}개
             </span>
           </div>
           <div className="min-h-0 flex-1 p-2">

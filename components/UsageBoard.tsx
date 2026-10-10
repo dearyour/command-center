@@ -55,10 +55,10 @@ type PlanKey = 'claude' | 'codex' | 'ollama';
 function age(iso: string | null, now: number): string {
   if (!iso) return ' - ';
   const s = Math.max(0, Math.floor((now - new Date(iso).getTime()) / 1000));
-  if (s < 90) return `${s}s ago`;
-  if (s < 5400) return `${Math.round(s / 60)}m ago`;
-  if (s < 90000) return `${Math.round(s / 3600)}h ago`;
-  return `${Math.round(s / 86400)}d ago`;
+  if (s < 90) return `${s}초 전`;
+  if (s < 5400) return `${Math.round(s / 60)}분 전`;
+  if (s < 90000) return `${Math.round(s / 3600)}시간 전`;
+  return `${Math.round(s / 86400)}일 전`;
 }
 
 const pct = (n: number) => (n >= 10 || n === 0 ? `${n.toFixed(0)}%` : `${n.toFixed(1)}%`);
@@ -102,7 +102,7 @@ function WindowStrip({ plan }: { plan: PlanUsage }) {
             <div className="text-[19px] font-semibold tabular-nums tracking-[-0.02em]">{fmtTokens(r?.burn ?? 0)}</div>
             <div className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-os-dim">{WINDOW_LABEL[w]}</div>
             <div className="font-mono text-[9.5px] text-os-muted">
-              {r?.pctOfWeekly !== null && r?.pctOfWeekly !== undefined ? `≈${pct(r.pctOfWeekly)} of wk${w === 'week' ? '' : ' est.'}` : r ? `${pct(r.shareOfWeek * 100)} of wk burn` : ' - '}
+              {r?.pctOfWeekly !== null && r?.pctOfWeekly !== undefined ? `주간 한도의 ≈${pct(r.pctOfWeekly)}${w === 'week' ? '' : ' (추정)'}` : r ? `주간 소모량의 ${pct(r.shareOfWeek * 100)}` : ' - '}
             </div>
           </div>
         );
@@ -116,7 +116,7 @@ function PlanCard({ title, plan, selected, onSelect, now }: { title: string; pla
     return (
       <div className="rounded-[12px] border border-dashed border-os-border p-5 text-[12.5px] text-os-dim">
         <span className="text-[15px] font-semibold text-os-muted">{title}</span>
-        <p className="mt-2">no sessions found on any reporting machine</p>
+        <p className="mt-2">보고 중인 머신에서 세션을 찾지 못했습니다</p>
       </div>
     );
   }
@@ -128,21 +128,21 @@ function PlanCard({ title, plan, selected, onSelect, now }: { title: string; pla
           <Dot state={hasData ? 'ok' : 'off'} />
           <span className="text-[15px] font-semibold tracking-[-0.01em]">{title}</span>
         </div>
-        {plan.planConflict ? <Badge tone="warn">plans differ</Badge> : <Badge tone={plan.plan ? 'accent' : 'default'}>{plan.plan ? `${plan.plan} · active` : 'plan unknown'}</Badge>}
+        {plan.planConflict ? <Badge tone="warn">요금제 다름</Badge> : <Badge tone={plan.plan ? 'accent' : 'default'}>{plan.plan ? `${plan.plan} · 사용 중` : '요금제 알 수 없음'}</Badge>}
       </div>
       {plan.planConflict && (
         <p className="mt-2 font-mono text-[10px] leading-relaxed text-os-warn">
-          machines are logged into different plans: {plan.planConflict.join(' · ')}
+          머신마다 다른 요금제로 로그인되어 있습니다: {plan.planConflict.join(' · ')}
         </p>
       )}
 
       {plan.official?.session || plan.official?.weekly ? (
         <div className="mt-4 space-y-4">
-          {plan.official.session && <VolumeMeter {...limitMeter('Session limit', '5h', plan.official.session, now)} />}
-          {plan.official.weekly && <VolumeMeter {...limitMeter('Weekly limit', '7d', plan.official.weekly, now)} delay={150} />}
+          {plan.official.session && <VolumeMeter {...limitMeter('세션 한도', '5시간', plan.official.session, now)} />}
+          {plan.official.weekly && <VolumeMeter {...limitMeter('주간 한도', '7일', plan.official.weekly, now)} delay={150} />}
         </div>
       ) : (
-        <p className="mt-4 text-[12px] leading-relaxed text-os-dim">no official gauge reported · burn below is measured from transcripts</p>
+        <p className="mt-4 text-[12px] leading-relaxed text-os-dim">공식 한도 정보 없음 · 아래 소모량은 기록에서 측정한 값입니다</p>
       )}
 
       <div className="mt-4">
@@ -153,9 +153,9 @@ function PlanCard({ title, plan, selected, onSelect, now }: { title: string; pla
         <LaneBar plan={plan} window="week" />
         <div className="flex items-center justify-between font-mono text-[10px] text-os-dim">
           <span>
-            {plan.machines.length} machine{plan.machines.length === 1 ? '' : 's'} · last activity {age(plan.lastActivity, now)}
+            머신 {plan.machines.length}대 · 마지막 활동 {age(plan.lastActivity, now)}
           </span>
-          <span>{selected ? 'breakdown ▾' : 'breakdown ▸'}</span>
+          <span>{selected ? '상세 ▾' : '상세 ▸'}</span>
         </div>
       </div>
     </button>
@@ -171,9 +171,9 @@ function OllamaCard({ lane, selected, onSelect }: { lane: OllamaBoard; selected:
           <Dot state={lane.state === 'up' ? 'ok' : 'err'} />
           <span className="text-[15px] font-semibold tracking-[-0.01em]">Ollama</span>
         </div>
-        <Badge tone={lane.plan ? 'accent' : 'default'}>{lane.plan ? `${lane.plan} · active` : lane.state === 'up' ? 'plan unknown' : 'server down'}</Badge>
+        <Badge tone={lane.plan ? 'accent' : 'default'}>{lane.plan ? `${lane.plan} · 사용 중` : lane.state === 'up' ? '요금제 알 수 없음' : '서버 다운'}</Badge>
       </div>
-      <p className="mt-4 text-[12px] leading-relaxed text-os-dim">no official gauge · ollama.com exposes plan % only on its settings page</p>
+      <p className="mt-4 text-[12px] leading-relaxed text-os-dim">공식 한도 정보 없음 · ollama.com은 설정 페이지에서만 요금제 %를 보여 줍니다</p>
       <div className="mt-4 grid grid-cols-4 gap-2">
         {WINDOWS.map((w) => {
           const r = lane.requests?.[w];
@@ -181,7 +181,7 @@ function OllamaCard({ lane, selected, onSelect }: { lane: OllamaBoard; selected:
             <div key={w} className="border-l border-os-border pl-2">
               <div className="text-[19px] font-semibold tabular-nums tracking-[-0.02em]">{r ? r.chat + r.embed : ' - '}</div>
               <div className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-os-dim">{WINDOW_LABEL[w]}</div>
-              <div className="font-mono text-[9.5px] text-os-muted">{r ? `${r.chat} chat · ${r.embed} emb` : 'no log'}</div>
+              <div className="font-mono text-[9.5px] text-os-muted">{r ? `채팅 ${r.chat} · 임베딩 ${r.embed}` : '기록 없음'}</div>
             </div>
           );
         })}
@@ -190,7 +190,7 @@ function OllamaCard({ lane, selected, onSelect }: { lane: OllamaBoard; selected:
         <span>
           {lane.models.length} models · {cloud} cloud (bill the plan)
         </span>
-        <span>{selected ? 'breakdown ▾' : 'breakdown ▸'}</span>
+        <span>{selected ? '상세 ▾' : '상세 ▸'}</span>
       </div>
     </button>
   );
@@ -215,7 +215,7 @@ function PlanDetail({ plan, now }: { plan: PlanUsage; now: number }) {
     <div className={DETAIL}>
       <div className="space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <Label>where it burns</Label>
+          <Label>어디서 소모되나</Label>
           <div className="flex flex-wrap gap-2" role="tablist">
             {WINDOWS.map((w) => (
               <button key={w} type="button" role="tab" aria-selected={win === w} onClick={() => setWin(w)} className={chipClass(win === w)}>
@@ -226,14 +226,14 @@ function PlanDetail({ plan, now }: { plan: PlanUsage; now: number }) {
         </div>
 
         {!b ? (
-          <p className="text-[12.5px] text-os-dim">this reading carries no lane breakdown yet (an older push)</p>
+          <p className="text-[12.5px] text-os-dim">이 데이터에는 아직 영역별 내역이 없습니다 (이전 버전에서 보냄)</p>
         ) : (
           <>
             <div>
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <span className="text-[30px] font-semibold tabular-nums tracking-[-0.03em]">{fmtTokens(total)}</span>
                 <span className="font-mono text-[11px] text-os-muted">
-                  {weekly !== null && weekTotal > 0 ? `≈${pct((weekly * total) / weekTotal)} of the weekly limit${win === 'week' ? '' : ' (est.)'}` : weekTotal > 0 ? `${pct((total / weekTotal) * 100)} of this week's burn` : 'no burn'}
+                  {weekly !== null && weekTotal > 0 ? `주간 한도의 ≈${pct((weekly * total) / weekTotal)}${win === 'week' ? '' : ' (추정)'}` : weekTotal > 0 ? `이번 주 소모량의 ${pct((total / weekTotal) * 100)}` : '소모 없음'}
                 </span>
               </div>
               <div className="mt-3">
@@ -255,7 +255,7 @@ function PlanDetail({ plan, now }: { plan: PlanUsage; now: number }) {
             </div>
 
             <div>
-              <Label>top burners · 7 days</Label>
+              <Label>가장 많이 소모 · 7일</Label>
               <div className="mt-3 space-y-2">
                 {b.top.length === 0 && <p className="text-[12.5px] text-os-dim">nothing burned this week</p>}
                 {b.top.slice(0, 12).map((t) => (
@@ -278,26 +278,26 @@ function PlanDetail({ plan, now }: { plan: PlanUsage; now: number }) {
 
       <div className="space-y-5">
         <div>
-          <Label>7-day burn · by day</Label>
+          <Label>7일 소모량 · 일별</Label>
           <div className="mt-3 flex h-20 items-end gap-1.5">
             {plan.days.map((d, i) => {
               const v = burnOf(d);
               const h = v === 0 ? 2 : Math.max(3, Math.round((v / dayMax) * 72));
               const today = i === plan.days.length - 1;
               return (
-                <div key={d.day} className="flex flex-1 flex-col items-center gap-1" title={`${d.day}: ${fmtTokens(v)} burn · ${fmtTokens(d.cacheRead)} context re-read`}>
+                <div key={d.day} className="flex flex-1 flex-col items-center gap-1" title={`${d.day}: 소모 ${fmtTokens(v)} · 맥락 다시 읽기 ${fmtTokens(d.cacheRead)}`}>
                   <div className="w-full rounded-t-[4px]" style={{ height: h, background: today ? 'var(--send-activity)' : 'color-mix(in oklab, var(--send-activity) 35%, transparent)' }} />
                   <span className="font-mono text-[9px] text-os-dim">{'SMTWTFS'[new Date(d.day + 'T12:00:00').getDay()]}</span>
                 </div>
               );
             })}
           </div>
-          <p className="mt-1.5 font-mono text-[10px] text-os-dim">context re-read (cache reads, not burn): {fmtTokens(plan.days.reduce((s, d) => s + d.cacheRead, 0))}</p>
+          <p className="mt-1.5 font-mono text-[10px] text-os-dim">맥락 다시 읽기 (캐시 읽기, 소모량 아님): {fmtTokens(plan.days.reduce((s, d) => s + d.cacheRead, 0))}</p>
         </div>
 
         {models.length > 0 && (
           <div>
-            <Label>models</Label>
+            <Label>모델</Label>
             <div className="mt-2 space-y-1.5">
               {models.slice(0, 5).map(([m, t]) => (
                 <div key={m} className="flex items-center justify-between text-[12.5px]">
@@ -313,7 +313,7 @@ function PlanDetail({ plan, now }: { plan: PlanUsage; now: number }) {
         )}
 
         <div>
-          <Label>machines reporting</Label>
+          <Label>보고 중인 머신</Label>
           <div className="mt-2 space-y-1.5">
             {plan.machines.map((m) => (
               <div key={m.id} className="flex items-center justify-between text-[12.5px]">
@@ -321,12 +321,12 @@ function PlanDetail({ plan, now }: { plan: PlanUsage; now: number }) {
                   <Dot state={m.stale ? 'warn' : 'ok'} />
                   {m.label}
                 </span>
-                <span className="font-mono text-[10.5px] text-os-dim">{m.source === 'local' ? 'this box · live' : `pushed ${age(m.capturedAt, now)}${m.stale ? ' · stale' : ''}`}</span>
+                <span className="font-mono text-[10.5px] text-os-dim">{m.source === 'local' ? '이 컴퓨터 · 실시간' : `${age(m.capturedAt, now)} 보냄${m.stale ? ' · 오래됨' : ''}`}</span>
               </div>
             ))}
           </div>
           <p className="mt-2 font-mono text-[10px] leading-relaxed text-os-dim">
-            Usage from connected machines appears here when they report.
+            연결된 머신이 보고하면 여기에 사용량이 표시됩니다.
           </p>
         </div>
         {plan.note && <p className="font-mono text-[10px] leading-relaxed text-os-dim">{plan.note}</p>}
@@ -340,7 +340,7 @@ function OllamaDetail({ lane, now }: { lane: OllamaBoard; now: number }) {
   return (
     <div className={DETAIL}>
       <div>
-        <Label>requests by window · chat vs embeddings</Label>
+        <Label>기간별 요청 · 채팅 vs 임베딩</Label>
         <div className="mt-3 space-y-3">
           {!lane.requests && <p className="text-[12.5px] text-os-dim">no Ollama server log on this box</p>}
           {lane.requests &&
@@ -350,11 +350,11 @@ function OllamaDetail({ lane, now }: { lane: OllamaBoard; now: number }) {
                 <div key={w} className="grid grid-cols-[90px_1fr_120px] items-center gap-3 text-[12.5px]">
                   <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-os-dim">{WINDOW_LABEL[w]}</span>
                   <div className="flex h-2 gap-[2px] overflow-hidden rounded-full" style={TRACK}>
-                    <div className="h-full" style={{ width: `${(r.chat / max) * 100}%`, background: 'var(--ramp-1)' }} title={`${r.chat} chat`} />
-                    <div className="h-full" style={{ width: `${(r.embed / max) * 100}%`, background: 'var(--ramp-3)' }} title={`${r.embed} embeddings`} />
+                    <div className="h-full" style={{ width: `${(r.chat / max) * 100}%`, background: 'var(--ramp-1)' }} title={`채팅 ${r.chat}`} />
+                    <div className="h-full" style={{ width: `${(r.embed / max) * 100}%`, background: 'var(--ramp-3)' }} title={`임베딩 ${r.embed}`} />
                   </div>
                   <span className="text-right font-mono text-[11px] tabular-nums">
-                    {r.chat} chat · {r.embed} emb
+                    채팅 {r.chat} · 임베딩 {r.embed}
                   </span>
                 </div>
               );
@@ -363,7 +363,7 @@ function OllamaDetail({ lane, now }: { lane: OllamaBoard; now: number }) {
         <p className="mt-4 font-mono text-[10px] leading-relaxed text-os-dim">{lane.note}</p>
       </div>
       <div>
-        <Label>models</Label>
+        <Label>모델</Label>
         <div className="mt-2 space-y-1.5">
           {lane.models.map((m) => (
             <div key={`${m.host}|${m.name}`} className="flex items-center justify-between text-[12.5px]">
@@ -371,13 +371,13 @@ function OllamaDetail({ lane, now }: { lane: OllamaBoard; now: number }) {
                 {m.name}
                 <span className="ml-2 font-mono text-[10px] text-os-dim">{m.host.replace(/^Ollama · /, '')}</span>
               </span>
-              <Badge tone={m.cloud ? 'warn' : 'default'}>{m.cloud ? 'cloud · bills plan' : 'local · free'}</Badge>
+              <Badge tone={m.cloud ? 'warn' : 'default'}>{m.cloud ? '클라우드 · 요금제 과금' : '로컬 · 무료'}</Badge>
             </div>
           ))}
           {lane.models.length === 0 && <p className="text-[12.5px] text-os-dim">no models listed</p>}
         </div>
         <div className="mt-5">
-          <Label>machines reporting</Label>
+          <Label>보고 중인 머신</Label>
           <div className="mt-2 space-y-1.5">
             {lane.machines.map((m) => (
               <div key={m.id} className="flex items-center justify-between text-[12.5px]">
@@ -385,7 +385,7 @@ function OllamaDetail({ lane, now }: { lane: OllamaBoard; now: number }) {
                   <Dot state={m.stale ? 'warn' : 'ok'} />
                   {m.label}
                 </span>
-                <span className="font-mono text-[10.5px] text-os-dim">{m.source === 'local' ? 'this box · live' : `pushed ${age(m.capturedAt, now)}${m.stale ? ' · stale' : ''}`}</span>
+                <span className="font-mono text-[10.5px] text-os-dim">{m.source === 'local' ? '이 컴퓨터 · 실시간' : `${age(m.capturedAt, now)} 보냄${m.stale ? ' · 오래됨' : ''}`}</span>
               </div>
             ))}
           </div>
@@ -425,7 +425,7 @@ export default function UsageBoard() {
   if (!board) {
     return (
       <div className="rounded-[12px] border border-os-border bg-os-surface px-6 py-8 text-[13px] text-os-dim">
-        {error ? `usage read failed: ${error}` : 'reading local transcripts…'}
+        {error ? `사용량 읽기 실패: ${error}` : '로컬 기록 읽는 중…'}
       </div>
     );
   }
@@ -438,16 +438,16 @@ export default function UsageBoard() {
     <div>
       {/* Hero row: the week's burn line + the Deal Volume card worn by token burn */}
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={1} title="Token Burn" sub="Claude + Codex · last 7 days">
+        <SlabCard i={1} title="토큰 소모" sub="Claude + Codex · 최근 7일">
           <div className="px-6 pt-3">
             <span className="text-[30px] font-semibold tabular-nums tracking-[-0.03em]">{fmtTokens(vol.weekTokens)}</span>
-            <span className="ml-2 text-[13px] text-os-dim">tokens burned, last 7 days</span>
+            <span className="ml-2 text-[13px] text-os-dim">최근 7일간 소모한 토큰</span>
           </div>
-          <StepLine series={vol.series} hue="var(--send-activity)" unit="k tokens" empty="No burn in this window." />
+          <StepLine series={vol.series} hue="var(--send-activity)" unit="k 토큰" empty="이 기간에는 소모량이 없습니다." />
           <div className="px-6 pb-5 font-mono text-[11px] text-os-dim">{vol.meta}</div>
         </SlabCard>
 
-        <SlabCard i={2} title="Burn Volume" className="flex flex-col">
+        <SlabCard i={2} title="소모 규모" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat value={vol.headlineTokens} kind="tokens" unit="tokens" chips={vol.chips} caption={vol.caption} />
             <MeterStack meters={vol.meters} foot={vol.foot} />
@@ -457,14 +457,14 @@ export default function UsageBoard() {
 
       {/* Second row: models, the official limits, THE insight card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Burn by Model">
+        <SlabCard i={3} title="모델별 소모">
           {/* stacked, not side by side: model names are too long to share a row */}
           <div className="flex flex-col gap-5 px-6 pb-6 pt-3">
             <div className="min-w-0">
               {vol.topModel ? (
-                <BigStat value={Math.round(vol.topModel.share * 100)} kind="pct" size={30} caption="of the week on the top model" />
+                <BigStat value={Math.round(vol.topModel.share * 100)} kind="pct" size={30} caption="이번 주 1위 모델 비중" />
               ) : (
-                <BigStat display=" - " size={30} caption="no model burn recorded this week" />
+                <BigStat display=" - " size={30} caption="이번 주 모델 소모 기록 없음" />
               )}
               {vol.topModel && (
                 <div className="mt-4 w-fit max-w-full truncate rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted">
@@ -476,21 +476,21 @@ export default function UsageBoard() {
           </div>
         </SlabCard>
 
-        <SlabCard i={4} title="Plan Limits" sub="official gauges only">
+        <SlabCard i={4} title="요금제 한도" sub="공식 수치만">
           <div className="px-6 pb-6">
-            <MeterStack meters={vol.limits} empty="No provider reported an official gauge. Burn is measured from transcripts." baseDelay={700} />
+            <MeterStack meters={vol.limits} empty="공식 한도를 보고한 제공자가 없습니다. 소모량은 기록에서 측정합니다." baseDelay={700} />
           </div>
         </SlabCard>
 
-        <InsightCard i={5} badge="Top burner · 7 days" value={vol.insight.value} kind="pct" headline={vol.insight.headline} body={vol.insight.body} frac={vol.insight.frac} />
+        <InsightCard i={5} badge="가장 많이 소모 · 7일" value={vol.insight.value} kind="pct" headline={vol.insight.headline} body={vol.insight.body} frac={vol.insight.frac} />
       </div>
 
       {/* The plans: click a card to open where its tokens went */}
       <SlabCard
         i={6}
         className="mt-6"
-        title="Plans"
-        sub={`${[board.claude, board.codex].filter(Boolean).length + 1} providers`}
+        title="요금제"
+        sub={`제공자 ${[board.claude, board.codex].filter(Boolean).length + 1}곳`}
         action={
           <>
             {(
@@ -519,8 +519,8 @@ export default function UsageBoard() {
           {open === 'ollama' && <OllamaDetail lane={board.ollama} now={now} />}
 
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-os-border pt-3 font-mono text-[10.5px] text-os-dim">
-            <span>refreshes every {POLL_MS / 1000}s · local file parsing only · no paid calls</span>
-            <span>{error ? `stale  -  last poll failed (${error})` : `updated ${age(board.generatedAt, Date.now())}`}</span>
+            <span>{POLL_MS / 1000}초마다 새로고침 · 로컬 파일만 분석 · 유료 호출 없음</span>
+            <span>{error ? `오래됨  -  마지막 조회 실패 (${error})` : `${age(board.generatedAt, Date.now())} 업데이트`}</span>
           </div>
         </div>
       </SlabCard>

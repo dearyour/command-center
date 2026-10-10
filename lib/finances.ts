@@ -121,8 +121,8 @@ export type ExpenseItem = { id: string; label: string; category: string; monthly
 // is ingested). Keep it short and obviously illustrative: real fixed costs
 // belong in the ledger, not hand-typed here.
 export const DECLARED_EXPENSES: ExpenseItem[] = [
-  { id: 'contractor-csm', label: 'Contractor · CSM', category: 'Contractors', monthly: 1000 },
-  { id: 'software-stack', label: 'Core software stack', category: 'Software', monthly: 500 },
+  { id: 'contractor-csm', label: '외주 · CSM', category: 'Contractors', monthly: 1000 },
+  { id: 'software-stack', label: '핵심 소프트웨어 스택', category: 'Software', monthly: 500 },
 ];
 
 /** Sum of every recurring monthly cost. */

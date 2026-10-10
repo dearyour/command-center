@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { cardLabel } from '@/lib/cards';
 import { cardTotals, categoryTotals, monthAfterRefresh, spendTotalCents, type SpendRow } from '@/lib/spend-report';
+import { categoryKo } from '@/lib/status-labels';
 import { SharePie } from '@/components/SharePie';
 import { ExpenditureReport } from '@/components/ExpenditureReport';
 import { STATEMENT_UPLOADED, type StatementUploadedDetail } from '@/lib/statement-events';
@@ -87,14 +88,14 @@ export function MonthlyExpenses({
     return month && !tail.includes(month) ? [month, ...tail] : tail;
   }, [months, month]);
   const total = live ? spendTotalCents(rows, month) : fallback.reduce((s, c) => s + c.totalCents, 0);
-  const period = live ? (month ? monthName(month) : 'all time') : 'per month';
+  const period = live ? (month ? monthName(month) : '전체 기간') : '월 기준';
 
   return (
     <section className="flex h-full flex-col">
       {/* the slab card head: 19px title, mono total, the way in to the full statement */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-6 pt-5">
         <div className="flex min-w-0 items-baseline gap-2">
-          <h2 className="text-[19px] font-semibold tracking-[-0.01em]">Where it goes</h2>
+          <h2 className="text-[19px] font-semibold tracking-[-0.01em]">돈이 나가는 곳</h2>
           <span className="font-mono text-[12px] tabular-nums text-os-dim">
             {live ? `${usd(total)} · ${period}` : `${usd(total)} /mo`}
           </span>
@@ -107,7 +108,7 @@ export function MonthlyExpenses({
           className="pressable inline-flex items-center gap-1.5 rounded-full border border-os-border px-4 py-2 text-[13px] text-os-muted hover:border-os-border-strong hover:text-os-text disabled:opacity-40"
         >
           <Maximize2 className="h-3 w-3" strokeWidth={1.8} />
-          View full expenditure statement
+          전체 지출 명세 보기
         </button>
       </div>
 
@@ -117,7 +118,7 @@ export function MonthlyExpenses({
           type="button"
           onClick={() => step(-1)}
           disabled={!live || index <= 0}
-          aria-label="Previous month"
+          aria-label="이전 달"
           className="pressable rounded-ctl border border-os-border p-1.5 text-os-muted hover:border-os-border-strong disabled:opacity-30"
         >
           <ChevronLeft className="h-3.5 w-3.5" strokeWidth={1.8} />
@@ -131,14 +132,14 @@ export function MonthlyExpenses({
           type="button"
           onClick={() => step(1)}
           disabled={!live || index < 0 || index >= months.length - 1}
-          aria-label="Next month"
+          aria-label="다음 달"
           className="pressable rounded-ctl border border-os-border p-1.5 text-os-muted hover:border-os-border-strong disabled:opacity-30"
         >
           <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
         </button>
         {!live && (
           <span className="font-mono text-[10.5px] uppercase tracking-[0.1em] text-os-warn">
-            set fees · upload a card statement for real months
+            고정 비용 · 실제 월별 지출은 카드 명세서를 올리세요
           </span>
         )}
       </div>
@@ -146,14 +147,14 @@ export function MonthlyExpenses({
       <div className="mt-5 grid flex-1 items-stretch gap-5 px-6 pb-6 md:grid-cols-2 2xl:grid-cols-[1.15fr_1fr_0.85fr]">
         {/* where the money goes: share per category, for the chosen month */}
         <SharePie
-          items={cats.map((c) => ({ key: c.category, label: c.category, value: c.totalCents }))}
+          items={cats.map((c) => ({ key: c.category, label: categoryKo(c.category), value: c.totalCents }))}
           total={total}
           centerLabel={period}
           format={(cents) => usd(cents)}
           framed={false}
           stacked
           donutPx={190}
-          ariaLabel="Monthly expenses by category"
+          ariaLabel="카테고리별 월간 지출"
         />
 
         {/* each category as a Deal Volume bar: its real share of the month's spend.
@@ -161,12 +162,12 @@ export function MonthlyExpenses({
         <div className="flex flex-col justify-between">
           <div className="flex flex-col gap-4">
             {cats.length === 0 ? (
-              <p className="py-3 text-center font-mono text-[10.5px] text-os-dim">Nothing spent this month.</p>
+              <p className="py-3 text-center font-mono text-[10.5px] text-os-dim">이번 달에는 지출이 없습니다.</p>
             ) : (
               cats.map((c, i) => (
                 <VolumeMeter
                   key={`${month ?? 'fees'}-${c.category}`}
-                  label={c.category}
+                  label={categoryKo(c.category)}
                   frac={total > 0 ? c.totalCents / total : 0}
                   display={usd(c.totalCents)}
                   hue="var(--ramp-4)"

@@ -125,19 +125,19 @@ export default async function AnalyticsPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="operating metrics · connectors · agent runs"
-        title="Analytics"
-        meta={`${vol.headline} reach · ${live.length} live · ${pending.length} pending · ${runsWithin(runs, today, 30).toLocaleString('en-US')} runs in 30 days`}
+        eyebrow="운영 지표 · 커넥터 · 에이전트 실행"
+        title="분석"
+        meta={`도달 ${vol.headline} · 실시간 ${live.length} · 대기 ${pending.length} · 30일간 실행 ${runsWithin(runs, today, 30).toLocaleString('en-US')}회`}
         right={
           <>
             <span className="rounded-full border border-os-border px-4 py-2 text-[13px] text-os-muted">
-              {live.length} live · {pending.length} pending
+              실시간 {live.length} · 대기 {pending.length}
             </span>
             <Link href="/social" className={PILL}>
-              Open Social
+              소셜 열기
             </Link>
             <Link href="/integrations" className={PILL_ACCENT}>
-              Wire connectors
+              커넥터 연결하기
             </Link>
           </>
         }
@@ -146,33 +146,33 @@ export default async function AnalyticsPage() {
       {/* Hero row: the run log as the big chart, reach as the Volume card. */}
       <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
         <RunVolumeCard data={runVolume} i={1} />
-        <SlabCard title="Reach Volume" i={2} className="flex flex-col">
+        <SlabCard title="도달 규모" i={2} className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat value={vol.reach} chips={vol.chips} caption={vol.caption} />
-            <MeterStack meters={vol.meters} foot={vol.foot} empty="no audience snapshots yet" />
+            <MeterStack meters={vol.meters} foot={vol.foot} empty="아직 오디언스 스냅샷이 없습니다" />
           </div>
         </SlabCard>
       </div>
 
       {/* Second row: runs by agent, the weekday rhythm, THE insight card. */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard title="Runs by Agent" sub={`${vol.runs.total.toLocaleString('en-US')} runs`} i={3} className="flex flex-col">
+        <SlabCard title="에이전트별 실행" sub={`실행 ${vol.runs.total.toLocaleString('en-US')}회`} i={3} className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat
               size={30}
-              display={vol.runs.okPct === null ? 'none yet' : `${vol.runs.okPct}%`}
-              chips={vol.runs.total ? [{ tone: 'ok', text: `${vol.runs.ok} ok` }, ...(vol.runs.failed ? [{ tone: 'err' as const, text: `${vol.runs.failed} failed` }] : [])] : []}
-              caption="of runs succeeded in the last 30 days"
+              display={vol.runs.okPct === null ? '아직 없음' : `${vol.runs.okPct}%`}
+              chips={vol.runs.total ? [{ tone: 'ok', text: `성공 ${vol.runs.ok}` }, ...(vol.runs.failed ? [{ tone: 'err' as const, text: `실패 ${vol.runs.failed}` }] : [])] : []}
+              caption="최근 30일간 성공한 실행 비율"
             />
-            <MeterStack meters={vol.runs.meters} foot={`${vol.runs.agents} agents in the log`} empty="no agent runs recorded yet" />
+            <MeterStack meters={vol.runs.meters} foot={`기록에 있는 에이전트 ${vol.runs.agents}개`} empty="아직 기록된 에이전트 실행이 없습니다" />
           </div>
         </SlabCard>
 
-        <SlabCard title="Run Rhythm" sub="last 30 days" i={4}>
+        <SlabCard title="실행 리듬" sub="최근 30일" i={4}>
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <div className="shrink-0">
               <BigStat size={30} value={vol.rhythmTotal} />
-              <div className="mt-1 whitespace-nowrap text-[13px] text-os-dim">runs by weekday</div>
+              <div className="mt-1 whitespace-nowrap text-[13px] text-os-dim">요일별 실행</div>
               {vol.rhythmTotal > 0 && (
                 <div className="mt-4 w-fit whitespace-nowrap rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted">
                   Busiest: <span className="font-semibold tabular-nums">{busiest.label}</span>
@@ -185,7 +185,7 @@ export default async function AnalyticsPage() {
 
         <InsightCard
           i={5}
-          badge="Awaiting credentials"
+          badge="인증 정보 대기"
           value={vol.insight.value}
           headline={vol.insight.headline}
           body={vol.insight.body}
@@ -195,13 +195,13 @@ export default async function AnalyticsPage() {
 
       {/* Live metric tiles + every metric still waiting on a key. */}
       <SlabCard
-        title="Operating Metrics"
-        sub={`${live.length} live · ${pending.length} pending`}
+        title="운영 지표"
+        sub={`실시간 ${live.length} · 대기 ${pending.length}`}
         i={6}
         className="mt-6"
         action={
           <Link href="/integrations" className={PILL}>
-            wire connectors → flip to live
+            커넥터 연결 → 실시간으로 전환
           </Link>
         }
       >
@@ -213,12 +213,12 @@ export default async function AnalyticsPage() {
               ))}
             </div>
           ) : (
-            <p className="py-4 text-[12.5px] text-os-dim">No connector has handed back a live number yet.</p>
+            <p className="py-4 text-[12.5px] text-os-dim">아직 실시간 숫자를 돌려준 커넥터가 없습니다.</p>
           )}
           <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-os-border pt-4">
-            <span className="mr-1 text-[13px] text-os-dim">Awaiting credentials</span>
+            <span className="mr-1 text-[13px] text-os-dim">인증 정보 대기</span>
             {pending.length === 0 ? (
-              <Chip tone="ok">all connectors live</Chip>
+              <Chip tone="ok">모든 커넥터 실시간</Chip>
             ) : (
               pending.map((m) => (
                 <span key={m.id} title={m.source}>
@@ -235,13 +235,13 @@ export default async function AnalyticsPage() {
 
       {/* Audience by platform: real Zernio snapshot data, one roomy row each. */}
       <SlabCard
-        title="Audience"
-        sub={`${formatFollowers(totalFollowers)} followers`}
+        title="오디언스"
+        sub={`팔로워 ${formatFollowers(totalFollowers)}`}
         i={9}
         className="mt-6"
         action={
           <Link href="/social" className={PILL}>
-            Open Social
+            소셜 열기
           </Link>
         }
       >
@@ -272,7 +272,7 @@ export default async function AnalyticsPage() {
                 <span className="text-right text-[20px] font-semibold tabular-nums tracking-[-0.02em]">{formatFollowers(p.followers)}</span>
                 <span className="flex items-center gap-2 max-[800px]:hidden">
                   <span className="rounded-full px-2.5 py-0.5 font-mono text-[10.5px] tabular-nums tracking-[0.04em]" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                    {share.toFixed(0)}% of reach
+                    도달의 {share.toFixed(0)}%
                   </span>
                   <span
                     className="rounded-full px-2.5 py-0.5 font-mono text-[10.5px] uppercase tabular-nums tracking-[0.08em]"

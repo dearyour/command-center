@@ -36,9 +36,9 @@ describe('/adpilot: present, reachable, honest', () => {
   test('no staged campaign file ships; the deck says so instead of inventing numbers', () => {
     expect(existsSync(join(process.cwd(), 'data/adpilot-campaigns.json'))).toBe(false);
     const deck = read('components/adpilot/AdPilotDeck.tsx');
-    expect(deck).toContain('No ad account connected');
+    expect(deck).toContain('연결된 광고 계정 없음');
     const lib = read('components/adpilot/AdLibrary.tsx');
-    expect(lib).toContain('not connected');
+    expect(lib).toContain('연결 안 됨');
   });
 
   test('AdPilot sits at the end of Operate, outside the nine digit shortcuts', () => {

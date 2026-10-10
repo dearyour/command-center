@@ -32,7 +32,7 @@ export function PersonaOrgChart({ persona }: { persona: Persona }) {
   const gradId = `pcover-${persona.id}`;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" className="block h-[150px] w-full" role="img" aria-label={`${persona.name} org chart`}>
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet" className="block h-[150px] w-full" role="img" aria-label={`${persona.name} 조직도`}>
       <defs>
         <radialGradient id={gradId} cx="50%" cy="22%" r="60%">
           <stop offset="0%" stopColor={accent} stopOpacity="0.16" />

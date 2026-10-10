@@ -37,7 +37,7 @@ export function ApiKeys() {
     fetch('/api/admin/keys')
       .then((r) => r.json())
       .then((b) => setKeys(b.keys ?? []))
-      .catch(() => setError('could not load key statuses'));
+      .catch(() => setError('키 상태를 불러올 수 없습니다'));
 
   useEffect(() => {
     load();
@@ -62,7 +62,7 @@ export function ApiKeys() {
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      setError(typeof body.error === 'string' ? body.error : 'save failed');
+      setError(typeof body.error === 'string' ? body.error : '저장 실패');
       return;
     }
     setValue('');
@@ -94,11 +94,11 @@ export function ApiKeys() {
     <section className="mt-10">
       <div className="mb-1 flex items-center gap-2">
         <KeyRound className="h-4 w-4 text-os-muted" />
-        <h2 className="text-sm font-bold uppercase tracking-widest text-os-muted">API keys</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-os-muted">API 키</h2>
       </div>
       <p className="mb-4 text-xs text-os-dim">
-        Stored in <code>.env.local</code> (gitignored), applied live. Values shown masked — the OS never
-        echoes a secret back.
+        <code>.env.local</code> (git 제외)에 저장되고 즉시 적용됩니다. 값은 가려서 표시하며 — OS는 비밀 값을
+        다시 보여 주지 않습니다.
       </p>
       {error && <p className="mb-3 font-mono text-[11px] text-os-muted">✗ {error}</p>}
 
@@ -119,7 +119,7 @@ export function ApiKeys() {
                       {slot.envVar}
                     </span>
                     <span className="font-mono text-os-dim">
-                      {slot.present ? (revealed[slot.envVar] ? slot.masked : '••••••••') : 'not set'}
+                      {slot.present ? (revealed[slot.envVar] ? slot.masked : '••••••••') : '설정 안 됨'}
                     </span>
                     {savedVar === slot.envVar && <Check className="h-3 w-3 text-os-text" />}
                     <span className="ml-auto flex items-center gap-2">
@@ -129,21 +129,21 @@ export function ApiKeys() {
                           onClick={() => setRevealed((r) => ({ ...r, [slot.envVar]: !r[slot.envVar] }))}
                           className="pressable text-[10px] text-os-dim"
                         >
-                          {revealed[slot.envVar] ? 'hide' : 'reveal'}
+                          {revealed[slot.envVar] ? '숨기기' : '보기'}
                         </button>
                       )}
                       {slot.present && slot.connectorId && (
                         <AsyncButton
                           run={() => test(slot.envVar)}
                           tone="secondary"
-                          busyLabel="testing"
+                          busyLabel="테스트 중"
                           doneLabel={
                             tests[slot.envVar]?.ok === false
-                              ? 'failed'
+                              ? '실패'
                               : `${tests[slot.envVar]?.ms ?? 0}ms`
                           }
                         >
-                          test
+                          테스트
                         </AsyncButton>
                       )}
                       <button
@@ -155,7 +155,7 @@ export function ApiKeys() {
                         }}
                         className="pressable text-[10px] text-os-dim"
                       >
-                        {editing === slot.envVar ? 'cancel' : slot.present ? 'rotate' : 'set'}
+                        {editing === slot.envVar ? '취소' : slot.present ? '교체' : '설정'}
                       </button>
                     </span>
                   </div>
@@ -167,7 +167,7 @@ export function ApiKeys() {
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && save(slot.envVar)}
-                        placeholder={slot.hint ?? 'paste value'}
+                        placeholder={slot.hint ?? '값 붙여넣기'}
                         className="flex-1 rounded-ctl border border-os-border bg-os-bg px-2 py-1 font-mono text-[11px] text-os-text placeholder:text-os-dim focus:border-os-border-bright focus:outline-none"
                       />
                       <button
@@ -175,7 +175,7 @@ export function ApiKeys() {
                         data-lens="c"
                         className="pressable is-primary rounded-ctl bg-os-text px-2.5 py-1 text-[10px] font-bold text-os-bg"
                       >
-                        Save
+                        저장
                       </button>
                     </div>
                   )}

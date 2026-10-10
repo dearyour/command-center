@@ -39,10 +39,10 @@ describe('/brand-deals slab: the board', () => {
   });
 
   test('keeps the honest live pill, the Notion row count and the sync age', () => {
-    expect(board).toContain('live · Notion');
-    expect(board).toMatch(/Notion rows/);
-    expect(board).toContain('synced');
-    expect(board).toContain('seeded');
+    expect(board).toContain('실시간 · Notion');
+    expect(board).toMatch(/Notion 행/);
+    expect(board).toContain('동기화');
+    expect(board).toContain('샘플');
   });
 
   test('refreshes from the existing GET route and nothing else', () => {

@@ -282,7 +282,7 @@ export function Globe({ geo, height = 560 }: Props) {
           className="pointer-events-none absolute left-0 top-0 z-20 flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[rgba(255,69,87,0.28)] bg-[#0a0507e6] px-2.5 py-1 opacity-0 transition-opacity duration-200"
         >
           <span className="text-[12px] text-os-text">{g.city}</span>
-          <span className="text-[11px] tabular-nums text-os-muted">{g.leads} leads</span>
+          <span className="text-[11px] tabular-nums text-os-muted">리드 {g.leads}</span>
         </div>
       ))}
       {tooltip && (
@@ -294,7 +294,7 @@ export function Globe({ geo, height = 560 }: Props) {
             {tooltip.g.city}, {tooltip.g.country}
           </div>
           <div className="text-[11.5px] text-os-muted">
-            {tooltip.g.leads} leads · {tooltip.g.bookings} booked
+            리드 {tooltip.g.leads} · 예약 {tooltip.g.bookings}
           </div>
         </div>
       )}

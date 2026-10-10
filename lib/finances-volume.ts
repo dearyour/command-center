@@ -63,8 +63,8 @@ export function moneyVolume(x: {
     display:
       a.income == null
         ? a.configured
-          ? 'pull pending'
-          : 'awaiting key'
+          ? '수집 대기'
+          : '키 대기'
         : a.incomeUpper != null
           ? `${usd(a.income)} - ${usd(a.incomeUpper)}`
           : usd(a.income),
@@ -73,9 +73,9 @@ export function moneyVolume(x: {
 
   const spentRatio = income > 0 ? x.expenses / income : 0;
   const spend: MoneyMeter = {
-    label: x.expensesLive ? `Spent of income${x.monthLabel ? ` · ${x.monthLabel}` : ''}` : 'Set fees of income',
+    label: x.expensesLive ? `수입 대비 지출${x.monthLabel ? ` · ${x.monthLabel}` : ''}` : '수입 대비 고정 비용',
     frac: comparable ? clamp01(spentRatio) : 0,
-    display: !comparable ? 'no statement this month' : income > 0 ? `${Math.round(spentRatio * 100)}%` : 'no income yet',
+    display: !comparable ? '이번 달 명세서 없음' : income > 0 ? `${Math.round(spentRatio * 100)}%` : '아직 수입 없음',
     hue: comparable && x.expenses > income ? 'var(--err)' : 'var(--warn)',
   };
 
@@ -84,26 +84,26 @@ export function moneyVolume(x: {
     upper: ceiling > income ? ceiling : null,
     chips: comparable
       ? [
-          { tone: 'err', text: `${usd(x.expenses)} out` },
-          { tone: net >= 0 ? 'ok' : 'err', text: `${signed(net)} net` },
+          { tone: 'err', text: `지출 ${usd(x.expenses)}` },
+          { tone: net >= 0 ? 'ok' : 'err', text: `순액 ${signed(net)}` },
         ]
-      : [{ tone: 'err', text: `${usd(x.expenses)} out · ${x.monthLabel ?? 'latest statement'}` }],
-    caption: `income this month · ${live}/${x.accounts.length} processors live`,
+      : [{ tone: 'err', text: `지출 ${usd(x.expenses)} · ${x.monthLabel ?? '최근 명세서'}` }],
+    caption: `이번 달 수입 · 결제 수단 ${live}/${x.accounts.length} 연동`,
     meters: [...sources, spend],
     foot: x.expensesLive
-      ? `expenses from the uploaded ${x.monthLabel ?? 'latest'} statement`
-      : 'expenses are declared set fees · upload a card statement for real months',
+      ? `업로드한 ${x.monthLabel ?? '최근'} 명세서 기준 지출`
+      : '지출은 신고한 고정 비용입니다 · 실제 월별 지출은 카드 명세서를 올리세요',
     insight: !comparable
       ? {
           display: ' - ',
-          headline: "Upload this month's statement to see what was kept.",
-          body: `${usd(income)} in so far this month; the latest statement is ${x.monthLabel ?? 'from another month'}.`,
+          headline: '이번 달 명세서를 올리면 남은 돈을 볼 수 있습니다.',
+          body: `이번 달 지금까지 수입 ${usd(income)}, 최근 명세서는 ${x.monthLabel ?? '다른 달'} 것입니다.`,
           frac: 0,
         }
       : {
       display: signed(net),
-      headline: net >= 0 ? `kept of ${usd(income)} in this month.` : 'more out than in this month.',
-      body: `${usd(income)} in − ${usd(x.expenses)} out${x.expensesLive ? `, spend from the ${x.monthLabel ?? 'latest'} statement` : ', spend is the declared set fees'}.`,
+      headline: net >= 0 ? `이번 달 수입 ${usd(income)} 중 남은 돈.` : '이번 달은 들어온 돈보다 나간 돈이 많습니다.',
+      body: `수입 ${usd(income)} − 지출 ${usd(x.expenses)}${x.expensesLive ? `, 지출은 ${x.monthLabel ?? '최근'} 명세서 기준` : ', 지출은 신고한 고정 비용'}.`,
       frac: income > 0 ? clamp01(net / income) : 0,
     },
   };

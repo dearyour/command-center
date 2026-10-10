@@ -57,7 +57,7 @@ export function ConnectFlow({
   const save = async () => {
     setError(null);
     if (keys.some((k) => !(values[k] ?? '').trim())) {
-      setError('every field is required');
+      setError('모든 항목을 입력해야 합니다');
       return;
     }
     setBusy(true);
@@ -73,7 +73,7 @@ export function ConnectFlow({
       setValues({});
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'save failed');
+      setError(e instanceof Error ? e.message : '저장 실패');
     } finally {
       setBusy(false);
     }
@@ -97,15 +97,15 @@ export function ConnectFlow({
   const statusChip = connected ? (
     <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-os-ok">
       <span className="dot ok" />
-      Connected
+      연결됨
     </span>
   ) : keySaved ? (
     <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-os-warn">
       <span className="dot warn" />
-      Key saved
+      키 저장됨
     </span>
   ) : (
-    <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim">Not connected</span>
+    <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-os-dim">연결 안 됨</span>
   );
 
   if (open) {
@@ -133,15 +133,15 @@ export function ConnectFlow({
             data-lens="c"
             className="pressable rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-os-dim"
           >
-            Cancel
+            취소
           </button>
           <AsyncButton
             run={save}
             tone="primary"
             busyLabel="OAuth…"
-            doneLabel={error ? 'failed' : 'connected'}
+            doneLabel={error ? '실패' : '연결됨'}
           >
-            Save &amp; connect
+            저장 &amp; 연결
           </AsyncButton>
         </div>
       </div>
@@ -156,10 +156,10 @@ export function ConnectFlow({
         // No button: this provider will not accept the http redirect this box
         // can offer, so offering one would be a button that cannot finish.
         <div className="font-mono text-[9.5px] leading-relaxed text-os-dim">
-          OAuth needs a public https redirect — put a domain or tunnel in front of the OS first, then
-          register <span className="text-os-muted">/api/oauth/callback</span> at{' '}
+          OAuth에는 공개 https 리디렉션이 필요합니다 — 먼저 OS 앞에 도메인이나 터널을 두고,
+          <span className="text-os-muted">/api/oauth/callback</span> 을 다음에 등록하세요:{' '}
           <a href={oauth.consoleUrl} target="_blank" rel="noreferrer" className="linky text-os-muted">
-            {oauth.name} console
+            {oauth.name} 콘솔
           </a>
           .
         </div>
@@ -169,18 +169,18 @@ export function ConnectFlow({
           data-lens="c"
           className="pressable is-dark inline-flex items-center gap-1.5 rounded-ctl border border-os-border-strong px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-os-text"
         >
-          {oauth.connected ? (oauth.expired ? 'Reconnect · expired' : 'Reconnect') : 'Connect with OAuth'}
+          {oauth.connected ? (oauth.expired ? '다시 연결 · 만료됨' : '다시 연결') : 'OAuth로 연결'}
         </a>
       ) : (
         <div className="font-mono text-[9.5px] leading-relaxed text-os-dim">
-          Register an app at{' '}
+          다음에서 앱을 등록하세요:{' '}
           <a href={oauth.consoleUrl} target="_blank" rel="noreferrer" className="linky text-os-muted">
-            {oauth.name} console
+            {oauth.name} 콘솔
           </a>{' '}
-          with redirect <span className="text-os-muted">/api/oauth/callback</span>, then save{' '}
-          <span className="text-os-muted">{oauth.clientIdEnv}</span> and{' '}
-          <span className="text-os-muted">{oauth.clientSecretEnv}</span> below.
-          {oauth.redirectKind === 'loopback' && ' This provider allows http only on localhost, so open the OS on the box itself to finish it.'}
+          (리디렉션 <span className="text-os-muted">/api/oauth/callback</span>), 그다음 아래에{' '}
+          <span className="text-os-muted">{oauth.clientIdEnv}</span> 와{' '}
+          <span className="text-os-muted">{oauth.clientSecretEnv}</span> 를 저장하세요.
+          {oauth.redirectKind === 'loopback' && ' 이 제공자는 localhost에서만 http를 허용하므로, 해당 컴퓨터에서 직접 OS를 열어 마무리하세요.'}
         </div>
       )}
     </div>
@@ -200,14 +200,14 @@ export function ConnectFlow({
             data-lens="c"
             className="pressable rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-os-dim disabled:opacity-40"
           >
-            Disconnect
+            연결 해제
           </button>
         ) : (
           <span
-            title="Credentials managed outside Command Center (canonical machine files)"
+            title="커맨드 센터 밖에서 관리되는 인증 정보 (기기의 원본 파일)"
             className="cursor-default rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-os-dim/60"
           >
-            Managed
+            외부 관리
           </span>
         )
       ) : keys.length > 0 ? (
@@ -216,14 +216,14 @@ export function ConnectFlow({
           onClick={() => setOpen(true)}
           data-lens="c" className="pressable rounded-full border border-os-border-strong px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-os-text hover:bg-os-text hover:text-os-bg"
         >
-          + Connect
+          + 연결
         </button>
       ) : (
         <span
-          title={guidance ?? 'Connects through local setup, not a pasted key'}
+          title={guidance ?? '붙여넣는 키가 아니라 로컬 설정으로 연결합니다'}
           className="cursor-help rounded-full border border-os-border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-os-dim"
         >
-          Setup
+          설정
         </span>
       )}
       </div>

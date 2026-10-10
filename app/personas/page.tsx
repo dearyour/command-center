@@ -12,9 +12,9 @@ export default function PersonasPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="platform variants"
-        title="Personas"
-        right={<Badge tone="accent">{personas.length} templates</Badge>}
+        eyebrow="플랫폼 변형"
+        title="페르소나"
+        right={<Badge tone="accent">템플릿 {personas.length}개</Badge>}
       />
       <Rise i={1}>
         <PersonasViewer personas={personas} />

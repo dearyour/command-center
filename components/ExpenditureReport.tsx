@@ -14,6 +14,7 @@ import {
   type SpendRow,
 } from '@/lib/spend-report';
 import { Badge, Label, SectionHead } from '@/components/terminal';
+import { categoryKo } from '@/lib/status-labels';
 
 const usd = (cents: number, decimals = false) =>
   (cents / 100).toLocaleString('en-US', {
@@ -102,11 +103,10 @@ export function ExpenditureReport({
               // full expenditure statement
             </div>
             <h1 className="text-[25px] font-bold uppercase tracking-[0.06em]">
-              {month ? monthLabel(month) : 'All time'}
+              {month ? monthLabel(month) : '전체 기간'}
             </h1>
             <p className="mt-1 font-mono text-[10.5px] text-os-dim">
-              {usd(monthTotal)} out · {charges.length} charges · {months.length} month
-              {months.length === 1 ? '' : 's'} on file
+              지출 {usd(monthTotal)} · 결제 {charges.length}건 · 기록된 기간 {months.length}개월
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -114,7 +114,7 @@ export function ExpenditureReport({
               type="button"
               onClick={() => step(-1)}
               disabled={index <= 0}
-              aria-label="Previous month"
+              aria-label="이전 달"
               className="pressable rounded-sm-t border border-os-border-strong p-1.5 text-os-muted hover:bg-os-surface2 disabled:opacity-30"
             >
               <ChevronLeft className="h-3.5 w-3.5" strokeWidth={1.8} />
@@ -123,7 +123,7 @@ export function ExpenditureReport({
               type="button"
               onClick={() => step(1)}
               disabled={index < 0 || index >= months.length - 1}
-              aria-label="Next month"
+              aria-label="다음 달"
               className="pressable rounded-sm-t border border-os-border-strong p-1.5 text-os-muted hover:bg-os-surface2 disabled:opacity-30"
             >
               <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
@@ -137,12 +137,12 @@ export function ExpenditureReport({
  : 'border-os-border-strong text-os-dim hover:bg-os-surface2'
  }`}
             >
-              all time
+              전체 기간
             </button>
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close expenditure statement"
+              aria-label="지출 명세 닫기"
               className="pressable rounded-sm-t border border-os-border-strong p-1.5 text-os-muted hover:bg-os-surface2"
             >
               <Minimize2 className="h-3.5 w-3.5" strokeWidth={1.8} />
@@ -152,10 +152,10 @@ export function ExpenditureReport({
 
         {/* month to month */}
         <section className="mb-5">
-          <SectionHead label="Month to month" count={`${timeline.length} months`} />
+          <SectionHead label="월별 추이" count={`${timeline.length}개월`} />
           <div className="rounded-lg-t border border-os-border bg-os-surface px-4 py-4">
             {timeline.length === 0 ? (
-              <p className="py-3 text-center font-mono text-[10.5px] text-os-dim">No statements uploaded yet.</p>
+              <p className="py-3 text-center font-mono text-[10.5px] text-os-dim">아직 업로드한 명세서가 없습니다.</p>
             ) : (
               <div className="flex items-end gap-2 overflow-x-auto pb-1">
                 {timeline.map((t) => {
@@ -192,7 +192,7 @@ export function ExpenditureReport({
 
         {/* the three lanes */}
         <section className="mb-5">
-          <SectionHead label="By card · three lanes" count={month ? monthLabel(month) : 'all time'} />
+          <SectionHead label="카드별 · 세 개 레인" count={month ? monthLabel(month) : '전체 기간'} />
           <div className="grid gap-3.5 lg:grid-cols-3">
             {lanes.map((l) => {
               const lane = CARD_LANES.find((c) => c.id === l.card);
@@ -220,25 +220,25 @@ export function ExpenditureReport({
         {/* subscriptions */}
         <section className="mb-5">
           <SectionHead
-            label="Subscriptions · recurring charges"
-            count={`${activeSubs.length} active · ${usd(subsMonthly)}/mo`}
+            label="구독 · 반복 결제"
+            count={`활성 ${activeSubs.length}개 · 월 ${usd(subsMonthly)}`}
           />
           <div className="rounded-lg-t border border-os-border bg-os-surface">
             {subs.length === 0 ? (
               <p className="px-4 py-6 text-center font-mono text-[10.5px] text-os-dim">
-                Nothing recurring yet: a merchant needs charges in two or more months before it counts as a
-                subscription.
+                아직 반복 결제가 없습니다: 같은 가맹점에서 두 달 이상 결제가 있어야
+                구독으로 집계됩니다.
               </p>
             ) : (
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b border-os-border text-left font-mono text-[9.5px] uppercase tracking-[0.16em] text-os-dim">
-                    <th className="px-4 py-2 font-medium">Merchant</th>
-                    <th className="px-4 py-2 font-medium">Card</th>
-                    <th className="px-4 py-2 text-right font-medium">Per month</th>
-                    <th className="px-4 py-2 font-medium">First seen</th>
-                    <th className="px-4 py-2 font-medium">Last charge</th>
-                    <th className="px-4 py-2 font-medium">Status</th>
+                    <th className="px-4 py-2 font-medium">가맹점</th>
+                    <th className="px-4 py-2 font-medium">카드</th>
+                    <th className="px-4 py-2 text-right font-medium">월 금액</th>
+                    <th className="px-4 py-2 font-medium">처음 결제</th>
+                    <th className="px-4 py-2 font-medium">마지막 결제</th>
+                    <th className="px-4 py-2 font-medium">상태</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -246,7 +246,7 @@ export function ExpenditureReport({
                     <tr key={`${s.card}|${s.merchant}`} className="border-b border-os-border/60 last:border-0">
                       <td className="px-4 py-2 font-mono text-[11px] text-os-text">
                         {s.merchant}
-                        <span className="ml-2 text-os-dim">{s.category}</span>
+                        <span className="ml-2 text-os-dim">{categoryKo(s.category)}</span>
                       </td>
                       <td className="px-4 py-2 font-mono text-[10.5px] text-os-muted">{cardLabel(s.card)}</td>
                       <td className="px-4 py-2 text-right font-mono text-[11px] text-os-text">
@@ -256,7 +256,7 @@ export function ExpenditureReport({
                       <td className="px-4 py-2 font-mono text-[10.5px] text-os-dim">{monthLabel(s.lastMonth)}</td>
                       <td className="px-4 py-2">
                         <Badge tone={s.status === 'active' ? 'ok' : 'default'}>
-                          {s.status === 'active' ? 'active' : `cancelled ${monthLabel(s.lastMonth)}`}
+                          {s.status === 'active' ? '활성' : `${monthLabel(s.lastMonth)} 해지`}
                         </Badge>
                       </td>
                     </tr>
@@ -270,16 +270,16 @@ export function ExpenditureReport({
         {/* what the month went on */}
         <section className="mb-5 grid gap-3.5 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <SectionHead label="By category" count={usd(monthTotal)} />
+            <SectionHead label="카테고리별" count={usd(monthTotal)} />
             <div className="rounded-lg-t border border-os-border bg-os-surface p-4">
               {cats.length === 0 ? (
-                <p className="py-3 text-center font-mono text-[10.5px] text-os-dim">Nothing this month.</p>
+                <p className="py-3 text-center font-mono text-[10.5px] text-os-dim">이번 달에는 없습니다.</p>
               ) : (
                 <div className="flex flex-col gap-2.5">
                   {cats.map((c) => (
                     <div key={c.category}>
                       <div className="mb-1 flex items-baseline justify-between gap-2 font-mono text-[11px]">
-                        <span className="text-os-muted">{c.category}</span>
+                        <span className="text-os-muted">{categoryKo(c.category)}</span>
                         <span className="text-os-text">{usd(c.totalCents)}</span>
                       </div>
                       <div className="h-1.5 overflow-hidden rounded-sm-t bg-os-surface2">
@@ -296,10 +296,10 @@ export function ExpenditureReport({
           </div>
 
           <div>
-            <SectionHead label="Top merchants" count={`${merchants.length} of ${charges.length} charges`} />
+            <SectionHead label="상위 가맹점" count={`결제 ${charges.length}건 중 ${merchants.length}곳`} />
             <div className="max-h-[420px] overflow-y-auto rounded-lg-t border border-os-border bg-os-surface">
               {merchants.length === 0 ? (
-                <p className="px-4 py-6 text-center font-mono text-[10.5px] text-os-dim">Nothing this month.</p>
+                <p className="px-4 py-6 text-center font-mono text-[10.5px] text-os-dim">이번 달에는 없습니다.</p>
               ) : (
                 merchants.map((m) => (
                   <div
@@ -320,11 +320,11 @@ export function ExpenditureReport({
 
         {/* every charge */}
         <section className="mb-8">
-          <SectionHead label="Every charge" count={`${charges.length} rows`} />
+          <SectionHead label="전체 결제" count={`${charges.length}행`} />
           <div className="max-h-[520px] overflow-y-auto rounded-lg-t border border-os-border bg-os-surface">
             {charges.length === 0 ? (
               <p className="px-4 py-6 text-center font-mono text-[10.5px] text-os-dim">
-                No charges for this period. Upload a statement from the finances page.
+                이 기간에는 결제가 없습니다. 재무 화면에서 명세서를 올리세요.
               </p>
             ) : (
               charges.map((r, i) => (
@@ -334,7 +334,7 @@ export function ExpenditureReport({
                 >
                   <span className="w-[54px] shrink-0 font-mono text-[10px] text-os-dim">{dayLabel(r.date)}</span>
                   <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-os-text">{r.description}</span>
-                  <span className="shrink-0 font-mono text-[10px] text-os-dim">{r.category}</span>
+                  <span className="shrink-0 font-mono text-[10px] text-os-dim">{categoryKo(r.category)}</span>
                   <span className="w-[92px] shrink-0 font-mono text-[10px] text-os-dim">{cardLabel(r.card)}</span>
                   <span className="w-[84px] shrink-0 text-right font-mono text-[11px] text-os-text">
                     {usd(r.amountCents, true)}

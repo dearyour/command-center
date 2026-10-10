@@ -58,7 +58,7 @@ export function AdPilotDeck({ campaigns, syncedAt }: { campaigns: Campaign[]; sy
         <div className="ap-chip flex items-center gap-2 px-5 py-2">
           <span className={`h-2 w-2 rounded-full ${liveCount > 0 ? 'bg-[var(--accent)]' : 'bg-os-dim'}`} />
           <span className="text-[13px] text-os-text">
-            {empty ? 'No ad account connected' : `${liveCount} active campaign${liveCount === 1 ? '' : 's'}`}
+            {empty ? '연결된 광고 계정 없음' : `진행 중인 캠페인 ${liveCount}개`}
           </span>
         </div>
       </div>
@@ -71,17 +71,17 @@ export function AdPilotDeck({ campaigns, syncedAt }: { campaigns: Campaign[]; sy
           style={{ background: 'radial-gradient(circle, rgba(255,47,68,0.18), rgba(255,47,68,0.06) 46%, transparent 68%)' }}
         />
         <div className="pointer-events-none absolute right-0 top-10 z-10 flex w-48 flex-col gap-3">
-          <StatFloat label="Total leads · 30 days" value={nf.format(metrics.leads)} />
-          <StatFloat label="Booked calls" value={nf.format(metrics.bookings)} />
+          <StatFloat label="전체 리드 · 30일" value={nf.format(metrics.leads)} />
+          <StatFloat label="예약된 통화" value={nf.format(metrics.bookings)} />
         </div>
         <Globe geo={geo} height={560} />
       </div>
 
       {empty ? (
         <div className="ap-panel mx-auto mt-4 max-w-xl px-4 py-6 text-center">
-          <p className="text-[13px] text-os-muted">No ad account connected.</p>
+          <p className="text-[13px] text-os-muted">연결된 광고 계정이 없습니다.</p>
           <p className="mt-1 text-[12px] text-os-dim">
-            Campaigns arrive automatically once a Meta ad account is connected: nothing here is added by hand.
+            Meta 광고 계정을 연결하면 캠페인이 자동으로 들어옵니다: 여기에는 직접 추가하는 것이 없습니다.
           </p>
         </div>
       ) : (
@@ -162,7 +162,7 @@ function CampaignRail({
 
   return (
     <div className="ap-panel mt-6 flex items-center gap-2 p-2">
-      {pill('all', 'All campaigns', null)}
+      {pill('all', '모든 캠페인', null)}
       <div className="h-6 w-px shrink-0 bg-[rgba(255,69,87,0.16)]" />
       <div
         ref={scrollRef}
@@ -181,7 +181,7 @@ function CampaignRail({
           <input
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder="filter"
+            placeholder="필터"
             className="w-24 bg-transparent text-[12px] text-os-text outline-none placeholder:text-os-dim"
           />
         </div>
@@ -231,7 +231,7 @@ function HeroSpend({
   const maxSpend = Math.max(...campaigns.map((c) => c.spend), 1);
   return (
     <div className="ap-panel ap-glow h-full p-5">
-      <div className="text-[12.5px] text-os-dim">Ad spend · 30 days</div>
+      <div className="text-[12.5px] text-os-dim">광고비 · 30일</div>
       <div className="mt-1 text-[36px] font-light tabular-nums leading-none text-os-text">{money(metrics.spend)}</div>
       <div className="mt-2.5 flex flex-wrap gap-1.5">
         <DeltaPill label="spend" delta={windowDelta(daily, (d) => d.spend)} />
@@ -270,7 +270,7 @@ function DeliveryMatrix({ campaigns, selected }: { campaigns: Campaign[]; select
   if (rows.length === 0) {
     return (
       <div className="ap-panel flex h-full items-center justify-center p-5">
-        <span className="text-[12px] text-os-dim">Daily delivery arrives with the ad-account sync.</span>
+        <span className="text-[12px] text-os-dim">일별 노출 데이터는 광고 계정 동기화와 함께 들어옵니다.</span>
       </div>
     );
   }
@@ -282,7 +282,7 @@ function DeliveryMatrix({ campaigns, selected }: { campaigns: Campaign[]; select
   return (
     <div className="ap-panel h-full p-5">
       <div className="flex items-baseline justify-between">
-        <div className="text-[12.5px] text-os-dim">Delivery · spend per day</div>
+        <div className="text-[12.5px] text-os-dim">노출 · 일별 지출</div>
         <div className="text-[11.5px] tabular-nums text-os-dim">
           {dates[0]?.slice(5)}: {dates[dates.length - 1]?.slice(5)}
         </div>
@@ -295,7 +295,7 @@ function DeliveryMatrix({ campaigns, selected }: { campaigns: Campaign[]; select
             <div key={c.id} className={dimmed ? 'opacity-30' : ''}>
               <div className="mb-1.5 flex items-baseline justify-between">
                 <span className="truncate text-[12.5px] text-os-muted">{c.name}</span>
-                <span className="text-[11px] tabular-nums text-os-dim">peak {money(rowPeak)}/d</span>
+                <span className="text-[11px] tabular-nums text-os-dim">최고 {money(rowPeak)}/일</span>
               </div>
               <div className="flex justify-between gap-[3px]">
                 {c.daily!.map((d) => {
@@ -303,7 +303,7 @@ function DeliveryMatrix({ campaigns, selected }: { campaigns: Campaign[]; select
                   return (
                     <span
                       key={d.date}
-                      title={`${d.date} · $${nf.format(Math.round(d.spend))} · ${d.leads} leads`}
+                      title={`${d.date} · $${nf.format(Math.round(d.spend))} · 리드 ${d.leads}`}
                       className="aspect-square w-full max-w-[13px] rounded-full"
                       style={{
                         background:
@@ -319,14 +319,14 @@ function DeliveryMatrix({ campaigns, selected }: { campaigns: Campaign[]; select
       </div>
       <div className="mt-4 flex items-center justify-between border-t border-[rgba(255,69,87,0.12)] pt-3">
         <span className="text-[11.5px] text-os-dim">
-          Peak day {peakAll.date.slice(5)} · {money(peakAll.spend)}
+          최고의 날 {peakAll.date.slice(5)} · {money(peakAll.spend)}
         </span>
         <span className="flex items-center gap-1.5 text-[11px] text-os-dim">
-          quiet
+          적음
           {[0.15, 0.45, 0.7, 1].map((t) => (
             <span key={t} className="h-[9px] w-[9px] rounded-full" style={{ background: `rgba(255,69,87,${0.1 + Math.pow(t, 1.7) * 0.88})` }} />
           ))}
-          heavy
+          많음
         </span>
       </div>
     </div>
@@ -344,7 +344,7 @@ function RoasRing({ metrics }: { metrics: CampaignMetrics }) {
   const tickAngle = (1 / CAP) * 360 - 90;
   return (
     <div className="ap-panel flex h-full flex-col items-center justify-center p-5">
-      <div className="self-start text-[12.5px] text-os-dim">ROAS · revenue vs spend</div>
+      <div className="self-start text-[12.5px] text-os-dim">ROAS · 매출 대비 지출</div>
       <div className="relative mt-1">
         <svg width="150" height="150" viewBox="0 0 150 150">
           <circle cx="75" cy="75" r={R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" />
@@ -365,12 +365,12 @@ function RoasRing({ metrics }: { metrics: CampaignMetrics }) {
           <span className={`text-[27px] font-light tabular-nums ${roas !== null && roas >= 1 ? 'text-[var(--accent)]' : 'text-os-text'}`}>
             {times(roas)}
           </span>
-          <span className="text-[10.5px] text-os-dim">break-even 1.00x</span>
+          <span className="text-[10.5px] text-os-dim">손익분기 1.00x</span>
         </div>
       </div>
       <div className="mt-1.5 flex gap-4 text-[11.5px] tabular-nums text-os-dim">
-        <span>rev {money(metrics.revenue)}</span>
-        <span>spend {money(metrics.spend)}</span>
+        <span>매출 {money(metrics.revenue)}</span>
+        <span>지출 {money(metrics.spend)}</span>
       </div>
     </div>
   );
@@ -380,16 +380,16 @@ function RoasRing({ metrics }: { metrics: CampaignMetrics }) {
 
 function ResultsPanel({ metrics }: { metrics: CampaignMetrics }) {
   const items: [string, string][] = [
-    ['Leads', nf.format(metrics.leads)],
-    ['Bookings', nf.format(metrics.bookings)],
-    ['Cost / lead', money2(metrics.cpl)],
-    ['Cost / booking', money2(metrics.costPerBooking)],
-    ['Cost / result', money2(metrics.costPerResult)],
+    ['리드', nf.format(metrics.leads)],
+    ['예약', nf.format(metrics.bookings)],
+    ['리드당 비용', money2(metrics.cpl)],
+    ['예약당 비용', money2(metrics.costPerBooking)],
+    ['결과당 비용', money2(metrics.costPerResult)],
     ['CTR', pct(metrics.ctr)],
   ];
   return (
     <div className="ap-panel h-full p-5">
-      <div className="text-[12.5px] text-os-dim">Results</div>
+      <div className="text-[12.5px] text-os-dim">결과</div>
       <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-4">
         {items.map(([label, value]) => (
           <div key={label} className="flex items-center gap-2.5">
@@ -409,14 +409,14 @@ function ResultsPanel({ metrics }: { metrics: CampaignMetrics }) {
 
 function AudiencePanel({ audience }: { audience: Campaign['audience'] }) {
   const groups: [string, Record<string, number>][] = [
-    ['Age', audience.age],
-    ['Gender', audience.gender],
-    ['Placements', audience.placements],
+    ['나이', audience.age],
+    ['성별', audience.gender],
+    ['노출 위치', audience.placements],
   ];
   const SEGMENTS = 18;
   return (
     <div className="ap-panel h-full p-5">
-      <div className="text-[12.5px] text-os-dim">Audience</div>
+      <div className="text-[12.5px] text-os-dim">오디언스</div>
       <div className="mt-3 grid gap-x-6 gap-y-4 sm:grid-cols-2">
         {groups.map(([title, data]) => (
           <div key={title} className={title === 'Age' ? 'sm:row-span-2' : ''}>

@@ -55,15 +55,15 @@ const ModelTotalsSchema = z.record(TotSchema);
 export const BURN_SOURCES = ['board', 'sessions', 'terminal', 'automation'] as const;
 export type BurnSource = (typeof BURN_SOURCES)[number];
 export const SOURCE_LABEL: Record<BurnSource, string> = {
-  board: 'Agent board',
-  sessions: 'My sessions · Superset',
-  terminal: 'Terminal',
-  automation: 'Crons & headless',
+  board: '에이전트 보드',
+  sessions: '내 세션 · Superset',
+  terminal: '터미널',
+  automation: '크론 & 헤드리스',
 };
 
 export const WINDOWS = ['hour', 'session', 'day', 'week'] as const;
 export type UsageWindow = (typeof WINDOWS)[number];
-export const WINDOW_LABEL: Record<UsageWindow, string> = { hour: 'last hour', session: '5h session', day: 'today', week: '7 days' };
+export const WINDOW_LABEL: Record<UsageWindow, string> = { hour: '최근 1시간', session: '5시간 세션', day: '오늘', week: '7일' };
 
 const LaneTotsSchema = z.object({ board: TotSchema, sessions: TotSchema, terminal: TotSchema, automation: TotSchema });
 export type LaneTots = z.infer<typeof LaneTotsSchema>;

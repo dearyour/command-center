@@ -24,7 +24,7 @@ export type AnalyticsVolume = {
 };
 
 const HUES = ['var(--ramp-1)', 'var(--ramp-2)', 'var(--ramp-3)', 'var(--ramp-4)'];
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
 const n = (v: number) => v.toLocaleString('en-US');
 
 /** Biggest first; past `max` rows the tail folds into one "Other" row. */
@@ -51,9 +51,9 @@ export function analyticsVolume(x: {
   // ── Reach: every channel plus the email list ──
   // A channel with no snapshot yet (null) is unmeasured, not zero: left out.
   const channels = x.channels.flatMap((c) => (c.followers === null ? [] : [{ label: c.label, value: c.followers }]));
-  if (x.subs) channels.push({ label: 'Email list', value: x.subs });
+  if (x.subs) channels.push({ label: '이메일 리스트', value: x.subs });
   const reach = channels.reduce((s, c) => s + c.value, 0);
-  const meters = topWithOther(channels, 4, (k) => `Other channels (${k})`).map((c, i) => ({
+  const meters = topWithOther(channels, 4, (k) => `기타 채널 (${k})`).map((c, i) => ({
     label: c.label,
     frac: reach > 0 ? c.value / reach : 0,
     display: `${n(c.value)} · ${reach > 0 ? Math.round((c.value / reach) * 100) : 0}%`,
@@ -62,9 +62,9 @@ export function analyticsVolume(x: {
 
   const chips: VolumeChip[] = [];
   if (x.growth7d !== null && x.growth7d !== 0) {
-    chips.push({ tone: x.growth7d > 0 ? 'ok' : 'err', text: `${x.growth7d > 0 ? '+' : ''}${x.growth7d.toFixed(1)}% 7d` });
+    chips.push({ tone: x.growth7d > 0 ? 'ok' : 'err', text: `${x.growth7d > 0 ? '+' : ''}${x.growth7d.toFixed(1)}% (7일)` });
   }
-  if (x.subs) chips.push({ text: `${n(x.subs)} email subs` });
+  if (x.subs) chips.push({ text: `이메일 구독자 ${n(x.subs)}` });
 
   const totalMetrics = x.live + x.pending.length;
 
@@ -74,7 +74,7 @@ export function analyticsVolume(x: {
   const ok = x.runs.filter((r) => r.ok).length;
   const total = x.runs.length;
   const agentRows = [...byAgent.entries()].map(([id, count]) => ({ label: x.agentNames[id] ?? id, value: count }));
-  const runMeters = topWithOther(agentRows, 4, (k) => `Other agents (${k})`).map((a, i) => ({
+  const runMeters = topWithOther(agentRows, 4, (k) => `기타 에이전트 (${k})`).map((a, i) => ({
     label: `${a.label} (${a.value})`,
     frac: total > 0 ? a.value / total : 0,
     display: `${total > 0 ? Math.round((a.value / total) * 100) : 0}%`,
@@ -101,9 +101,9 @@ export function analyticsVolume(x: {
     reach,
     headline: n(reach),
     chips,
-    caption: channels.length ? `total reach across ${channels.length} channel${channels.length === 1 ? '' : 's'}` : 'no audience snapshots yet',
+    caption: channels.length ? `채널 ${channels.length}개의 전체 도달` : '아직 오디언스 스냅샷이 없습니다',
     meters,
-    foot: `reach = followers + email list · ${x.live} of ${totalMetrics} metrics live`,
+    foot: `도달 = 팔로워 + 이메일 리스트 · 지표 ${totalMetrics}개 중 ${x.live}개 실시간`,
     runs: {
       total,
       ok,
@@ -116,12 +116,12 @@ export function analyticsVolume(x: {
     rhythmTotal: byDay.reduce((s, c) => s + c, 0),
     insight: {
       value: pendingCount,
-      headline: pendingCount === 0 ? 'Every metric is live' : `${pendingCount} metric${pendingCount === 1 ? '' : 's'} waiting on credentials`,
+      headline: pendingCount === 0 ? '모든 지표가 실시간입니다' : `인증 정보를 기다리는 지표 ${pendingCount}개`,
       body:
         x.pending
           .slice(0, 3)
           .map((p) => p.label)
-          .join(' · ') || 'Nothing to wire. Every tile reads a real connector.',
+          .join(' · ') || '연결할 것이 없습니다. 모든 타일이 실제 커넥터를 읽습니다.',
       frac: totalMetrics > 0 ? x.live / totalMetrics : 0,
     },
   };

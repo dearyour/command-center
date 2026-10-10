@@ -41,33 +41,33 @@ describe('tradingVolume', () => {
   test('the headline is the brokerage total, with the day and the book as chips', () => {
     expect(v.headline).toBe(1800);
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '+$3.25 today' },
-      { tone: 'accent', text: '$100 in 2 positions' },
+      { tone: 'ok', text: '오늘 +$3.25' },
+      { tone: 'accent', text: '2개 종목에 $100' },
     ]);
-    expect(v.caption).toBe('brokerage, 2 accounts · $2,000.00 with the wallet');
+    expect(v.caption).toBe('증권 계좌 2개 · 지갑 포함 $2,000.00');
   });
 
   test('one meter per account plus the wallet, each its share of everything held, naming who may trade it', () => {
-    expect(v.meters.map((m) => m.label)).toEqual(['Agentic · agent may trade', 'Individual · read-only to agents', 'Phantom · 2 SOL · 68SH…BST2']);
+    expect(v.meters.map((m) => m.label)).toEqual(['Agentic · 에이전트 거래 가능', 'Individual · 에이전트는 읽기만 가능', 'Phantom · 2 SOL · 68SH…BST2']);
     expect(v.meters[0].frac).toBeCloseTo(0.3);
     expect(v.meters[1].frac).toBeCloseTo(0.6);
     expect(v.meters[2].frac).toBeCloseTo(0.1);
     expect(v.meters.map((m) => m.display)).toEqual(['$600.00', '$1,200.00', '$200.00']);
     expect(v.meters.map((m) => m.hue)).toEqual(['var(--accent)', 'var(--ramp-1)', 'var(--ramp-4)']);
-    expect(v.foot).toBe('only the agentic sleeve can be traded by an agent · $100.00 / SOL');
+    expect(v.foot).toBe('에이전트는 에이전트 슬리브에서만 거래할 수 있습니다 · $100.00 / SOL');
   });
 
   test('a losing day is a red chip; an unreachable wallet is an empty meter that says so', () => {
     const r = tradingVolume({ accounts: [snap({ dayPnlUsd: -3 })], positions: [], phantom: null });
-    expect(r.chips[0]).toEqual({ tone: 'err', text: '-$3.00 today' });
-    expect(r.chips[1]).toEqual({ tone: 'accent', text: 'all cash' });
-    expect(r.meters.at(-1)).toMatchObject({ label: 'Phantom · wallet not reachable', frac: 0, display: '--' });
-    expect(r.foot).toBe('only the agentic sleeve can be traded by an agent · wallet read from a public RPC');
+    expect(r.chips[0]).toEqual({ tone: 'err', text: '오늘 -$3.00' });
+    expect(r.chips[1]).toEqual({ tone: 'accent', text: '전액 현금' });
+    expect(r.meters.at(-1)).toMatchObject({ label: 'Phantom · 지갑 연결 불가', frac: 0, display: '--' });
+    expect(r.foot).toBe('에이전트는 에이전트 슬리브에서만 거래할 수 있습니다 · 지갑은 공개 RPC로 조회');
   });
 
   test('a wallet with no price reads unavailable, not $0', () => {
     const r = tradingVolume({ accounts: [snap({})], positions: [], phantom: { ...phantom, usdValue: null, usdPerSol: null } });
-    expect(r.meters.at(-1)).toMatchObject({ frac: 0, display: 'price unavailable' });
+    expect(r.meters.at(-1)).toMatchObject({ frac: 0, display: '가격 정보 없음' });
   });
 
   test('nothing fed yet: empty meters, never fabricated fills', () => {

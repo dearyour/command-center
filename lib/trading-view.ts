@@ -53,11 +53,11 @@ const MIN = 60_000;
 /** "synced Nm ago" in the Brand Deals voice. */
 export function syncAge(iso: string, now: number = Date.now()): string {
   const m = Math.max(0, Math.floor((now - Date.parse(iso)) / MIN));
-  if (m < 1) return 'synced just now';
-  if (m < 60) return `synced ${m}m ago`;
+  if (m < 1) return '방금 동기화';
+  if (m < 60) return `${m}분 전 동기화`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `synced ${h}h ago`;
-  return `synced ${Math.floor(h / 24)}d ago`;
+  if (h < 24) return `${h}시간 전 동기화`;
+  return `${Math.floor(h / 24)}일 전 동기화`;
 }
 
 export type Freshness = { state: 'none' | 'seeded' | 'live' | 'stale'; label: string };
@@ -66,9 +66,9 @@ export type Freshness = { state: 'none' | 'seeded' | 'live' | 'stale'; label: st
  *  live however recent their timestamp; a real push older than 90 minutes is
  *  stale (the feed runs every 30 in market hours, so 90 is three misses). */
 export function freshness(accounts: TradingAccountSnapshot[], now: number = Date.now()): Freshness {
-  if (accounts.length === 0) return { state: 'none', label: 'no feed yet' };
+  if (accounts.length === 0) return { state: 'none', label: '아직 피드 없음' };
   const real = accounts.filter((a) => a.source !== 'seed');
-  if (real.length === 0) return { state: 'seeded', label: 'seeded · example rows' };
+  if (real.length === 0) return { state: 'seeded', label: '샘플 · 예시 데이터' };
   const freshest = real.reduce((a, b) => (a.capturedAt >= b.capturedAt ? a : b));
   const label = syncAge(freshest.capturedAt, now);
   const age = now - Date.parse(freshest.capturedAt);
@@ -155,30 +155,30 @@ export function tradingVolume(x: { accounts: TradingAccountSnapshot[]; positions
   const n = x.accounts.length;
 
   const meters: TradingMeter[] = x.accounts.map((a) => ({
-    label: `${a.accountLabel} · ${a.accountId === AGENTIC_ID ? 'agent may trade' : 'read-only to agents'}`,
+    label: `${a.accountLabel} · ${a.accountId === AGENTIC_ID ? '에이전트 거래 가능' : '에이전트는 읽기만 가능'}`,
     frac: share(a.accountValueUsd),
     display: money(a.accountValueUsd),
     hue: a.accountId === AGENTIC_ID ? TRADING_HUE.agentic : TRADING_HUE.individual,
   }));
   const p = x.phantom;
   meters.push({
-    label: p ? `Phantom · ${p.sol} SOL · ${shortAddress(p.address)}` : 'Phantom · wallet not reachable',
+    label: p ? `Phantom · ${p.sol} SOL · ${shortAddress(p.address)}` : 'Phantom · 지갑 연결 불가',
     frac: p && p.usdValue !== null ? share(p.usdValue) : 0,
-    display: p ? (p.usdValue === null ? 'price unavailable' : money(p.usdValue)) : '--',
+    display: p ? (p.usdValue === null ? '가격 정보 없음' : money(p.usdValue)) : '--',
     hue: TRADING_HUE.phantom,
   });
 
   return {
     headline: brokerage,
     chips: [
-      { tone: day > 0 ? 'ok' : day < 0 ? 'err' : 'accent', text: `${day > 0 ? '+' : day < 0 ? '-' : ''}${money(Math.abs(day))} today` },
+      { tone: day > 0 ? 'ok' : day < 0 ? 'err' : 'accent', text: `오늘 ${day > 0 ? '+' : day < 0 ? '-' : ''}${money(Math.abs(day))}` },
       {
         tone: 'accent',
-        text: x.positions.length === 0 ? 'all cash' : `${money(invested, false)} in ${x.positions.length} position${x.positions.length === 1 ? '' : 's'}`,
+        text: x.positions.length === 0 ? '전액 현금' : `${x.positions.length}개 종목에 ${money(invested, false)}`,
       },
     ],
-    caption: `brokerage, ${n} account${n === 1 ? '' : 's'}${p ? ` · ${money(total)} with the wallet` : ''}`,
+    caption: `증권 계좌 ${n}개${p ? ` · 지갑 포함 ${money(total)}` : ''}`,
     meters,
-    foot: `only the agentic sleeve can be traded by an agent · ${p?.usdPerSol ? `${money(p.usdPerSol)} / SOL` : 'wallet read from a public RPC'}`,
+    foot: `에이전트는 에이전트 슬리브에서만 거래할 수 있습니다 · ${p?.usdPerSol ? `${money(p.usdPerSol)} / SOL` : '지갑은 공개 RPC로 조회'}`,
   };
 }

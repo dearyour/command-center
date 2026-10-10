@@ -75,6 +75,33 @@ const STATUS_KO: Record<string, string> = {
   dropped: '제외',
 };
 
+/** Spend categories the ledger stores in English (lib/statements.ts rules). */
+const CATEGORY_KO: Record<string, string> = {
+  Advertising: '광고',
+  Infrastructure: '인프라',
+  Contractors: '외주',
+  'CRM & Revenue': 'CRM & 매출',
+  Software: '소프트웨어',
+  Income: '수입',
+  Uncategorized: '미분류',
+  // integration catalog categories (lib/schemas INTEGRATION_CATEGORIES)
+  Productivity: '생산성',
+  Communication: '커뮤니케이션',
+  'CRM & Sales': 'CRM & 영업',
+  Developer: '개발',
+  Scheduling: '일정',
+  Finance: '재무',
+  Marketing: '마케팅',
+  Storage: '저장소',
+  Knowledge: '지식',
+  'AI & Automation': 'AI & 자동화',
+  Creative: '크리에이티브',
+};
+
+export function categoryKo(value: string): string {
+  return CATEGORY_KO[value] ?? value;
+}
+
 export function statusKo(value: string | null | undefined): string {
   if (value == null) return '';
   return STATUS_KO[value] ?? value;

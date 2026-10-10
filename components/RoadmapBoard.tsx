@@ -8,14 +8,15 @@ import { groupRoadmapByQuarter, type PhaseProgress } from '@/lib/roadmap';
 import type { RoadmapItem, RoadmapStatus } from '@/lib/schemas';
 
 const STATUS_BADGE: Record<RoadmapStatus, { tone: BadgeTone; ghost: boolean; label: string }> = {
-  done: { tone: 'ok', ghost: false, label: 'Done' },
-  now: { tone: 'accent', ghost: false, label: 'Now' },
-  next: { tone: 'warn', ghost: false, label: 'Next' },
-  later: { tone: 'default', ghost: true, label: 'Later' },
+  done: { tone: 'ok', ghost: false, label: '완료' },
+  now: { tone: 'accent', ghost: false, label: '진행 중' },
+  next: { tone: 'warn', ghost: false, label: '다음' },
+  later: { tone: 'default', ghost: true, label: '나중' },
 };
 
 const FILTERS = ['All', 'Done', 'Now', 'Next', 'Later'] as const;
 type Filter = (typeof FILTERS)[number];
+const FILTER_LABEL: Record<Filter, string> = { All: '전체', Done: '완료', Now: '진행 중', Next: '다음', Later: '나중' };
 
 /**
  * Mock 5h: the roadmap as one board you can actually work.
@@ -69,7 +70,7 @@ export function RoadmapBoard({
   return (
     <div>
       <section className="mb-9">
-        <SectionHead label="Phases" count={phases.length} />
+        <SectionHead label="단계" count={phases.length} />
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 ultra:grid-cols-6">
           {phases.map(({ phase, items: seeded }) => {
             const pct = pctOf(phase.id);
@@ -125,12 +126,12 @@ export function RoadmapBoard({
       </section>
 
       <SectionHead
-        label="Quarter by quarter"
+        label="분기별"
         right={
           <div className="flex shrink-0 gap-1">
             {FILTERS.map((f) => (
               <Chip key={f} data-lens="c" on={filter === f} onClick={() => setFilter(f)}>
-                {f}
+                {FILTER_LABEL[f]}
               </Chip>
             ))}
           </div>
@@ -147,7 +148,7 @@ export function RoadmapBoard({
                   {quarter.replace('-', ' · ')}
                 </span>
                 <span className="font-mono text-[10px] text-os-dim">
-                  {doneN}/{rows.length} done
+                  {doneN}/{rows.length} 완료
                 </span>
                 <span className="h-px flex-1 bg-os-border" />
               </div>
@@ -195,15 +196,15 @@ export function RoadmapBoard({
                               data-lens="c"
                               className="pressable is-dark inline-flex h-[22px] items-center rounded-ctl border border-os-border bg-os-bg px-2 font-mono text-[10px] font-semibold text-os-muted"
                             >
-                              open task
+                              작업 열기
                             </button>
                             <AsyncButton
                               run={() => mark(item)}
                               tone="secondary"
-                              busyLabel="saving"
-                              doneLabel="saved"
+                              busyLabel="저장 중"
+                              doneLabel="저장됨"
                             >
-                              {done ? 'mark now' : 'mark done'}
+                              {done ? '진행 중으로 표시' : '완료로 표시'}
                             </AsyncButton>
                           </div>
                         </>

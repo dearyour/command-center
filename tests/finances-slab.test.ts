@@ -19,17 +19,17 @@ describe('/finances on the slab kit', () => {
     expect(page).toMatch(/from '@\/components\/slab'/);
     expect(page).toContain('<Slab>');
     expect(page).toContain('<SlabTitle');
-    expect(page).toContain('title="Finances"');
+    expect(page).toContain('title="재무"');
     expect(page).not.toContain('<PageHeader');
   });
 
   test('the hero row is the expense chart beside a Money Volume card fed by the view-model', () => {
     expect(page).toMatch(/grid-cols-\[2fr_1fr\]/);
-    expect(page).toContain('title="Money Volume"');
+    expect(page).toContain('title="자금 규모"');
     expect(page).toMatch(/moneyVolume\(/);
     expect(page).toContain('<BigStat');
     expect(page).toContain('<MeterStack');
-    expect(page.indexOf('<MonthlyExpenses')).toBeLessThan(page.indexOf('title="Money Volume"'));
+    expect(page.indexOf('<MonthlyExpenses')).toBeLessThan(page.indexOf('title="자금 규모"'));
   });
 
   test('a second row: spend step line, charge-size dots, and exactly one insight card', () => {
@@ -42,7 +42,7 @@ describe('/finances on the slab kit', () => {
   });
 
   test('keeps every existing piece of the page', () => {
-    for (const s of ['<StatementUploader', '<MonthlyExpenses', '<BusinessIncomeChart', 'Income · by processor', 'Recent income', 'Outgoing · Wise']) {
+    for (const s of ['<StatementUploader', '<MonthlyExpenses', '<BusinessIncomeChart', '수입 · 결제 수단별', '최근 수입', '송금 · Wise']) {
       expect(page, s).toContain(s);
     }
   });

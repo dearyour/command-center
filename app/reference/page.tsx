@@ -11,8 +11,8 @@ export default function ReferencePage() {
   return (
     <div>
       <PageHeader
-        eyebrow="operating domains"
-        title="Reference Model"
+        eyebrow="운영 영역"
+        title="참조 모델"
       />
       <Rise i={1} className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4 ultra:grid-cols-6">
         {domains.map((domain) => (

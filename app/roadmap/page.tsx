@@ -16,11 +16,11 @@ export default function RoadmapPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="build plan"
-        title="Roadmap"
+        eyebrow="구축 계획"
+        title="로드맵"
         right={
           <span className="font-mono text-[10px] text-os-muted">
-            {shipped}/{items.length} shipped
+            {shipped}/{items.length} 출시
           </span>
         }
       />

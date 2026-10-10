@@ -64,21 +64,21 @@ describe('usageVolume: the headline', () => {
 
   test('chips are the official 5h gauges in status tones, plus Ollama requests today', () => {
     expect(v.chips).toEqual([
-      { tone: 'ok', text: 'Claude 5h 42%' },
-      { tone: 'warn', text: 'Codex 5h 75%' },
-      { tone: 'accent', text: '12 Ollama requests today' },
+      { tone: 'ok', text: 'Claude 5시간 42%' },
+      { tone: 'warn', text: 'Codex 5시간 75%' },
+      { tone: 'accent', text: '오늘 Ollama 요청 12회' },
     ]);
   });
 
   test('the caption and the meta line say where the number came from', () => {
-    expect(v.caption).toBe('tokens burned today across Claude + Codex · 1.8M over 7 days');
-    expect(v.meta).toBe('1.2M today · 1.8M this week · 2 machines reporting · Claude Max 20x · ChatGPT Pro · Ollama Pro');
+    expect(v.caption).toBe('오늘 Claude + Codex 토큰 소모량 · 7일간 1.8M');
+    expect(v.meta).toBe('오늘 1.2M · 이번 주 1.8M · 보고 중인 머신 2대 · Claude Max 20x · ChatGPT Pro · Ollama Pro');
   });
 });
 
 describe('usageVolume: the lane meters', () => {
   test('one meter per lane, each its share of today’s lane burn', () => {
-    expect(v.meters.map((m) => m.label)).toEqual(['Agent board', 'My sessions · Superset', 'Terminal', 'Crons & headless']);
+    expect(v.meters.map((m) => m.label)).toEqual(['에이전트 보드', '내 세션 · Superset', '터미널', '크론 & 헤드리스']);
     expect(v.meters[0]).toMatchObject({ frac: 500_000 / 1_200_000, display: '500.0k' });
     expect(v.meters[2]).toMatchObject({ frac: 350_000 / 1_200_000, display: '350.0k' });
     expect(v.meters.map((m) => m.hue)).toEqual([LANE_HUE.board, LANE_HUE.sessions, LANE_HUE.terminal, LANE_HUE.automation]);
@@ -100,16 +100,16 @@ describe('usageVolume: series, models, limits, insight', () => {
   });
 
   test('limits: every official gauge as a meter, hued by how close it runs', () => {
-    expect(v.limits.map((m) => m.label)).toEqual(['Claude · 5h session', 'Claude · weekly', 'Codex · 5h session']);
-    expect(v.limits[0]).toMatchObject({ frac: 0.42, display: '42% · resets in 3h', hue: 'var(--ok)' });
-    expect(v.limits[1]).toMatchObject({ frac: 0.91, display: '91% · resets in 2d', hue: 'var(--err)' });
+    expect(v.limits.map((m) => m.label)).toEqual(['Claude · 5시간 세션', 'Claude · 주간', 'Codex · 5시간 세션']);
+    expect(v.limits[0]).toMatchObject({ frac: 0.42, display: '42% · 3시간 후 초기화', hue: 'var(--ok)' });
+    expect(v.limits[1]).toMatchObject({ frac: 0.91, display: '91% · 2일 후 초기화', hue: 'var(--err)' });
     expect(v.limits[2]).toMatchObject({ frac: 0.75, display: '75%', hue: 'var(--warn)' });
   });
 
   test('the insight is the week’s single biggest burner and its share of the lane burn', () => {
     expect(v.insight.value).toBe(33);
     expect(v.insight.headline).toBe('Conductor');
-    expect(v.insight.body).toBe('Agent board · 600.0k of 1.8M burned this week');
+    expect(v.insight.body).toBe('에이전트 보드 · 이번 주 소모량 1.8M 중 600.0k');
     expect(v.insight.frac).toBeCloseTo(600_000 / 1_800_000);
   });
 });
@@ -120,13 +120,13 @@ describe('usageVolume: nothing reported', () => {
   test('empty data gives empty meters and honest copy, never fabricated numbers', () => {
     expect(e.headlineTokens).toBe(0);
     expect(e.headline).toBe('0');
-    expect(e.chips).toEqual([{ tone: 'err', text: 'Ollama down' }]);
+    expect(e.chips).toEqual([{ tone: 'err', text: 'Ollama 다운' }]);
     expect(e.meters.every((m) => m.frac === 0)).toBe(true);
     expect(e.series).toEqual([]);
     expect(e.models).toEqual([]);
     expect(e.topModel).toBeNull();
     expect(e.limits).toEqual([]);
-    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: 'Nothing burned this week.' });
+    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: '이번 주에는 소모량이 없습니다.' });
   });
 
   test('a plan with no lane breakdown still counts toward the headline, not the lanes', () => {

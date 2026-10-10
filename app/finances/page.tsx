@@ -149,14 +149,14 @@ export default async function FinancesPage() {
   return (
     <Slab>
       <SlabTitle
-        eyebrow="money · every processor, one view"
-        title="Finances"
+        eyebrow="돈 · 모든 결제 수단을 한눈에"
+        title="재무"
         meta={
           <>
             {usd(incomeMtd)}
-            {incomeMtdUpper > incomeMtd ? ` - ${usd(incomeMtdUpper)}` : ''} in this month · {usd(expenses)} out
-            {expensesLive ? ` (${monthLabel} statement)` : ' (set fees)'} · {liveCount}/{accounts.length} processors live
-            {stripeLive ? ` · Stripe balance ${usd(available, true)}, ${usd(pending, true)} pending` : ' · Stripe balance needs a live key'}
+            {incomeMtdUpper > incomeMtd ? ` - ${usd(incomeMtdUpper)}` : ''} 이번 달 수입 · 지출 {usd(expenses)}
+            {expensesLive ? ` (${monthLabel} 명세서)` : ' (고정 비용)'} · 결제 수단 {liveCount}/{accounts.length} 연동
+            {stripeLive ? ` · Stripe 잔액 ${usd(available, true)}, 대기 ${usd(pending, true)}` : ' · Stripe 잔액을 보려면 실제 키가 필요합니다'}
           </>
         }
         right={
@@ -164,14 +164,14 @@ export default async function FinancesPage() {
             {netComparable && (
               <Chip tone={netMonthly >= 0 ? 'ok' : 'err'}>
                 {netMonthly >= 0 ? '+' : '−'}
-                {usd(Math.abs(netMonthly))} net /mo
+                {usd(Math.abs(netMonthly))} 월 순이익
               </Chip>
             )}
             <a href="#statements" className={PILL}>
-              <Upload size={13} strokeWidth={1.7} /> Upload statement
+              <Upload size={13} strokeWidth={1.7} /> 명세서 업로드
             </a>
             <a href="https://dashboard.stripe.com/" target="_blank" rel="noreferrer" className={PILL_ACCENT}>
-              Open Stripe <ExternalLink size={12} strokeWidth={1.8} />
+              Stripe 열기 <ExternalLink size={12} strokeWidth={1.8} />
             </a>
           </>
         }
@@ -196,7 +196,7 @@ export default async function FinancesPage() {
           </MonthlyExpenses>
         </SlabCard>
 
-        <SlabCard i={2} title="Money Volume" sub="month to date" className="flex flex-col">
+        <SlabCard i={2} title="자금 규모" sub="이번 달 누적" className="flex flex-col">
           <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
             <BigStat
               value={vol.headline}
@@ -205,31 +205,31 @@ export default async function FinancesPage() {
               chips={vol.chips}
               caption={vol.caption}
             />
-            <MeterStack meters={vol.meters} foot={vol.foot} empty="no processors wired yet" />
+            <MeterStack meters={vol.meters} foot={vol.foot} empty="아직 연결된 결제 수단이 없습니다" />
           </div>
         </SlabCard>
       </div>
 
       {/* Second row: spend by month, charge sizes, THE gradient card */}
       <div className="mt-6 grid grid-cols-3 gap-6 max-[1200px]:grid-cols-1">
-        <SlabCard i={3} title="Spend by month" sub={expensesLive ? 'card statements' : 'no statements yet'}>
+        <SlabCard i={3} title="월별 지출" sub={expensesLive ? '카드 명세서' : '아직 명세서 없음'}>
           <div className="px-6 pt-3">
             <BigStat
               size={30}
               value={latestSpend?.count ?? 0}
               kind="usd"
-              caption={latestSpend ? `spent in ${latestSpend.label}, across ${spend.length} uploaded month${spend.length === 1 ? '' : 's'}` : 'upload a card statement to chart spend'}
+              caption={latestSpend ? `${latestSpend.label} 지출, 업로드한 ${spend.length}개월 기준` : '카드 명세서를 올리면 지출 차트가 그려집니다'}
             />
           </div>
-          <StepLine series={spend} hue="var(--ramp-4)" unit=" USD" empty="No card statements uploaded yet." />
+          <StepLine series={spend} hue="var(--ramp-4)" unit=" USD" empty="아직 업로드한 카드 명세서가 없습니다." />
         </SlabCard>
 
-        <SlabCard i={4} title="Charge sizes" sub={stripeLive ? 'Stripe · recent' : 'Stripe not live'}>
+        <SlabCard i={4} title="결제 금액 분포" sub={stripeLive ? 'Stripe · 최근' : 'Stripe 미연동'}>
           <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
             <div>
-              <BigStat size={30} value={recent.length} caption={`recent charge${recent.length === 1 ? '' : 's'}`} />
+              <BigStat size={30} value={recent.length} caption="최근 결제" />
               <div className="mt-4 w-fit rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted">
-                Largest: <span className="font-semibold tabular-nums">{stripeLive && recent.length > 0 ? usd(largestCharge, true) : ' - '}</span>
+                최대: <span className="font-semibold tabular-nums">{stripeLive && recent.length > 0 ? usd(largestCharge, true) : ' - '}</span>
               </div>
             </div>
             <DotMatrix cols={sizes} hue="var(--ramp-1)" />
@@ -239,7 +239,7 @@ export default async function FinancesPage() {
         {/* the ONE gradient insight card: what was kept */}
         <InsightCard
           i={5}
-          badge="Kept this month"
+          badge="이번 달 남은 돈"
           display={vol.insight.display}
           headline={vol.insight.headline}
           body={vol.insight.body}
@@ -249,7 +249,7 @@ export default async function FinancesPage() {
 
       {/* Income by business  -  from uploaded bank statements, with range chips */}
       {bankSeries.length > 0 && (
-        <SlabCard i={6} title="Income · by business" sub="bank deposits" className="mt-6">
+        <SlabCard i={6} title="수입 · 사업별" sub="은행 입금" className="mt-6">
           <div className="grid gap-4 px-6 pb-6 pt-4 lg:grid-cols-2">
             {bankSeries.map((s) => (
               <BusinessIncomeChart key={s.business} series={s} />
@@ -258,7 +258,7 @@ export default async function FinancesPage() {
         </SlabCard>
       )}
 
-      <SlabCard i={7} title="Income · by processor" sub={`${liveCount}/${accounts.length} live`} className="mt-6">
+      <SlabCard i={7} title="수입 · 결제 수단별" sub={`${liveCount}/${accounts.length} 연동`} className="mt-6">
         <div className="mt-4 border-t border-os-border">
           {accounts.map((a) => (
             <div
@@ -273,7 +273,7 @@ export default async function FinancesPage() {
                   {/* A bounded month says so out loud rather than printing one
                       confident number the source cannot actually support. */}
                   {a.unsplittableCustomers > 0
-                    ? ` · ${a.unsplittableCustomers} repeat ${a.unsplittableCustomers === 1 ? 'customer' : 'customers'} · split unavailable`
+                    ? ` · 반복 고객 ${a.unsplittableCustomers}명 · 분리 불가`
                     : ''}
                 </div>
               </div>
@@ -283,7 +283,7 @@ export default async function FinancesPage() {
                   {a.incomeUpper != null ? <span className="text-os-dim"> - {usd(a.incomeUpper)}</span> : null}
                 </div>
                 <div className="font-mono text-[10.5px] text-os-dim">
-                  {a.live ? 'this month' : a.configured ? 'pull pending' : 'awaiting key'}
+                  {a.live ? '이번 달' : a.configured ? '수집 대기' : '키 대기'}
                 </div>
               </div>
               <span
@@ -296,7 +296,7 @@ export default async function FinancesPage() {
                       : { background: 'color-mix(in oklab, var(--text) 8%, transparent)', color: 'var(--text-2)' }
                 }
               >
-                {a.live ? 'live' : a.configured ? 'key set' : 'connect →'}
+                {a.live ? '연동됨' : a.configured ? '키 설정됨' : '연결 →'}
               </span>
             </div>
           ))}
@@ -305,7 +305,7 @@ export default async function FinancesPage() {
 
       {/* Recent income  -  real Stripe charges */}
       {stripeLive && recent.length > 0 && (
-        <SlabCard i={8} title="Recent income" sub="Stripe · live" className="mt-6">
+        <SlabCard i={8} title="최근 수입" sub="Stripe · 실시간" className="mt-6">
           <ul className="mt-4 border-t border-os-border">
             {recent.map((c, i) => (
               <li
@@ -331,12 +331,12 @@ export default async function FinancesPage() {
       {wiseOut && (
         <SlabCard
           i={9}
-          title="Outgoing · Wise"
-          sub={`${wiseOut.length} transfer${wiseOut.length === 1 ? '' : 's'}`}
+          title="송금 · Wise"
+          sub={`송금 ${wiseOut.length}건`}
           className="mt-6"
         >
           {wiseOut.length === 0 ? (
-            <div className="px-6 py-7 text-center font-mono text-[11.5px] text-os-dim">Wise connected · no recent outgoing transfers</div>
+            <div className="px-6 py-7 text-center font-mono text-[11.5px] text-os-dim">Wise 연결됨 · 최근 송금 없음</div>
           ) : (
             <ul className="mt-4 border-t border-os-border">
               {wiseOut.map((t, i) => (

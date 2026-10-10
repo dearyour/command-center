@@ -13,7 +13,7 @@ const monthName = (month: string): string =>
 
 const TARGETS: { id: Target; label: string }[] = [
   ...CARD_LANES.map((c) => ({ id: c.id as Target, label: c.label })),
-  { id: 'bank', label: 'Bank statement · income' },
+  { id: 'bank', label: '은행 명세서 · 수입' },
 ];
 
 /**
@@ -32,7 +32,7 @@ export function StatementUploader() {
   async function upload(file: File) {
     const bank = target === 'bank';
     setBusy(true);
-    setStatus(`Parsing ${file.name}…`);
+    setStatus(`${file.name} 분석 중…`);
     try {
       const body = new FormData();
       body.append('file', file);
@@ -55,7 +55,7 @@ export function StatementUploader() {
         // holding whatever month was on screen before.
         const landed: string[] = Array.isArray(data.uploadedMonths) ? data.uploadedMonths : [];
         const newest = landed.length > 0 ? landed[landed.length - 1] : null;
-        setStatus(`✓ ${data.inserted} new of ${data.parsed} parsed rows${newest ? ` · ${monthName(newest)}` : ''}`);
+        setStatus(`✓ 분석한 ${data.parsed}행 중 ${data.inserted}행 새로 추가${newest ? ` · ${monthName(newest)}` : ''}`);
         router.refresh();
         if (landed.length > 0) {
           const detail: StatementUploadedDetail = { months: landed };
@@ -93,7 +93,7 @@ export function StatementUploader() {
       }`}
     >
       <Upload className="h-5 w-5 text-os-dim" strokeWidth={1.6} />
-      <div className="text-[13px] font-semibold text-os-muted">Upload statements</div>
+      <div className="text-[13px] font-semibold text-os-muted">명세서 업로드</div>
 
       <div className="flex w-full max-w-[260px] flex-col gap-1">
         {TARGETS.map((t) => (
@@ -111,15 +111,15 @@ export function StatementUploader() {
       </div>
 
       <p className="max-w-[260px] font-mono text-[10px] leading-relaxed text-os-dim">
-        Drop a CSV or PDF here, or pick one below.{' '}
+        CSV나 PDF를 여기에 놓거나 아래에서 고르세요.{' '}
         {target === 'bank'
-          ? 'Bank statement: per-business income and net.'
-          : 'Card statement: categorized spend and subscriptions for this lane.'}{' '}
-        Parsed locally, stored gitignored, never committed.
+          ? '은행 명세서: 사업별 수입과 순액.'
+          : '카드 명세서: 이 카드의 분류별 지출과 구독.'}{' '}
+        로컬에서 분석하고, git에서 제외된 곳에 저장하며, 커밋하지 않습니다.
       </p>
 
       <label className="pressable cursor-pointer rounded-ctl bg-os-text text-os-ink px-3 py-1.5 font-mono text-[11px] font-semibold hover:bg-white">
-        {busy ? 'Working…' : '↑ Upload statement'}
+        {busy ? '처리 중…' : '↑ 명세서 업로드'}
         <input
           type="file"
           accept=".csv,text/csv,.pdf,application/pdf,.txt,text/plain"

@@ -53,49 +53,49 @@ describe('integrationsVolume: the Connection Volume card', () => {
     expect(v.headline).toBe(3);
     expect(v.counts).toEqual({ connected: 3, notConfigured: 2, error: 1, total: 6 });
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '3 live' },
-      { text: '2 not configured' },
-      { tone: 'err', text: '1 erroring' },
+      { tone: 'ok', text: '연결됨 3' },
+      { text: '미설정 2' },
+      { tone: 'err', text: '오류 1' },
     ]);
-    expect(v.caption).toContain('of 6 connector checks');
+    expect(v.caption).toContain('커넥터 확인 6건 중');
   });
 
   test('four meters, honest fractions of real wholes', () => {
     expect(v.meters.map((m) => m.label)).toEqual([
-      'Connectors live (3/6)',
-      'Catalog tools connected (3/6)',
-      'Keys saved (3/5)',
-      'Popular connected (2/4)',
+      '연결된 커넥터 (3/6)',
+      '연결된 카탈로그 도구 (3/6)',
+      '저장된 키 (3/5)',
+      '연결된 인기 도구 (2/4)',
     ]);
     expect(v.meters.map((m) => m.frac)).toEqual([0.5, 0.5, 0.6, 0.5]);
     for (const m of v.meters) expect(m.hue).toMatch(/^var\(--/);
   });
 
   test('the foot counts the catalog', () => {
-    expect(v.foot).toBe('6 tools · 4 categories · 1 saved key not live');
+    expect(v.foot).toBe('도구 6개 · 카테고리 4개 · 미연결 저장 키 1개');
   });
 
   test('by category: connected tools per category, busiest first, short labels', () => {
     expect(v.byCategory).toEqual([
-      { label: 'Comm', count: 2 },
-      { label: 'Fin', count: 1 },
-      { label: 'Prod', count: 0 },
-      { label: 'Know', count: 0 },
+      { label: '소통', count: 2 },
+      { label: '재무', count: 1 },
+      { label: '생산성', count: 0 },
+      { label: '지식', count: 0 },
     ]);
     expect(v.topCategory).toEqual({ name: 'Communication', count: 2 });
   });
 
   test('health: live, unset and erroring checks as columns', () => {
     expect(v.health).toEqual([
-      { label: 'live', count: 3 },
-      { label: 'unset', count: 2 },
-      { label: 'error', count: 1 },
+      { label: '연결됨', count: 3 },
+      { label: '미설정', count: 2 },
+      { label: '오류', count: 1 },
     ]);
   });
 
   test('the one insight names what is erroring', () => {
     expect(v.insight.value).toBe(1);
-    expect(v.insight.headline).toMatch(/1 connector erroring/);
+    expect(v.insight.headline).toMatch(/커넥터 1개 오류/);
     expect(v.insight.body).toContain('Zernio');
     expect(v.insight.frac).toBeCloseTo(1 / 6);
   });
@@ -115,7 +115,7 @@ describe('integrationsVolume: honest when there is nothing', () => {
   test('nothing erroring: the insight says so and falls back to saved-not-live keys', () => {
     const v = integrationsVolume({ statuses: STATUSES.slice(0, 5), catalog: CATALOG });
     expect(v.insight.value).toBe(0);
-    expect(v.insight.headline).toMatch(/no connector is erroring/i);
-    expect(v.insight.body).toContain('1 saved key not live');
+    expect(v.insight.headline).toMatch(/오류 난 커넥터가 없습니다/);
+    expect(v.insight.body).toContain('저장된 키 1개가 아직 연결되지 않았습니다');
   });
 });

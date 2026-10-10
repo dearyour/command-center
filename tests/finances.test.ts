@@ -187,27 +187,27 @@ describe('/finances mock-3d polish', () => {
     const chart = read('components/BusinessIncomeChart.tsx');
     expect(chart).toContain('Chip');
     expect(chart).not.toContain('<select');
-    expect(chart).toMatch(/Money in/);
-    expect(chart).toMatch(/Money out/);
-    expect(chart).toMatch(/3 mo/);
-    expect(chart).toMatch(/6 mo/);
-    expect(chart).toMatch(/All/);
+    expect(chart).toMatch(/들어온 돈/);
+    expect(chart).toMatch(/나간 돈/);
+    expect(chart).toMatch(/3개월/);
+    expect(chart).toMatch(/6개월/);
+    expect(chart).toMatch(/전체/);
   });
 
   test('the uploader takes a drop and carries the mock copy + filled action', () => {
     const up = read('components/StatementUploader.tsx');
     expect(up).toContain('onDrop');
     expect(up).toContain('onDragOver');
-    expect(up).toMatch(/drop a CSV or PDF/i);
+    expect(up).toMatch(/CSV나 PDF를 여기에 놓거나/);
     // the upload action is the filled primary, not an outline
     expect(up).toMatch(/bg-os-text text-os-ink/);
-    expect(up).toMatch(/↑ Upload/);
+    expect(up).toMatch(/↑ 명세서 업로드/);
   });
 
   test('recent income reads above the outgoing Wise transfers', () => {
     const page = read('app/finances/page.tsx');
-    const recent = page.indexOf('Recent income');
-    const wise = page.indexOf('Outgoing · Wise');
+    const recent = page.indexOf('최근 수입');
+    const wise = page.indexOf('송금 · Wise');
     expect(recent).toBeGreaterThan(-1);
     expect(wise).toBeGreaterThan(-1);
     expect(recent).toBeLessThan(wise);

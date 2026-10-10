@@ -5,17 +5,17 @@ import type { BusinessSeries, IncomeRange, MonthPoint } from '@/lib/bank-stateme
 import { Chip } from '@/components/Pressable';
 
 const RANGES: { label: string; value: IncomeRange }[] = [
-  { label: '3 mo', value: 3 },
-  { label: '6 mo', value: 6 },
-  { label: 'All', value: 'all' },
+  { label: '3개월', value: 3 },
+  { label: '6개월', value: 6 },
+  { label: '전체', value: 'all' },
 ];
 
 /** What the card plots: deposits, outflow, or what's left after outflow. */
 type Metric = 'in' | 'out' | 'net';
 const METRICS: { label: string; value: Metric }[] = [
-  { label: 'Money in', value: 'in' },
-  { label: 'Money out', value: 'out' },
-  { label: 'Net after out', value: 'net' },
+  { label: '들어온 돈', value: 'in' },
+  { label: '나간 돈', value: 'out' },
+  { label: '지출 후 순액', value: 'net' },
 ];
 const metricCents = (m: MonthPoint, metric: Metric): number =>
   metric === 'in' ? m.creditsCents : metric === 'out' ? m.debitsCents : m.netCents;
@@ -43,12 +43,12 @@ export function BusinessIncomeChart({ series }: { series: BusinessSeries }) {
     metric === 'in' ? 'text-os-ok' : metric === 'out' ? 'text-os-err' : net >= 0 ? 'text-os-ok' : 'text-os-err';
   const subLabel =
     metric === 'in' ? (
-      <span className={`font-mono text-[11px] ${net >= 0 ? 'text-os-ok' : 'text-os-err'}`}>{signedUsd(net)} net</span>
+      <span className={`font-mono text-[11px] ${net >= 0 ? 'text-os-ok' : 'text-os-err'}`}>순액 {signedUsd(net)}</span>
     ) : metric === 'out' ? (
       <span className="font-mono text-[11px] text-os-dim">of {usd(totalIn)} in</span>
     ) : (
       <span className="font-mono text-[11px] text-os-dim">
-        {usd(totalIn)} in − {usd(totalOut)} out
+        입금 {usd(totalIn)} − 출금 {usd(totalOut)}
       </span>
     );
 
@@ -58,7 +58,7 @@ export function BusinessIncomeChart({ series }: { series: BusinessSeries }) {
         <div>
           <div className="text-sm font-semibold">{series.business}</div>
           <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-os-dim">
-            {metric === 'in' ? 'income · bank deposits' : metric === 'out' ? 'outflow · bank debits' : 'net · after money out'}
+            {metric === 'in' ? '수입 · 은행 입금' : metric === 'out' ? '지출 · 은행 출금' : '순액 · 지출 후'}
           </div>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1.5">
@@ -87,7 +87,7 @@ export function BusinessIncomeChart({ series }: { series: BusinessSeries }) {
       </div>
 
       {shown.length === 0 ? (
-        <div className="mt-4 font-mono text-[11px] text-os-dim">no statements in range</div>
+        <div className="mt-4 font-mono text-[11px] text-os-dim">이 기간에는 명세서가 없습니다</div>
       ) : (
         <div className="mt-4 flex items-end gap-1.5" style={{ height: 104 }}>
           {shown.map((m) => {

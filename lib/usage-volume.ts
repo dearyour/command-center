@@ -55,8 +55,8 @@ function resetsIn(resetsAt: string | null, now: number): string {
   if (!resetsAt) return '';
   const ms = new Date(resetsAt).getTime() - now;
   if (!Number.isFinite(ms)) return '';
-  if (ms < 0) return 'reset since';
-  return `resets in ${ms > 86400_000 ? `${Math.round(ms / 86400_000)}d` : `${Math.max(1, Math.round(ms / 3600_000))}h`}`;
+  if (ms < 0) return '초기화됨';
+  return `${ms > 86400_000 ? `${Math.round(ms / 86400_000)}일` : `${Math.max(1, Math.round(ms / 3600_000))}시간`} 후 초기화`;
 }
 
 export function limitMeter(name: string, window: string, w: OfficialWindow, now: number): UsageMeter {
@@ -101,18 +101,18 @@ export function usageVolume(x: { claude: PlanUsage | null; codex: PlanUsage | nu
   const chips: UsageVolume['chips'] = [];
   for (const { name, plan } of named) {
     const s = plan.official?.session;
-    if (s) chips.push({ tone: pctTone(s.usedPercent), text: `${name} 5h ${round(s.usedPercent)}%` });
+    if (s) chips.push({ tone: pctTone(s.usedPercent), text: `${name} 5시간 ${round(s.usedPercent)}%` });
   }
-  if (x.ollama.state === 'down') chips.push({ tone: 'err', text: 'Ollama down' });
+  if (x.ollama.state === 'down') chips.push({ tone: 'err', text: 'Ollama 다운' });
   else if (x.ollama.requests) {
     const r = x.ollama.requests.day.chat + x.ollama.requests.day.embed;
-    chips.push({ tone: 'accent', text: `${r} Ollama request${r === 1 ? '' : 's'} today` });
+    chips.push({ tone: 'accent', text: `오늘 Ollama 요청 ${r}회` });
   }
 
   const limits: UsageMeter[] = [];
   for (const { name, plan } of named) {
-    if (plan.official?.session) limits.push(limitMeter(name, '5h session', plan.official.session, now));
-    if (plan.official?.weekly) limits.push(limitMeter(name, 'weekly', plan.official.weekly, now));
+    if (plan.official?.session) limits.push(limitMeter(name, '5시간 세션', plan.official.session, now));
+    if (plan.official?.weekly) limits.push(limitMeter(name, '주간', plan.official.weekly, now));
   }
 
   const modelBurn = new Map<string, number>();
@@ -135,10 +135,10 @@ export function usageVolume(x: { claude: PlanUsage | null; codex: PlanUsage | nu
     headline: fmtTokens(headlineTokens),
     headlineTokens,
     chips,
-    caption: `tokens burned today across Claude + Codex · ${fmtTokens(weekTokens)} over 7 days`,
-    meta: [`${fmtTokens(headlineTokens)} today`, `${fmtTokens(weekTokens)} this week`, `${machines} machine${machines === 1 ? '' : 's'} reporting`, ...planNames].join(' · '),
+    caption: `오늘 Claude + Codex 토큰 소모량 · 7일간 ${fmtTokens(weekTokens)}`,
+    meta: [`오늘 ${fmtTokens(headlineTokens)}`, `이번 주 ${fmtTokens(weekTokens)}`, `보고 중인 머신 ${machines}대`, ...planNames].join(' · '),
     meters,
-    foot: 'burn = input + output + cache writes · cache reads not counted',
+    foot: '소모량 = 입력 + 출력 + 캐시 쓰기 · 캐시 읽기는 제외',
     series,
     weekTokens,
     models,
@@ -148,10 +148,10 @@ export function usageVolume(x: { claude: PlanUsage | null; codex: PlanUsage | nu
       ? {
           value: Math.round(topShare * 100),
           headline: top.label,
-          body: `${SOURCE_LABEL[top.source]} · ${fmtTokens(top.burn)} of ${fmtTokens(weekLanes)} burned this week`,
+          body: `${SOURCE_LABEL[top.source]} · 이번 주 소모량 ${fmtTokens(weekLanes)} 중 ${fmtTokens(top.burn)}`,
           frac: topShare,
         }
-      : { value: 0, headline: 'Nothing burned this week.', body: 'No transcripts on any reporting machine yet.', frac: 0 },
+      : { value: 0, headline: '이번 주에는 소모량이 없습니다.', body: '보고 중인 머신에 아직 기록이 없습니다.', frac: 0 },
   };
 }
 

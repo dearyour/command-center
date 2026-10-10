@@ -58,12 +58,12 @@ export default function AdPilotPage() {
       />
 
       <div className="relative">
-        <PageHeader eyebrow="Paid media" title="AdPilot" />
+        <PageHeader eyebrow="유료 광고" title="광고 파일럿" />
 
         <AdPilotDeck campaigns={campaigns} syncedAt={syncedAt} />
 
         <section className="mt-12">
-          <SectionHead label="Ad intelligence" count={`${wall.length} tracked ads`} />
+          <SectionHead label="광고 인텔리전스" count={`추적 중인 광고 ${wall.length}개`} />
           <AdLibrary
             initialWall={wall}
             watchlist={watchlist}

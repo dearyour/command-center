@@ -70,7 +70,7 @@ describe('/integrations in the Brand Deals look', () => {
 
   test('the hero row is the 2fr/1fr split, its right card the Connection Volume card', () => {
     expect(page).toContain('grid-cols-[2fr_1fr]');
-    expect(page).toContain('title="Connection Volume"');
+    expect(page).toContain('title="연결 규모"');
   });
 
   test('the second row carries dot matrices and exactly one gradient insight card', () => {

@@ -30,6 +30,7 @@ import { DotMatrix } from '@/components/slab-charts';
 import { agentSummary } from '@/lib/trading-chart';
 import { AGENTIC_ID, TRADING_HUE, activityCounts, filterActivity, freshness, positionSizes, tradingVolume, type ActivityFilter, type TradingPayload } from '@/lib/trading-view';
 import type { TradeActivity, TradingAccountSnapshot, TradingOrder } from '@/lib/schemas';
+import { statusKo } from '@/lib/status-labels';
 
 const EASE = 'cubic-bezier(.2,.7,.2,1)';
 
@@ -47,9 +48,9 @@ function pnl(n: number): { text: string; cls: string } {
 
 const timeAgo = (iso: string, now: number) => {
   const m = Math.max(0, Math.round((now - new Date(iso).getTime()) / 60000));
-  if (m < 60) return `${m}m`;
+  if (m < 60) return `${m}분`;
   const h = Math.round(m / 60);
-  return h < 24 ? `${h}h` : `${Math.round(h / 24)}d`;
+  return h < 24 ? `${h}시간` : `${Math.round(h / 24)}일`;
 };
 
 const clock = (iso: string) =>
@@ -75,7 +76,7 @@ function CardHead({ title, meta, onRefresh }: { title: string; meta?: React.Reac
       </div>
       <button
         onClick={() => setOpen((v) => !v)}
-        aria-label={`${title} menu`}
+        aria-label={`${title} 메뉴`}
         className="pressable grid h-8 w-8 shrink-0 place-items-center rounded-full border border-os-border text-[13px] leading-none text-os-dim hover:border-os-border-strong hover:text-os-text"
       >
         ···
@@ -91,7 +92,7 @@ function CardHead({ title, meta, onRefresh }: { title: string; meta?: React.Reac
               }}
               className="pressable flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[12.5px] text-os-muted hover:bg-[color-mix(in_oklab,var(--text)_6%,transparent)] hover:text-os-text"
             >
-              <RefreshCw size={13} strokeWidth={1.7} /> Refresh from the feed
+              <RefreshCw size={13} strokeWidth={1.7} /> 피드에서 새로고침
             </button>
             <a
               href="https://robinhood.com/"
@@ -100,7 +101,7 @@ function CardHead({ title, meta, onRefresh }: { title: string; meta?: React.Reac
               onClick={() => setOpen(false)}
               className="flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[12.5px] text-os-muted hover:bg-[color-mix(in_oklab,var(--text)_6%,transparent)] hover:text-os-text"
             >
-              <ExternalLink size={13} strokeWidth={1.7} /> Open Robinhood
+              <ExternalLink size={13} strokeWidth={1.7} /> Robinhood 열기
             </a>
           </div>
         </>
@@ -113,7 +114,7 @@ function ActionTag({ action }: { action: TradeActivity['action'] }) {
   const buy = action === 'buy';
   return (
     <span className={`shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider ${buy ? 'bg-os-ok/15 text-os-ok' : 'bg-os-err/15 text-os-err'}`}>
-      {action}
+      {statusKo(action)}
     </span>
   );
 }
@@ -138,7 +139,7 @@ function statusTone(status: TradeActivity['status']): 'ok' | 'warn' | 'err' | 'd
  *  purpose: the log is what the agent did, this is what has not happened yet. */
 function OpenOrders({ orders, now }: { orders: TradingOrder[]; now: number }) {
   if (orders.length === 0) {
-    return <div className="px-6 py-7 text-center font-mono text-[11.5px] text-os-dim">No live orders at the broker.</div>;
+    return <div className="px-6 py-7 text-center font-mono text-[11.5px] text-os-dim">증권사에 진행 중인 주문이 없습니다.</div>;
   }
   return (
     <ul className="mt-4 border-t border-os-border">
@@ -148,20 +149,20 @@ function OpenOrders({ orders, now }: { orders: TradingOrder[]; now: number }) {
           <span className="font-mono text-[12.5px] font-bold">{o.symbol}</span>
           <span className="font-mono text-[11px] tabular-nums text-os-muted">
             {o.dollarAmountUsd !== null ? usd(o.dollarAmountUsd) : `${o.quantity}`}
-            {o.limitPriceUsd !== null && ` limit ${usd(o.limitPriceUsd)}`}
-            {o.filledQuantity > 0 && ` · ${o.filledQuantity}/${o.quantity} filled`}
+            {o.limitPriceUsd !== null && ` 지정가 ${usd(o.limitPriceUsd)}`}
+            {o.filledQuantity > 0 && ` · ${o.filledQuantity}/${o.quantity} 체결`}
           </span>
           <Badge tone="warn" ghost>
-            {o.state}
+            {statusKo(o.state)}
           </Badge>
           {/* Who placed it, said as loudly as the state: Robinhood stamps
               placed_agent 'agentic' on anything the agent submitted. */}
           <Badge tone={o.placedAgent === 'agentic' ? 'ok' : 'default'} ghost>
-            {o.placedAgent === 'agentic' ? 'agent' : 'you'}
+            {o.placedAgent === 'agentic' ? '에이전트' : '나'}
           </Badge>
           <span className="flex-1" />
           <span className="font-mono text-[10px] text-os-dim">
-            {o.type} · {timeAgo(o.createdAt, now)} ago
+            {o.type} · {timeAgo(o.createdAt, now)} 전
           </span>
         </li>
       ))}
@@ -238,31 +239,31 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
       {/* The slab: the whole view floats as one surface. */}
       <Slab>
         <SlabTitle
-          eyebrow="markets · robinhood + phantom · agent-fed"
-          title="Trading"
+          eyebrow="시장 · robinhood + phantom · 에이전트 연동"
+          title="트레이딩"
           meta={
             <>
-              {usd(total)} across {accounts.length} account{accounts.length === 1 ? '' : 's'}
-              {phantom ? ' + wallet' : ''} · {fresh.label}
-              {fresh.state === 'stale' && ' · the feed has not pushed in a while'}
+              계좌 {accounts.length}개 합계 {usd(total)}
+              {phantom ? ' + 지갑' : ''} · {fresh.label}
+              {fresh.state === 'stale' && ' · 피드가 한동안 갱신되지 않았습니다'}
             </>
           }
           right={
             <>
               {fresh.state === 'live' ? (
-                <Badge tone="ok">live · robinhood</Badge>
+                <Badge tone="ok">실시간 · robinhood</Badge>
               ) : fresh.state === 'stale' ? (
-                <Badge tone="warn">stale · {fresh.label.replace('synced ', '')}</Badge>
+                <Badge tone="warn">오래됨 · {fresh.label.replace(' 동기화', '')}</Badge>
               ) : fresh.state === 'seeded' ? (
-                <Badge tone="warn">seeded · awaiting the feed</Badge>
+                <Badge tone="warn">샘플 · 피드 대기 중</Badge>
               ) : (
-                <Badge tone="err">no feed</Badge>
+                <Badge tone="err">피드 없음</Badge>
               )}
-              <span className="rounded-full border border-os-border px-4 py-2 text-[13px] text-os-muted">monitor-only · refreshes 60s</span>
+              <span className="rounded-full border border-os-border px-4 py-2 text-[13px] text-os-muted">모니터 전용 · 60초마다 새로고침</span>
               <button
                 onClick={refresh}
-                aria-label="Refresh feed"
-                title="Refresh feed"
+                aria-label="피드 새로고침"
+                title="피드 새로고침"
                 className="pressable grid h-10 w-10 place-items-center rounded-full border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
               >
                 <RefreshCw size={15} strokeWidth={1.7} className={busy ? 'animate-spin' : ''} />
@@ -273,7 +274,7 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
 
         {accounts.length === 0 ? (
           <Card delay={120} className="px-6 py-12 text-center">
-            <div className="text-[19px] font-semibold">No account data yet</div>
+            <div className="text-[19px] font-semibold">아직 계좌 데이터가 없습니다</div>
             <div className="mx-auto mt-2 max-w-md text-[12.5px] leading-relaxed text-os-dim">{status.detail}</div>
           </Card>
         ) : (
@@ -282,13 +283,13 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
             <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
               <Card delay={120} className="flex flex-col pb-5">
                 <CardHead
-                  title={view === AGENTIC_ID ? 'Agent · the sleeve' : `${viewAccount?.accountLabel ?? 'Account'} · value`}
+                  title={view === AGENTIC_ID ? '에이전트 · 운용 슬리브' : `${viewAccount?.accountLabel ?? '계좌'} · 평가액`}
                   meta={
                     view === AGENTIC_ID
                       ? agent.hasActed
-                        ? `${agent.tradeCount} trade${agent.tradeCount === 1 ? '' : 's'} · last ${timeAgo(agent.lastTradeAt!, now)} ago`
-                        : 'no trades placed yet'
-                      : 'read-only to agents'
+                        ? `거래 ${agent.tradeCount}건 · 마지막 ${timeAgo(agent.lastTradeAt!, now)} 전`
+                        : '아직 거래 없음'
+                      : '에이전트는 읽기만 가능'
                   }
                   onRefresh={refresh}
                 />
@@ -304,10 +305,10 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
                 </div>
                 <div className="mx-6 mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-os-border bg-os-border sm:grid-cols-4">
                   {[
-                    { label: 'Deployed', value: usd(agent.deployedUsd) },
-                    { label: 'Idle cash', value: usd(agent.idleCashUsd) },
-                    { label: 'Unrealized', value: pnl(agent.unrealizedPnlUsd).text, cls: pnl(agent.unrealizedPnlUsd).cls },
-                    { label: 'Agent trades', value: String(agent.tradeCount) },
+                    { label: '투입 자금', value: usd(agent.deployedUsd) },
+                    { label: '대기 현금', value: usd(agent.idleCashUsd) },
+                    { label: '평가 손익', value: pnl(agent.unrealizedPnlUsd).text, cls: pnl(agent.unrealizedPnlUsd).cls },
+                    { label: '에이전트 거래', value: String(agent.tradeCount) },
                   ].map((s) => (
                     <div key={s.label} className="min-w-0 bg-os-surface px-4 py-3">
                       <div className="truncate font-mono text-[9px] uppercase tracking-[0.2em] text-os-dim">{s.label}</div>
@@ -318,14 +319,14 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
                 {!agent.hasActed && (
                   <div className="mx-6 mt-3 text-[12px] leading-relaxed text-os-dim">
                     {agentAccount
-                      ? `The sleeve is funded with ${usd(agentAccount.cashUsd)} and sitting in cash. Nothing here moves until the agent places a trade against it.`
-                      : 'No agentic account has been fed yet.'}
+                      ? `슬리브에 ${usd(agentAccount.cashUsd)}이(가) 현금으로 들어 있습니다. 에이전트가 거래를 넣기 전까지는 아무것도 움직이지 않습니다.`
+                      : '아직 에이전트 계좌 데이터가 들어오지 않았습니다.'}
                   </div>
                 )}
               </Card>
 
               <Card delay={220} className="flex flex-col">
-                <CardHead title="Accounts" meta={status.detail} onRefresh={refresh} />
+                <CardHead title="계좌" meta={status.detail} onRefresh={refresh} />
                 <div className="flex flex-1 flex-col px-6 pb-6 pt-3">
                   {/* Deal Volume's shape: count-up headline, dot chips, one meter
                       per account plus the wallet, each its share of everything held */}
@@ -339,11 +340,11 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
             <div className="mt-6 grid grid-cols-[1.15fr_1fr_.85fr] gap-6 max-[1200px]:grid-cols-1">
               <Card delay={320} className="flex min-h-0 flex-col">
                 <CardHead
-                  title="Agent · reasoning"
+                  title="에이전트 · 판단 근거"
                   meta={
                     analysis
-                      ? `${analysis.examined} examined · ${analysis.signals} signal${analysis.signals === 1 ? '' : 's'} · ${timeAgo(analysis.at, now)} ago`
-                      : 'no run recorded'
+                      ? `검토 ${analysis.examined}개 · 신호 ${analysis.signals}개 · ${timeAgo(analysis.at, now)} 전`
+                      : '기록된 실행 없음'
                   }
                   onRefresh={refresh}
                 />
@@ -351,9 +352,9 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
               </Card>
 
               <Card delay={420} className="flex min-h-0 flex-col">
-                <CardHead title="Positions" meta={`${usd0(invested)} invested`} onRefresh={refresh} />
+                <CardHead title="보유 종목" meta={`투자금 ${usd0(invested)}`} onRefresh={refresh} />
                 <div className="flex items-end justify-between gap-4 px-6 pt-3">
-                  <BigStat size={30} value={positions.length} caption={`open position${positions.length === 1 ? '' : 's'}`} />
+                  <BigStat size={30} value={positions.length} caption="보유 중인 종목" />
                   <DotMatrix cols={sizes} hue={HUE.individual} />
                 </div>
                 <ul className="mt-4 max-h-[236px] flex-1 overflow-y-auto border-t border-os-border">
@@ -380,22 +381,22 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
               {/* the ONE gradient insight card: the agent's next move */}
               <InsightCard
                 i={6}
-                badge="Agent · next move"
+                badge="에이전트 · 다음 행동"
                 value={openOrders.length > 0 ? openOrders.length : (analysis?.signals ?? 0)}
                 headline={
                   openOrders.length > 0
-                    ? `order${openOrders.length === 1 ? '' : 's'} working at the broker.`
+                    ? `건의 주문이 증권사에서 진행 중입니다.`
                     : analysis
-                      ? `signal${analysis.signals === 1 ? '' : 's'} on the last run, ${timeAgo(analysis.at, now)} ago.`
-                      : 'runs recorded. The agent has not reported in.'
+                      ? `개의 신호가 마지막 실행(${timeAgo(analysis.at, now)} 전)에서 나왔습니다.`
+                      : '건의 실행 기록. 에이전트가 아직 보고하지 않았습니다.'
                 }
                 body={
                   <>
                     <span className="line-clamp-4">
                       {analysis?.notes ||
-                        'Index core: QQQ and SPY, bought on dips and topped up monthly, with buys stopping at the kill-switch floor. Every order is checked in code before it reaches the broker.'}
+                        '핵심 지수: QQQ와 SPY를 하락 시 매수하고 매달 추가 매수하며, 킬스위치 하한에 닿으면 매수를 멈춥니다. 모든 주문은 증권사에 가기 전에 코드로 검사합니다.'}
                     </span>
-                    <span className="mt-1.5 block font-mono text-[10px] text-white/60">{Math.round(deployedFrac * 100)}% of the sleeve deployed</span>
+                    <span className="mt-1.5 block font-mono text-[10px] text-white/60">슬리브의 {Math.round(deployedFrac * 100)}% 투입됨</span>
                   </>
                 }
                 frac={deployedFrac}
@@ -404,7 +405,7 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
 
             {/* Open orders */}
             <Card delay={620} className="mt-6">
-              <CardHead title="Open orders" meta={openOrders.length === 0 ? 'nothing working' : `${openOrders.length} working`} onRefresh={refresh} />
+              <CardHead title="미체결 주문" meta={openOrders.length === 0 ? '진행 중 없음' : `진행 중 ${openOrders.length}건`} onRefresh={refresh} />
               <OpenOrders orders={openOrders} now={now} />
             </Card>
 
@@ -412,18 +413,18 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
             <Card delay={720} className="mt-6">
               <div className="flex flex-wrap items-center justify-between gap-4 px-6 pt-5">
                 <h2 className="text-[19px] font-semibold tracking-[-0.01em]">
-                  Trade log{' '}
+                  거래 기록{' '}
                   <span className="ml-1 font-mono text-[12px] font-normal tabular-nums text-os-dim">
-                    {rows.length} of {activity.length}
+                    {activity.length}건 중 {rows.length}건
                   </span>
                 </h2>
                 <div className="flex flex-wrap items-center gap-2">
                   {(
                     [
-                      ['all', `All ${counts.all}`],
-                      ['agent', `Agent ${counts.agent}`],
-                      ['you', `You ${counts.you}`],
-                      ['rejected', `Rejected ${counts.rejected}`],
+                      ['all', `전체 ${counts.all}`],
+                      ['agent', `에이전트 ${counts.agent}`],
+                      ['you', `나 ${counts.you}`],
+                      ['rejected', `거부됨 ${counts.rejected}`],
                     ] as Array<[ActivityFilter, string]>
                   ).map(([key, label]) => (
                     <button key={key} onClick={() => setLogFilter(key)} className={chipClass(logFilter === key)}>
@@ -448,22 +449,22 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
                           {a.quantity} @ {usd(a.priceUsd)}
                         </span>
                         <Badge tone={statusTone(a.status)} ghost>
-                          {a.status}
+                          {statusKo(a.status)}
                         </Badge>
                       </div>
-                      <div className="mt-1 line-clamp-2 text-[11.5px] leading-snug text-os-dim">{a.rationale || 'no rationale recorded'}</div>
+                      <div className="mt-1 line-clamp-2 text-[11.5px] leading-snug text-os-dim">{a.rationale || '기록된 근거 없음'}</div>
                     </div>
                     <div className="shrink-0 text-right font-mono text-[10px] text-os-dim max-[900px]:hidden">
                       <div className="truncate">
                         {a.agent} · <span className="uppercase tracking-wider">{a.accountId}</span>
                       </div>
-                      <div>{timeAgo(a.at, now)} ago</div>
+                      <div>{timeAgo(a.at, now)} 전</div>
                     </div>
                   </button>
                 ))}
                 {rows.length === 0 && (
                   <div className="px-6 py-8 text-center text-[12.5px] text-os-dim">
-                    {activity.length === 0 ? 'No trades logged yet.' : 'Nothing matches that filter.'}
+                    {activity.length === 0 ? '아직 기록된 거래가 없습니다.' : '해당 필터와 일치하는 항목이 없습니다.'}
                   </div>
                 )}
               </div>
@@ -478,7 +479,7 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
         </div>
         {seeded && (
           <div className="mt-4 text-center font-mono text-[10.5px] text-os-dim">
-            Example rows. The first real push from the Markets Agent feed replaces them.
+            예시 데이터입니다. 마켓 에이전트 피드에서 첫 실제 데이터가 들어오면 대체됩니다.
           </div>
         )}
       </Slab>
@@ -507,7 +508,7 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
             </div>
             <button
               onClick={() => setSelectedId(null)}
-              aria-label="Close"
+              aria-label="닫기"
               className="pressable grid h-[30px] w-[30px] shrink-0 place-items-center rounded-sm-t border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
             >
               <X size={15} strokeWidth={1.8} />
@@ -515,28 +516,28 @@ export function TradingBoard({ initial }: { initial: TradingPayload }) {
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
             <section className="mb-6">
-              <Label rule>Rationale</Label>
-              <p className="mt-2 whitespace-pre-wrap text-[12.5px] leading-relaxed text-os-text">{selected.rationale || 'No rationale was recorded with this trade.'}</p>
+              <Label rule>근거</Label>
+              <p className="mt-2 whitespace-pre-wrap text-[12.5px] leading-relaxed text-os-text">{selected.rationale || '이 거래에는 기록된 근거가 없습니다.'}</p>
             </section>
             <section className="mb-6">
-              <Label rule>Order</Label>
+              <Label rule>주문</Label>
               <div className="mt-2">
-                <Field k="Side" v={selected.action} />
-                <Field k="Quantity" v={String(selected.quantity)} />
-                <Field k="Price" v={usd(selected.priceUsd)} />
-                <Field k="Notional" v={usd(selected.quantity * selected.priceUsd)} />
-                <Field k="Outcome" v={selected.status} />
+                <Field k="구분" v={statusKo(selected.action)} />
+                <Field k="수량" v={String(selected.quantity)} />
+                <Field k="가격" v={usd(selected.priceUsd)} />
+                <Field k="거래 금액" v={usd(selected.quantity * selected.priceUsd)} />
+                <Field k="결과" v={statusKo(selected.status)} />
               </div>
             </section>
             <section>
-              <Label rule>Who and where</Label>
+              <Label rule>주체와 위치</Label>
               <div className="mt-2">
-                <Field k="Placed by" v={selected.agent} />
-                <Field k="Account" v={selected.accountId} />
-                <Field k="When" v={`${timeAgo(selected.at, now)} ago (${selected.at.slice(0, 10)})`} />
+                <Field k="주문자" v={selected.agent} />
+                <Field k="계좌" v={selected.accountId} />
+                <Field k="시각" v={`${timeAgo(selected.at, now)} 전 (${selected.at.slice(0, 10)})`} />
               </div>
               <p className="mt-3 flex items-start gap-2 text-[11px] leading-relaxed text-os-dim">
-                <Bot size={12} className="mt-0.5 shrink-0" /> Rejected rows carry the exact broker or guardrail reason in the rationale; nothing is retried silently.
+                <Bot size={12} className="mt-0.5 shrink-0" /> 거부된 행에는 증권사나 안전장치의 정확한 거부 사유가 근거에 남으며, 몰래 재시도하지 않습니다.
               </p>
             </section>
           </div>

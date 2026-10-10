@@ -42,7 +42,7 @@ export function AgentTradeChart({
         className="flex items-center justify-center rounded-md-t border border-dashed border-os-border px-6 text-center"
       >
         <p className="font-mono text-[11px] leading-relaxed text-os-dim">
-          No value series yet. The graph draws itself once the agent has pushed a second snapshot.
+          아직 평가액 기록이 없습니다. 에이전트가 두 번째 스냅샷을 올리면 그래프가 그려집니다.
         </p>
       </div>
     );
@@ -61,7 +61,7 @@ export function AgentTradeChart({
         className="w-full"
         style={{ aspectRatio: `${W + GUTTER * 2} / ${H}` }}
         role="img"
-        aria-label={`Agentic account value, ${usd(geo.firstUsd)} to ${usd(geo.lastUsd)} across ${geo.points.length} samples`}
+        aria-label={`에이전트 계좌 평가액, ${geo.points.length}개 샘플에서 ${usd(geo.firstUsd)} → ${usd(geo.lastUsd)}`}
         onMouseLeave={() => setHover(null)}
         onMouseMove={(e) => {
           const box = e.currentTarget.getBoundingClientRect();

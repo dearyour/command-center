@@ -52,9 +52,9 @@ const nf = new Intl.NumberFormat('en-US');
 function ago(iso: string | null): string {
   if (!iso) return 'never';
   const mins = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
-  if (mins < 60) return `${mins}m ago`;
-  if (mins < 60 * 36) return `${Math.round(mins / 60)}h ago`;
-  return `${Math.round(mins / 1440)}d ago`;
+  if (mins < 60) return `${mins}분 전`;
+  if (mins < 60 * 36) return `${Math.round(mins / 60)}시간 전`;
+  return `${Math.round(mins / 1440)}일 전`;
 }
 
 export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initialSaved, signals, credits, lastSyncAt }: Props) {
@@ -97,20 +97,20 @@ export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initial
       const res = await fetch('/api/adscout/sync', { method: 'POST' });
       const body = await res.json();
       if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
-      setNotice(`Refreshed: ${body.brands} brands · ${body.signals.length} new signals`);
+      setNotice(`새로고침됨: 브랜드 ${body.brands}개 · 새 신호 ${body.signals.length}개`);
       window.location.reload();
     } catch (err) {
-      setNotice(err instanceof Error ? err.message : 'refresh failed');
+      setNotice(err instanceof Error ? err.message : '새로고침 실패');
       setBusy(null);
     }
   };
 
   const TABS: { key: Tab; label: string; count?: number }[] = [
-    { key: 'foryou', label: 'For you' },
-    { key: 'search', label: 'Search' },
-    { key: 'saved', label: 'Saved', count: saved.length },
-    { key: 'watchlist', label: 'Watchlist', count: watchlist.length },
-    { key: 'activity', label: 'Activity', count: signals.length },
+    { key: 'foryou', label: '추천' },
+    { key: 'search', label: '검색' },
+    { key: 'saved', label: '저장됨', count: saved.length },
+    { key: 'watchlist', label: '관심 목록', count: watchlist.length },
+    { key: 'activity', label: '활동', count: signals.length },
   ];
 
   return (
@@ -128,23 +128,23 @@ export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initial
           <span>
             <span className="flex items-center gap-2 text-[16px] font-medium text-white">
               <LibraryBig className="h-5 w-5" strokeWidth={1.7} />
-              {libOpen ? 'Close ad library' : 'Open ad library'}
+              {libOpen ? '광고 라이브러리 닫기' : '광고 라이브러리 열기'}
             </span>
             <span className="mt-1 block text-[12.5px] text-white/75">
-              {nf.format(initialWall.length)} tracked ads · {saved.length} saved · search by concept, save winners, remake
+              추적 중인 광고 {nf.format(initialWall.length)}개 · 저장 {saved.length}개 · 콘셉트로 검색하고, 잘 되는 광고를 저장하고, 다시 만드세요
             </span>
           </span>
           <ChevronDown className={`h-5 w-5 shrink-0 text-white/85 transition-transform ${libOpen ? 'rotate-180' : ''}`} strokeWidth={1.9} />
         </button>
         <div className="ap-panel p-5 lg:col-span-4">
-          <div className="text-[12.5px] text-os-dim">API credits</div>
+          <div className="text-[12.5px] text-os-dim">API 크레딧</div>
           <div className="mt-1 text-[25px] font-light tabular-nums text-os-text">
             {credits ? (
               <>
                 {nf.format(credits.remaining)} <span className="text-[14px] text-os-dim">/ {nf.format(credits.total)}</span>
               </>
             ) : (
-              'not connected'
+              '연결 안 됨'
             )}
           </div>
           <div className="mt-2.5 flex gap-[3px]">
@@ -165,9 +165,9 @@ export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initial
         <div className="ap-panel flex flex-col justify-center p-5 lg:col-span-3">
           <button type="button" onClick={runSync} disabled={busy === 'sync'} className="pressable c-btn c-btn-primary flex items-center justify-center gap-2 py-2.5 text-[13px]">
             {busy === 'sync' ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.7} /> : <RefreshCw className="h-4 w-4" strokeWidth={1.7} />}
-            Refresh data
+            데이터 새로고침
           </button>
-          <div className="mt-2 text-center text-[12px] text-os-dim">{notice ?? `last synced ${ago(lastSyncAt)}`}</div>
+          <div className="mt-2 text-center text-[12px] text-os-dim">{notice ?? `마지막 동기화 ${ago(lastSyncAt)}`}</div>
         </div>
       </div>
 
@@ -198,7 +198,7 @@ export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initial
           <>
             <CardGrid ads={feed.map((f) => f.ad)} savedIds={savedIds} onOpen={setSelected} onSave={toggleSave} />
             <p className="mt-3 text-center text-[11px] text-os-dim">
-              ranked by fit to your niche + your saves + proven longevity: saves teach this feed
+              내 분야 적합도 + 저장한 광고 + 검증된 지속 기간 순 정렬: 저장할수록 이 피드가 학습합니다
             </p>
           </>
         )}
@@ -207,7 +207,7 @@ export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initial
         )}
         {tab === 'saved' &&
           (saved.length === 0 ? (
-            <Empty line1="Nothing saved yet." line2="The bookmark on any ad saves it here: and teaches the For-you feed." />
+            <Empty line1="아직 저장한 광고가 없습니다." line2="광고의 북마크를 누르면 여기에 저장되고, 추천 피드가 학습합니다." />
           ) : (
             <CardGrid ads={savedAds} savedIds={savedIds} onOpen={setSelected} onSave={toggleSave} />
           ))}
@@ -236,7 +236,7 @@ export function AdLibrary({ initialWall, watchlist: initialWatch, saved: initial
             const body = await res.json();
             if (res.ok && body.ok) {
               setWatchlist(body.watchlist);
-              setNotice(`Watching ${ad.brand}`);
+              setNotice(`${ad.brand} 관심 등록`);
             }
           }}
         />
@@ -290,7 +290,7 @@ function AskWidget({ wall, onOpen }: { wall: WallAd[]; onOpen: (ad: WallAd) => v
       if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
       setState({ phase: 'done', text: body.answer });
     } catch (err) {
-      setState({ phase: 'error', text: err instanceof Error ? err.message : 'ask failed' });
+      setState({ phase: 'error', text: err instanceof Error ? err.message : '질문 실패' });
     }
   };
 
@@ -301,22 +301,22 @@ function AskWidget({ wall, onOpen }: { wall: WallAd[]; onOpen: (ad: WallAd) => v
       <div className="absolute inset-0 bg-[#0a0608]/60 backdrop-blur-2xl" aria-hidden />
       <div className="relative px-6 py-5">
         <div className="flex items-center gap-3">
-          <span className="shrink-0 text-[14px] font-medium text-[var(--accent-2)]">Ask Adscout</span>
+          <span className="shrink-0 text-[14px] font-medium text-[var(--accent-2)]">Adscout에게 묻기</span>
           <input
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && ask()}
-            placeholder="what's working in my niche right now?"
+            placeholder="지금 내 분야에서 잘 되는 광고는?"
             className="min-w-0 flex-1 bg-transparent text-[14.5px] text-os-text outline-none placeholder:text-os-dim"
           />
-          <button type="button" onClick={ask} disabled={state.phase === 'running'} aria-label="ask Adscout" className="pressable c-btn px-3 py-2">
+          <button type="button" onClick={ask} disabled={state.phase === 'running'} aria-label="Adscout에게 묻기" className="pressable c-btn px-3 py-2">
             {state.phase === 'running' ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.7} /> : <Send className="h-4 w-4" strokeWidth={1.7} />}
           </button>
         </div>
 
         {/* the widget grows downward for the answer */}
         {state.phase === 'running' && (
-          <p className="mt-3 text-[13px] text-os-muted">Checking the library: hooks, longevity, drivers, signals…</p>
+          <p className="mt-3 text-[13px] text-os-muted">라이브러리 확인 중: 훅, 지속 기간, 감정 요인, 신호…</p>
         )}
         {state.phase === 'error' && <p className="mt-3 text-[13px] text-[#ff8790]">{state.text}</p>}
         {state.phase === 'done' && (
@@ -326,7 +326,7 @@ function AskWidget({ wall, onOpen }: { wall: WallAd[]; onOpen: (ad: WallAd) => v
               <button
                 type="button"
                 onClick={() => setState({ phase: 'idle' })}
-                aria-label="dismiss answer"
+                aria-label="답변 닫기"
                 className="pressable shrink-0 text-os-dim hover:text-os-text"
               >
                 <X className="h-4 w-4" strokeWidth={1.7} />
@@ -334,7 +334,7 @@ function AskWidget({ wall, onOpen }: { wall: WallAd[]; onOpen: (ad: WallAd) => v
             </div>
             {examples.length > 0 && (
               <div className="mt-4">
-                <div className="text-[12px] text-os-dim">From the library</div>
+                <div className="text-[12px] text-os-dim">라이브러리에서</div>
                 <div className="mt-2 grid gap-2 sm:grid-cols-3">
                   {examples.map((ad) => (
                     <button
@@ -390,7 +390,7 @@ function CardGrid({
   }, [ads]);
 
   if (display.length === 0) {
-    return <Empty line1="Nothing here yet." line2="Add brands to the watchlist or run a search: the library builds itself." />;
+    return <Empty line1="아직 아무것도 없습니다." line2="관심 목록에 브랜드를 추가하거나 검색하면 라이브러리가 저절로 채워집니다." />;
   }
 
   return (
@@ -407,7 +407,7 @@ function CardGrid({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={ad.thumbnail ?? ad.image ?? ''}
-                  alt={`${ad.brand} ad creative`}
+                  alt={`${ad.brand} 광고 소재`}
                   className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
                   loading="lazy"
                 />
@@ -421,7 +421,7 @@ function CardGrid({
                   <span className={`text-[19px] font-light tabular-nums ${ad.live ? 'text-[var(--accent)]' : 'text-os-dim'}`}>
                     {ad.daysRunning}
                   </span>
-                  <span className="text-[10px] text-os-dim">days</span>
+                  <span className="text-[10px] text-os-dim">일</span>
                 </span>
               </div>
               {ad.live && <span className="absolute left-2 top-2 h-2 w-2 rounded-full bg-[var(--accent)]" />}
@@ -435,7 +435,7 @@ function CardGrid({
           {/* Save toggle: the swipe-file affordance on every card */}
           <button
             type="button"
-            aria-label={savedIds.has(ad.id) ? 'unsave ad' : 'save ad'}
+            aria-label={savedIds.has(ad.id) ? '광고 저장 취소' : '광고 저장'}
             onClick={(e) => {
               e.stopPropagation();
               onSave(ad);
@@ -501,7 +501,7 @@ function SearchTab({
       setState({ phase: 'done', probes: body.probes, pooled: body.pooled, apiCalls: body.apiCalls, winners: body.winners });
       onResults(body.winners);
     } catch (err) {
-      setState({ phase: 'error', message: err instanceof Error ? err.message : 'search failed' });
+      setState({ phase: 'error', message: err instanceof Error ? err.message : '검색 실패' });
     }
   };
 
@@ -521,7 +521,7 @@ function SearchTab({
   return (
     <div>
       <label className="block text-[12.5px] text-os-muted" htmlFor="ap-concept">
-        Describe a concept: probes expand it, the database answers with proven ads
+        콘셉트를 설명하세요: 탐색어로 확장하고, 데이터베이스가 검증된 광고로 답합니다
       </label>
       <div className="ap-glow mt-2 flex items-center gap-2 rounded-[12px] border border-[rgba(255,69,87,0.3)] bg-black/45 p-1.5">
         <Search className="ml-2 h-4 w-4 shrink-0 text-[var(--accent)]" strokeWidth={1.7} />
@@ -530,28 +530,28 @@ function SearchTab({
           value={concept}
           onChange={(e) => setConcept(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && run()}
-          placeholder="founders replacing staff with AI agents"
+          placeholder="AI 에이전트로 직원을 대체하는 창업자"
           className="min-w-0 flex-1 bg-transparent px-1 py-2 text-[14px] text-os-text outline-none placeholder:text-os-dim"
         />
         <button type="button" onClick={run} disabled={state.phase === 'running' || concept.trim().length < 3} className="pressable c-btn c-btn-primary flex items-center gap-1.5 text-[12.5px]">
           {state.phase === 'running' ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.7} /> : <Search className="h-4 w-4" strokeWidth={1.7} />}
-          Search ads
+          광고 검색
         </button>
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
-        <span className="mr-1 text-[11px] text-os-dim">Proven for</span>
-        {[21, 30, 60].map((d) => chip(minDays === d, `${d}+ days`, () => setMinDays(d)))}
-        <span className="ml-3 mr-1 text-[11px] text-os-dim">Format</span>
+        <span className="mr-1 text-[11px] text-os-dim">검증 기간</span>
+        {[21, 30, 60].map((d) => chip(minDays === d, `${d}일 이상`, () => setMinDays(d)))}
+        <span className="ml-3 mr-1 text-[11px] text-os-dim">형식</span>
         {(['all', 'video', 'image'] as const).map((f) => chip(format === f, f, () => setFormat(f)))}
-        <span className="ml-auto text-[11px] text-os-dim">~5 API credits per search</span>
+        <span className="ml-auto text-[11px] text-os-dim">검색당 API 크레딧 약 5</span>
       </div>
 
       <div className="mt-4">
         {state.phase === 'idle' && (
-          <Empty line1="Search the 100M-ad database by idea, not by brand." line2="Results are filtered to ads still paying off after your chosen threshold: the honest proof filter." />
+          <Empty line1="1억 개 광고 데이터베이스를 브랜드가 아니라 아이디어로 검색하세요." line2="결과는 선택한 기간이 지나도 계속 돌아가는 광고만 남깁니다: 정직한 검증 필터." />
         )}
         {state.phase === 'running' && (
-          <p className="py-8 text-center text-[12.5px] text-os-dim">expanding concept → probing discovery → filtering to proven ads…</p>
+          <p className="py-8 text-center text-[12.5px] text-os-dim">콘셉트 확장 → 탐색 → 검증된 광고만 걸러내는 중…</p>
         )}
         {state.phase === 'error' && <p className="py-8 text-center text-[12px] text-[#f04e52]">{state.message}</p>}
         {state.phase === 'done' && (
@@ -563,7 +563,7 @@ function SearchTab({
                 </span>
               ))}
               <span className="text-os-muted">
-                · {state.pooled} pooled · {state.apiCalls} credits
+                · 수집 {state.pooled}개 · 크레딧 {state.apiCalls}
               </span>
             </div>
             <CardGrid ads={state.winners} savedIds={savedIds} onOpen={onOpen} onSave={onSave} />
@@ -619,9 +619,9 @@ function WatchlistTab({
       if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
       setWatchlist(body.watchlist);
       setDomain('');
-      setNotice(`Watching ${body.added.name}: refresh data to pull its ads`);
+      setNotice(`${body.added.name} 관심 등록: 데이터를 새로고침하면 광고를 가져옵니다`);
     } catch (err) {
-      setNotice(err instanceof Error ? err.message : 'add failed');
+      setNotice(err instanceof Error ? err.message : '추가 실패');
     } finally {
       setBusy(null);
     }
@@ -640,7 +640,7 @@ function WatchlistTab({
   return (
     <div className="mx-auto max-w-2xl">
       <label className="block text-[12px] text-os-muted" htmlFor="ap-domain">
-        Track a brand: enter its website, Adscout finds its ad pages
+        브랜드 추적: 웹사이트를 입력하면 Adscout가 광고 페이지를 찾습니다
       </label>
       <div className="mt-1.5 flex items-center gap-2">
         <input
@@ -653,13 +653,13 @@ function WatchlistTab({
         />
         <button type="button" onClick={add} disabled={busy === 'add'} className="pressable c-btn flex items-center gap-1.5 text-[12.5px]">
           {busy === 'add' ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.7} /> : <Plus className="h-4 w-4" strokeWidth={1.7} />}
-          Track brand
+          브랜드 추적
         </button>
       </div>
 
       <div className="mt-4 flex flex-col gap-2">
         {watchlist.length === 0 && (
-          <Empty line1="No brands tracked." line2="Tracked brands get synced daily: new launches, longevity winners, kills, velocity moves." />
+          <Empty line1="추적 중인 브랜드가 없습니다." line2="추적 중인 브랜드는 매일 동기화됩니다: 새 광고, 오래가는 광고, 중단, 속도 변화." />
         )}
         {watchlist.map((w) => {
           const counts = liveCounts.get(w.id);
@@ -675,14 +675,14 @@ function WatchlistTab({
               )}
               <div className="min-w-0 flex-1">
                 <div className="truncate text-[13px] text-os-text">{w.name}</div>
-                <div className="text-[11px] text-os-dim">{w.domain ?? 'added from a result'}</div>
+                <div className="text-[11px] text-os-dim">{w.domain ?? '검색 결과에서 추가됨'}</div>
               </div>
               {counts && (
                 <div className="text-right text-[11.5px] tabular-nums text-os-muted">
-                  {counts.live} live · longest {counts.top}d
+                  운영 중 {counts.live} · 최장 {counts.top}일
                 </div>
               )}
-              <button type="button" aria-label={`stop watching ${w.name}`} onClick={() => remove(w.id)} className="pressable c-btn p-1.5">
+              <button type="button" aria-label={`${w.name} 관심 해제`} onClick={() => remove(w.id)} className="pressable c-btn p-1.5">
                 <X className="h-3.5 w-3.5" strokeWidth={1.7} />
               </button>
             </div>
@@ -696,11 +696,11 @@ function WatchlistTab({
 /* -------------------------------- activity --------------------------------- */
 
 const SIGNAL_META: Record<Signal['type'], { icon: typeof Zap; label: string }> = {
-  new_launch: { icon: Zap, label: 'launched' },
-  winner: { icon: Trophy, label: 'proven' },
-  killed: { icon: XCircle, label: 'killed' },
-  velocity_spike: { icon: TrendingUp, label: 'scaling up' },
-  velocity_drop: { icon: TrendingDown, label: 'pulling back' },
+  new_launch: { icon: Zap, label: '새로 시작' },
+  winner: { icon: Trophy, label: '검증됨' },
+  killed: { icon: XCircle, label: '중단됨' },
+  velocity_spike: { icon: TrendingUp, label: '확대 중' },
+  velocity_drop: { icon: TrendingDown, label: '축소 중' },
 };
 
 function ActivityTab({ signals, wall, onOpen }: { signals: Signal[]; wall: WallAd[]; onOpen: (ad: WallAd) => void }) {
@@ -715,12 +715,12 @@ function ActivityTab({ signals, wall, onOpen }: { signals: Signal[]; wall: WallA
   }, [signals]);
 
   if (signals.length === 0) {
-    return <Empty line1="Quiet." line2="After each refresh this lists what changed across your watchlist: launches, ads crossing 21/30/60 days, kills, and spend-velocity moves." />;
+    return <Empty line1="조용합니다." line2="새로고침할 때마다 관심 목록의 변화를 보여 줍니다: 새 광고, 21/30/60일을 넘긴 광고, 중단, 지출 속도 변화." />;
   }
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
-      <p className="text-[12px] text-os-dim">What changed across your watchlist, newest first.</p>
+      <p className="text-[12px] text-os-dim">관심 목록의 변화, 최신순.</p>
       {groups.map(([day, rows]) => (
         <div key={day}>
           <div className="mb-2 text-[11.5px] text-os-dim">{day}</div>
@@ -819,7 +819,7 @@ function Dossier({
           <div>
             <div className="text-[15px] text-os-text">{ad.brand}</div>
             <div className="mt-0.5 text-[12px] text-os-dim">
-              {ad.format ?? 'ad'} · {ad.daysRunning} days {ad.live ? '· live' : '· off'}
+              {ad.format ?? '광고'} · {ad.daysRunning}일 {ad.live ? '· 운영 중' : '· 꺼짐'}
               {ad.ctaType ? ` · ${ad.ctaType.toLowerCase().replaceAll('_', ' ')}` : ''}
             </div>
           </div>
@@ -832,44 +832,44 @@ function Dossier({
           <video ref={videoRef} src={ad.video} controls playsInline className="w-full rounded-[10px] border border-[rgba(255,69,87,0.16)] bg-black" />
         ) : ad.thumbnail || ad.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={ad.thumbnail ?? ad.image ?? ''} alt={`${ad.brand} creative`} className="w-full rounded-[10px] border border-[rgba(255,69,87,0.16)]" />
+          <img src={ad.thumbnail ?? ad.image ?? ''} alt={`${ad.brand} 소재`} className="w-full rounded-[10px] border border-[rgba(255,69,87,0.16)]" />
         ) : null}
 
         <div className="mt-3 flex flex-wrap gap-1.5">
           <button type="button" onClick={remake} className="pressable c-btn c-btn-primary flex items-center gap-1.5 text-[12px]">
-            <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.7} /> Remake
+            <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.7} /> 다시 만들기
           </button>
           <button type="button" onClick={() => onSave(ad)} className="pressable c-btn flex items-center gap-1.5 text-[12px]">
             <Bookmark className="h-3.5 w-3.5" strokeWidth={1.7} fill={isSaved ? 'currentColor' : 'none'} />
-            {isSaved ? 'Saved' : 'Save'}
+            {isSaved ? '저장됨' : '저장'}
           </button>
           {ad.brandId && (
             <button type="button" onClick={() => onWatch(ad)} className="pressable c-btn flex items-center gap-1.5 text-[12px]">
-              <Plus className="h-3.5 w-3.5" strokeWidth={1.7} /> Track brand
+              <Plus className="h-3.5 w-3.5" strokeWidth={1.7} /> 브랜드 추적
             </button>
           )}
           {ad.hook && (
             <button type="button" onClick={copyHook} className="pressable c-btn flex items-center gap-1.5 text-[12px]">
-              <Copy className="h-3.5 w-3.5" strokeWidth={1.7} /> {copied ? 'Copied' : 'Copy hook'}
+              <Copy className="h-3.5 w-3.5" strokeWidth={1.7} /> {copied ? '복사됨' : '훅 복사'}
             </button>
           )}
           {ad.linkUrl && (
             <a href={ad.linkUrl} target="_blank" rel="noreferrer" className="c-btn flex items-center gap-1.5 text-[12px]">
-              <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.7} /> Landing page
+              <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.7} /> 랜딩 페이지
             </a>
           )}
         </div>
 
         {ad.hook && (
           <div className="mt-4">
-            <div className="text-[11px] text-os-dim">Hook ({ad.hookSource})</div>
+            <div className="text-[11px] text-os-dim">훅 ({ad.hookSource})</div>
             <p className="mt-1 text-[13.5px] leading-snug text-os-text">“{ad.hook}”</p>
           </div>
         )}
 
         {topDrivers.length > 0 && (
           <div className="mt-4">
-            <div className="text-[11px] text-os-dim">Emotional drivers</div>
+            <div className="text-[11px] text-os-dim">감정 요인</div>
             <div className="mt-2 flex flex-col gap-1.5">
               {topDrivers.map(([axis, score]) => (
                 <div key={axis} className="flex items-center gap-2">
@@ -886,7 +886,7 @@ function Dossier({
 
         {ad.transcript.length > 0 && (
           <div className="mt-4">
-            <div className="text-[11px] text-os-dim">Transcript: click a line to seek</div>
+            <div className="text-[11px] text-os-dim">대본: 줄을 클릭하면 해당 위치로 이동</div>
             <div className="mt-2 flex flex-col">
               {ad.transcript.map((line, i) => (
                 <button

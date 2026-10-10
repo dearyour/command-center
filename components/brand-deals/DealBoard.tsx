@@ -57,9 +57,9 @@ const EASE = 'cubic-bezier(.2,.7,.2,1)';
 function syncAge(syncedAt: number | null): string | null {
   if (syncedAt === null) return null;
   const m = Math.max(0, Math.floor((Date.now() - syncedAt) / 60_000));
-  if (m < 1) return 'synced just now';
-  if (m < 60) return `synced ${m}m ago`;
-  return `synced ${Math.floor(m / 60)}h ago`;
+  if (m < 1) return '방금 동기화';
+  if (m < 60) return `${m}분 전 동기화`;
+  return `${Math.floor(m / 60)}시간 전 동기화`;
 }
 
 /** Card shell: near-bg surface, soft dual shadow, stagger-in, 1px hover lift. */
@@ -79,7 +79,7 @@ function CardHead({ title, onRefresh, hubUrl }: { title: string; onRefresh: () =
       <h2 className="text-[19px] font-semibold tracking-[-0.01em]">{title}</h2>
       <button
         onClick={() => setOpen((v) => !v)}
-        aria-label={`${title} menu`}
+        aria-label={`${title} 메뉴`}
         className="pressable grid h-8 w-8 place-items-center rounded-full border border-os-border text-[13px] leading-none text-os-dim hover:border-os-border-strong hover:text-os-text"
       >
         ···
@@ -95,7 +95,7 @@ function CardHead({ title, onRefresh, hubUrl }: { title: string; onRefresh: () =
               }}
               className="pressable flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[12.5px] text-os-muted hover:bg-[color-mix(in_oklab,var(--text)_6%,transparent)] hover:text-os-text"
             >
-              <RefreshCw size={13} strokeWidth={1.7} /> Refresh from Notion
+              <RefreshCw size={13} strokeWidth={1.7} /> Notion에서 새로고침
             </button>
             {hubUrl && (
               <a
@@ -105,7 +105,7 @@ function CardHead({ title, onRefresh, hubUrl }: { title: string; onRefresh: () =
                 onClick={() => setOpen(false)}
                 className="flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-[12.5px] text-os-muted hover:bg-[color-mix(in_oklab,var(--text)_6%,transparent)] hover:text-os-text"
               >
-                <ExternalLink size={13} strokeWidth={1.7} /> Open in Notion
+                <ExternalLink size={13} strokeWidth={1.7} /> Notion에서 열기
               </a>
             )}
           </div>
@@ -222,22 +222,22 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
         {/* Title row */}
         <div className="mb-7 flex flex-wrap items-end justify-between gap-5">
           <div>
-            <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.32em] text-os-dim">// sponsorships · notion brand deals hub</div>
-            <h1 className="text-[46px] font-semibold leading-none tracking-[-0.035em]">Brand Deals</h1>
+            <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.32em] text-os-dim">// 협찬 · notion 브랜드 협찬 허브</div>
+            <h1 className="text-[46px] font-semibold leading-none tracking-[-0.035em]">브랜드 협찬</h1>
             <div className="mt-3 font-mono text-[11px] text-os-dim">
-              {fmtUsd(vol.openUsd)} open pipeline · {deals.length} deal{deals.length === 1 ? '' : 's'} ·{' '}
-              {mode === 'live' ? `${deals.length} Notion rows${age ? ` · ${age}` : ''}` : detail}
+              진행 중 파이프라인 {fmtUsd(vol.openUsd)} · 거래 {deals.length}건 ·{' '}
+              {mode === 'live' ? `Notion 행 ${deals.length}개${age ? ` · ${age}` : ''}` : detail}
             </div>
           </div>
           <div className="flex items-center gap-2.5">
             {mode === 'live' ? (
-              <Badge tone="ok">live · Notion</Badge>
+              <Badge tone="ok">실시간 · Notion</Badge>
             ) : mode === 'seeded' ? (
-              <Badge tone="warn">seeded · connect Notion</Badge>
+              <Badge tone="warn">샘플 · Notion을 연결하세요</Badge>
             ) : (
-              <Badge tone="err">Notion error</Badge>
+              <Badge tone="err">Notion 오류</Badge>
             )}
-            <span className="rounded-full border border-os-border px-4 py-2 text-[13px] text-os-muted">read-only · refreshes 60s</span>
+            <span className="rounded-full border border-os-border px-4 py-2 text-[13px] text-os-muted">읽기 전용 · 60초마다 새로고침</span>
             {hubUrl && (
               <a
                 href={hubUrl}
@@ -250,7 +250,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
             )}
             <button
               onClick={refresh}
-              aria-label="Refresh"
+              aria-label="새로고침"
               className="pressable grid h-10 w-10 place-items-center rounded-full border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
             >
               <RefreshCw size={15} strokeWidth={1.7} />
@@ -261,7 +261,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
         {/* Hero row: funnel + volume card */}
         <div className="grid grid-cols-[2fr_1fr] gap-6 max-[1200px]:grid-cols-1">
           <Card delay={120} className="pb-4">
-            <CardHead title="Pipeline" onRefresh={refresh} hubUrl={hubUrl} />
+            <CardHead title="파이프라인" onRefresh={refresh} hubUrl={hubUrl} />
             <PipelineChart
               stages={stages}
               active={FILTER_TO_STAGE_IDX[stageFilter]}
@@ -270,14 +270,14 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
                 <>
                   <div className="mb-2 flex items-center gap-2 px-1 text-[13px] text-os-muted">
                     <Sparkles size={14} strokeWidth={1.7} className="text-os-accent" />
-                    What are you looking for?
+                    무엇을 찾고 있나요?
                   </div>
                   <label className="flex items-center gap-2 rounded-[12px] border border-os-border bg-os-bg px-3.5 py-2.5">
                     <Search size={14} strokeWidth={1.7} className="shrink-0 text-os-dim" />
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Filter deals: a brand, a contact, a channel, or /talks /production /paid /declined /s"
+                      placeholder="거래 필터: 브랜드, 연락처, 채널, 또는 /talks /production /paid /declined /s"
                       className="w-full bg-transparent text-[13.5px] outline-none placeholder:text-os-dim"
                     />
                     {slash && (
@@ -296,7 +296,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
           </Card>
 
           <Card delay={220} className="flex flex-col">
-            <CardHead title="Deal Volume" onRefresh={refresh} hubUrl={hubUrl} />
+            <CardHead title="거래 규모" onRefresh={refresh} hubUrl={hubUrl} />
             <div className="flex flex-1 flex-col px-6 pb-6">
               <div className="mt-3 flex flex-wrap items-center gap-2.5">
                 <span className="text-[50px] font-semibold leading-none tracking-[-0.035em] tabular-nums">
@@ -304,23 +304,23 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
                 </span>
                 {vol.paidUsd > 0 && (
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-os-border px-2.5 py-1 font-mono text-[11.5px] tabular-nums text-os-muted">
-                    <span className="h-1.5 w-1.5 rounded-full bg-os-ok" /> {fmtUsd(vol.paidUsd)} paid
+                    <span className="h-1.5 w-1.5 rounded-full bg-os-ok" /> 지급 완료 {fmtUsd(vol.paidUsd)}
                   </span>
                 )}
                 {vol.declinedUsd > 0 && (
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-os-border px-2.5 py-1 font-mono text-[11.5px] tabular-nums text-os-muted">
-                    <span className="h-1.5 w-1.5 rounded-full bg-os-err" /> {fmtUsd(vol.declinedUsd)} declined
+                    <span className="h-1.5 w-1.5 rounded-full bg-os-err" /> 거절 {fmtUsd(vol.declinedUsd)}
                   </span>
                 )}
               </div>
               <div className="mb-5 mt-2 text-[13px] text-os-dim">
-                open pipeline across {openCount} deal{openCount === 1 ? '' : 's'} · {vol.quotedDeals} of {deals.length} priced
+                진행 중 거래 {openCount}건의 파이프라인 · {deals.length}건 중 {vol.quotedDeals}건 가격 책정
               </div>
               <div className="flex flex-1 flex-col justify-around gap-6 border-t border-os-border pt-5">
-                <VolumeMeter label={`In talks (${vol.counts.talks})`} frac={vol.openUsd > 0 ? vol.talksUsd / vol.openUsd : 0} display={fmtUsd(vol.talksUsd)} hue={HUE.amber} delay={500} />
-                <VolumeMeter label={`In production (${vol.counts.production})`} frac={vol.openUsd > 0 ? vol.productionUsd / vol.openUsd : 0} display={fmtUsd(vol.productionUsd)} hue={HUE.cobalt} delay={650} />
+                <VolumeMeter label={`협의 중 (${vol.counts.talks})`} frac={vol.openUsd > 0 ? vol.talksUsd / vol.openUsd : 0} display={fmtUsd(vol.talksUsd)} hue={HUE.amber} delay={500} />
+                <VolumeMeter label={`제작 중 (${vol.counts.production})`} frac={vol.openUsd > 0 ? vol.productionUsd / vol.openUsd : 0} display={fmtUsd(vol.productionUsd)} hue={HUE.cobalt} delay={650} />
                 <VolumeMeter
-                  label={`Paid vs declined (${vol.counts.paid}/${vol.counts.declined})`}
+                  label={`지급 vs 거절 (${vol.counts.paid}/${vol.counts.declined})`}
                   frac={vol.paidUsd + vol.declinedUsd > 0 ? vol.paidUsd / (vol.paidUsd + vol.declinedUsd) : 0}
                   display={`${fmtUsd(vol.paidUsd)} / ${fmtUsd(vol.declinedUsd)}`}
                   hue={HUE.accent}
@@ -328,7 +328,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
                 />
               </div>
               <div className="mt-5 border-t border-os-border pt-3 text-center font-mono text-[10.5px] tracking-[0.1em] text-os-dim">
-                open = talks + production · {vol.counts.tierS} S-tier
+                진행 중 = 협의 + 제작 · S등급 {vol.counts.tierS}
               </div>
             </div>
           </Card>
@@ -337,26 +337,26 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
         {/* Second row: activity line + sizes + THE gradient card */}
         <div className="mt-6 grid grid-cols-[1fr_1fr_1fr] gap-6 max-[1200px]:grid-cols-1">
           <Card delay={320}>
-            <CardHead title="Deal Activity" onRefresh={refresh} hubUrl={hubUrl} />
+            <CardHead title="거래 활동" onRefresh={refresh} hubUrl={hubUrl} />
             <div className="px-6 pt-3">
               <span className="text-[30px] font-semibold tabular-nums tracking-[-0.03em]">
                 <StatNumber value={editsInWindow} />
               </span>
-              <span className="ml-2 text-[13px] text-os-dim">Notion edits, last 30 days</span>
+              <span className="ml-2 text-[13px] text-os-dim">최근 30일간 Notion 수정</span>
             </div>
-            <StepLine series={series} hue={HUE.activity} empty="No edits in this window." />
+            <StepLine series={series} hue={HUE.activity} empty="이 기간에는 수정이 없습니다." />
           </Card>
 
           <Card delay={420}>
-            <CardHead title="Deal Sizes" onRefresh={refresh} hubUrl={hubUrl} />
+            <CardHead title="거래 금액 분포" onRefresh={refresh} hubUrl={hubUrl} />
             <div className="flex items-end justify-between gap-4 px-6 pb-6 pt-3">
               <div>
                 <div className="text-[30px] font-semibold tabular-nums tracking-[-0.03em]">
                   <StatNumber value={vol.quotedDeals} />
                 </div>
-                <div className="mt-1 text-[13px] text-os-dim">priced deals</div>
+                <div className="mt-1 text-[13px] text-os-dim">가격이 정해진 거래</div>
                 <div className="mt-4 rounded-full border border-os-border px-3 py-1 text-[12px] text-os-muted">
-                  Largest: <span className="font-semibold tabular-nums">{fmtUsd(largest)}</span>
+                  최대: <span className="font-semibold tabular-nums">{fmtUsd(largest)}</span>
                 </div>
               </div>
               <DotMatrix cols={sizes} hue={HUE.cobalt} />
@@ -382,19 +382,19 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
             <div className="pointer-events-none absolute -right-14 -top-16 h-56 w-56 rotate-[24deg] rounded-[36px] border border-white/25 bg-white/5" style={{ backdropFilter: 'blur(3px)' }} />
             <div className="relative flex h-full flex-col px-6 py-5 text-white">
               <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[12px] backdrop-blur">
-                <Lightbulb size={13} strokeWidth={1.7} /> Needs you this week
+                <Lightbulb size={13} strokeWidth={1.7} /> 이번 주 확인 필요
               </span>
               <div className="mt-4 text-[64px] font-semibold leading-none tracking-[-0.03em] tabular-nums">
                 <StatNumber value={needsYou} />
               </div>
               <div className="mt-2 text-[16px] font-semibold leading-snug">
-                {due.followUps.length} follow-up{due.followUps.length === 1 ? '' : 's'} due · {due.deadlines.length} deadline{due.deadlines.length === 1 ? '' : 's'} inside 7 days.
+                후속 연락 {due.followUps.length}건 · 7일 안 마감 {due.deadlines.length}건.
               </div>
               <div className="mt-1.5 text-[12.5px] leading-relaxed text-white/75">
                 {[...due.followUps, ...due.deadlines]
                   .slice(0, 3)
                   .map((d) => d.brand)
-                  .join(' · ') || 'Nothing due. The pipeline is waiting on brands, not on you.'}
+                  .join(' · ') || '해야 할 일이 없습니다. 파이프라인은 당신이 아니라 브랜드를 기다리는 중입니다.'}
               </div>
               <div className="mt-auto flex gap-1.5 pt-4">
                 {Array.from({ length: 8 }, (_, i) => (
@@ -409,20 +409,20 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
         <Card delay={620} className="mt-6">
           <div className="flex flex-wrap items-center justify-between gap-4 px-6 pt-5">
             <h2 className="text-[19px] font-semibold tracking-[-0.01em]">
-              Deals{' '}
+              거래{' '}
               <span className="ml-1 font-mono text-[12px] font-normal tabular-nums text-os-dim">
-                {filtered.length} of {deals.length}
+                {deals.length}건 중 {filtered.length}건
               </span>
             </h2>
             <div className="flex flex-wrap items-center gap-2">
               {(
                 [
-                  ['all', `All ${vol.counts.all}`],
-                  ['talks', `In talks ${vol.counts.talks}`],
-                  ['production', `In production ${vol.counts.production}`],
-                  ['paid', `Paid ${vol.counts.paid}`],
-                  ['declined', `Declined ${vol.counts.declined}`],
-                  ['tier-s', `S-tier ${vol.counts.tierS}`],
+                  ['all', `전체 ${vol.counts.all}`],
+                  ['talks', `협의 중 ${vol.counts.talks}`],
+                  ['production', `제작 중 ${vol.counts.production}`],
+                  ['paid', `지급 완료 ${vol.counts.paid}`],
+                  ['declined', `거절 ${vol.counts.declined}`],
+                  ['tier-s', `S등급 ${vol.counts.tierS}`],
                 ] as Array<[Filter, string]>
               ).map(([key, label]) => (
                 <button
@@ -448,24 +448,24 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
                 >
                   <div className="min-w-0">
                     <div className="truncate text-[13.5px] font-medium">{d.brand}</div>
-                    <div className="truncate font-mono text-[11px] text-os-dim">{d.contactName ?? d.contactEmail ?? d.source ?? 'no contact yet'}</div>
+                    <div className="truncate font-mono text-[11px] text-os-dim">{d.contactName ?? d.contactEmail ?? d.source ?? '아직 연락처 없음'}</div>
                   </div>
                   <div className="min-w-0 max-[1000px]:hidden">
-                    <div className="truncate text-[12.5px] text-os-muted">{[d.videoType, d.mainChannel].filter(Boolean).join(' on ') || d.status}</div>
+                    <div className="truncate text-[12.5px] text-os-muted">{[d.videoType, d.mainChannel].filter(Boolean).join(' · ') || d.status}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     {usd > 0 && (
                       <span
                         className="rounded-full px-2.5 py-0.5 font-mono text-[10.5px] tabular-nums tracking-[0.04em]"
                         style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
-                        title={d.amountAgreedUsd != null ? 'amount agreed' : d.dealValueUsd != null ? 'deal value' : 'brand budget'}
+                        title={d.amountAgreedUsd != null ? '합의 금액' : d.dealValueUsd != null ? '거래 가치' : '브랜드 예산'}
                       >
                         {fmtUsd(usd)}
                       </span>
                     )}
                     {(d.tier ?? '').toUpperCase() === 'S' && (
                       <span className="rounded-full px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.12em]" style={{ background: 'color-mix(in oklab, var(--ramp-4) 18%, transparent)', color: HUE.violet }}>
-                        S-tier
+                        S등급
                       </span>
                     )}
                     <span className="rounded-full px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.12em]" style={statusStyle(d)}>
@@ -484,7 +484,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
                 </button>
               );
             })}
-            {filtered.length === 0 && <div className="px-6 py-8 text-center text-[12.5px] text-os-dim">Nothing matches that filter.</div>}
+            {filtered.length === 0 && <div className="px-6 py-8 text-center text-[12.5px] text-os-dim">해당 필터와 일치하는 항목이 없습니다.</div>}
           </div>
         </Card>
       </div>
@@ -496,7 +496,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
           <div className="flex items-start justify-between gap-4 border-b border-os-border px-6 py-5">
             <div className="min-w-0">
               <div className="truncate text-[17px] font-semibold">{selected.brand}</div>
-              <div className="mt-0.5 truncate font-mono text-[11.5px] text-os-dim">{selected.contactEmail ?? selected.contactName ?? 'no contact on the row'}</div>
+              <div className="mt-0.5 truncate font-mono text-[11.5px] text-os-dim">{selected.contactEmail ?? selected.contactName ?? '이 행에는 연락처가 없습니다'}</div>
               <div className="mt-2.5 flex flex-wrap items-center gap-2">
                 {selected.tier && <Badge tone={(selected.tier ?? '').toUpperCase() === 'S' ? 'accent' : 'default'}>tier {selected.tier}</Badge>}
                 <Badge tone={badgeTone(selected)}>{selected.status}</Badge>
@@ -506,7 +506,7 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
             </div>
             <button
               onClick={() => setSelectedId(null)}
-              aria-label="Close"
+              aria-label="닫기"
               className="pressable grid h-[30px] w-[30px] shrink-0 place-items-center rounded-sm-t border border-os-border text-os-muted hover:border-os-border-strong hover:text-os-text"
             >
               <X size={15} strokeWidth={1.8} />
@@ -515,34 +515,34 @@ export function DealBoard({ initial }: { initial: BrandDealsResult }) {
           <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
             <section className="mb-6">
               <a href={selected.notionUrl} target="_blank" rel="noreferrer" className={BTN_SOLID}>
-                <ExternalLink size={13} strokeWidth={1.8} /> Open in Notion
+                <ExternalLink size={13} strokeWidth={1.8} /> Notion에서 열기
               </a>
-              <p className="mt-2.5 text-[11px] text-os-dim">Notion is the source of truth. Edit the deal there; this board rereads it on refresh or within 20 minutes.</p>
+              <p className="mt-2.5 text-[11px] text-os-dim">원본은 Notion입니다. 거래는 Notion에서 수정하세요. 이 보드는 새로고침하거나 20분 안에 다시 읽어 옵니다.</p>
             </section>
             <section className="mb-6">
-              <Label rule>Money</Label>
+              <Label rule>금액</Label>
               <div className="mt-2">
-                <Field k="Amount agreed" v={selected.amountAgreedUsd != null ? fmtUsd(selected.amountAgreedUsd) : null} />
-                <Field k="Deal value" v={selected.dealValueUsd != null ? fmtUsd(selected.dealValueUsd) : null} />
-                <Field k="Brand budget" v={selected.budgetUsd != null ? fmtUsd(selected.budgetUsd) : null} />
-                <Field k="Suggested rate" v={selected.suggestedRateUsd != null ? fmtUsd(selected.suggestedRateUsd) : null} />
+                <Field k="합의 금액" v={selected.amountAgreedUsd != null ? fmtUsd(selected.amountAgreedUsd) : null} />
+                <Field k="거래 가치" v={selected.dealValueUsd != null ? fmtUsd(selected.dealValueUsd) : null} />
+                <Field k="브랜드 예산" v={selected.budgetUsd != null ? fmtUsd(selected.budgetUsd) : null} />
+                <Field k="제안 단가" v={selected.suggestedRateUsd != null ? fmtUsd(selected.suggestedRateUsd) : null} />
               </div>
             </section>
             <section className="mb-6">
-              <Label rule>Dates</Label>
+              <Label rule>날짜</Label>
               <div className="mt-2">
-                <Field k="Follow-up" v={selected.followUpDate} />
-                <Field k="Deadline" v={selected.deadline} />
-                <Field k="Last edited" v={`${timeAgo(selected.lastEdited)} (${selected.lastEdited.slice(0, 10)})`} />
+                <Field k="후속 연락" v={selected.followUpDate} />
+                <Field k="마감" v={selected.deadline} />
+                <Field k="마지막 수정" v={`${timeAgo(selected.lastEdited)} (${selected.lastEdited.slice(0, 10)})`} />
               </div>
             </section>
             <section>
-              <Label rule>Fit</Label>
+              <Label rule>적합도</Label>
               <div className="mt-2">
-                <Field k="Channel" v={selected.mainChannel} />
-                <Field k="Format" v={selected.videoType} />
-                <Field k="Source" v={selected.source} />
-                <Field k="ICP fit" v={selected.icpFit} />
+                <Field k="채널" v={selected.mainChannel} />
+                <Field k="형식" v={selected.videoType} />
+                <Field k="출처" v={selected.source} />
+                <Field k="ICP 적합도" v={selected.icpFit} />
               </div>
             </section>
           </div>

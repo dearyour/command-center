@@ -45,10 +45,10 @@ describe('moneyVolume', () => {
     expect(v.headline).toBe(8000);
     expect(v.upper).toBeNull();
     expect(v.chips).toEqual([
-      { tone: 'err', text: '$2,000 out' },
-      { tone: 'ok', text: '+$6,000 net' },
+      { tone: 'err', text: '지출 $2,000' },
+      { tone: 'ok', text: '순액 +$6,000' },
     ]);
-    expect(v.caption).toBe('income this month · 2/3 processors live');
+    expect(v.caption).toBe('이번 달 수입 · 결제 수단 2/3 연동');
   });
 
   test('one meter per processor, each its real share of income, then spend as a share of income', () => {
@@ -56,22 +56,22 @@ describe('moneyVolume', () => {
       'Stripe · Launchpad Cohort',
       'Stripe · Vantage',
       'PayKit · Launchpad Cohort',
-      'Spent of income · Aug 2026',
+      '수입 대비 지출 · Aug 2026',
     ]);
     expect(v.meters[0].frac).toBeCloseTo(0.75);
     expect(v.meters[1].frac).toBeCloseTo(0.25);
     expect(v.meters[0].display).toBe('$6,000');
     // a keyed account that is not pulling reads pending, never $0
-    expect(v.meters[2]).toMatchObject({ frac: 0, display: 'pull pending' });
+    expect(v.meters[2]).toMatchObject({ frac: 0, display: '수집 대기' });
     expect(v.meters[3]).toMatchObject({ display: '25%', hue: 'var(--warn)' });
     expect(v.meters[3].frac).toBeCloseTo(0.25);
-    expect(v.foot).toBe('expenses from the uploaded Aug 2026 statement');
+    expect(v.foot).toBe('업로드한 Aug 2026 명세서 기준 지출');
   });
 
   test('the insight card is what was kept, as a fraction of what came in', () => {
     expect(v.insight.display).toBe('+$6,000');
     expect(v.insight.frac).toBeCloseTo(0.75);
-    expect(v.insight.headline).toBe('kept of $8,000 in this month.');
+    expect(v.insight.headline).toBe('이번 달 수입 $8,000 중 남은 돈.');
   });
 
   test('a bounded month shows its floor as the headline and carries the ceiling', () => {
@@ -88,11 +88,11 @@ describe('moneyVolume', () => {
 
   test('spending more than came in turns the spend meter red and the net chip red, capped at a full bar', () => {
     const r = moneyVolume({ accounts: [acct({ income: 1000 })], expenses: 1500, expensesLive: false, monthLabel: null });
-    expect(r.meters.at(-1)).toMatchObject({ frac: 1, display: '150%', hue: 'var(--err)', label: 'Set fees of income' });
-    expect(r.chips[1]).toEqual({ tone: 'err', text: '−$500 net' });
+    expect(r.meters.at(-1)).toMatchObject({ frac: 1, display: '150%', hue: 'var(--err)', label: '수입 대비 고정 비용' });
+    expect(r.chips[1]).toEqual({ tone: 'err', text: '순액 −$500' });
     expect(r.insight.frac).toBe(0);
-    expect(r.insight.headline).toBe('more out than in this month.');
-    expect(r.foot).toBe('expenses are declared set fees · upload a card statement for real months');
+    expect(r.insight.headline).toBe('이번 달은 들어온 돈보다 나간 돈이 많습니다.');
+    expect(r.foot).toBe('지출은 신고한 고정 비용입니다 · 실제 월별 지출은 카드 명세서를 올리세요');
   });
 
   test('no income at all: empty meters and honest copy, not fabricated fills', () => {
@@ -104,8 +104,8 @@ describe('moneyVolume', () => {
     });
     expect(e.headline).toBe(0);
     expect(e.meters.every((m) => m.frac === 0)).toBe(true);
-    expect(e.meters[0].display).toBe('awaiting key');
-    expect(e.meters.at(-1)!.display).toBe('no income yet');
+    expect(e.meters[0].display).toBe('키 대기');
+    expect(e.meters.at(-1)!.display).toBe('아직 수입 없음');
     expect(e.insight.frac).toBe(0);
   });
 });
@@ -118,20 +118,20 @@ describe('moneyVolume never divides one month by another (review 2026-09-24)', (
   test('the spend meter is empty and says the statement is for another month', () => {
     const m = stale.meters.at(-1)!;
     expect(m.frac).toBe(0);
-    expect(m.display).toBe('no statement this month');
-    expect(m.label).toBe('Spent of income · Aug 2026');
+    expect(m.display).toBe('이번 달 명세서 없음');
+    expect(m.label).toBe('수입 대비 지출 · Aug 2026');
   });
 
   test('no net chip and no kept-this-month number across months', () => {
-    expect(stale.chips).toEqual([{ tone: 'err', text: '$8,000 out · Aug 2026' }]);
+    expect(stale.chips).toEqual([{ tone: 'err', text: '지출 $8,000 · Aug 2026' }]);
     expect(stale.insight.display).toBe(' - ');
     expect(stale.insight.frac).toBe(0);
-    expect(stale.insight.headline).toMatch(/this month's statement/);
+    expect(stale.insight.headline).toMatch(/이번 달 명세서/);
   });
 
   test('set fees are monthly, so they still compare with this month', () => {
     const fees = moneyVolume({ accounts: [acct({ income: 500 })], expenses: 1200, expensesLive: false, monthLabel: null, statementIsThisMonth: false });
-    expect(fees.chips.map((c) => c.text)).toEqual(['$1,200 out', '−$700 net']);
+    expect(fees.chips.map((c) => c.text)).toEqual(['지출 $1,200', '순액 −$700']);
   });
 });
 

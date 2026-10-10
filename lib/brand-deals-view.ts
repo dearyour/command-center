@@ -141,10 +141,10 @@ export function funnelStages(deals: BrandDeal[]): FunnelStage[] {
   const declined = deals.filter((d) => bucketOf(d.status) === 'declined').length;
   const paused = deals.filter((d) => bucketOf(d.status) === 'paused').length;
   return [
-    { label: 'All deals', value: v.counts.all, usd: deals.reduce((n, d) => n + dealUsd(d), 0), note: 'every deal in the hub', filter: 'all' },
-    { label: 'In talks', value: v.counts.talks, usd: v.talksUsd, note: 'inbound and negotiating', filter: 'talks' },
-    { label: 'In production', value: v.counts.production, usd: v.productionUsd, note: 'researching through invoiced', filter: 'production' },
-    { label: 'Paid', value: v.counts.paid, usd: v.paidUsd, note: `${declined} declined · ${paused} paused`, filter: 'paid' },
+    { label: '전체 거래', value: v.counts.all, usd: deals.reduce((n, d) => n + dealUsd(d), 0), note: '허브의 모든 거래', filter: 'all' },
+    { label: '협의 중', value: v.counts.talks, usd: v.talksUsd, note: '문의 및 협상 중', filter: 'talks' },
+    { label: '제작 중', value: v.counts.production, usd: v.productionUsd, note: '조사부터 청구까지', filter: 'production' },
+    { label: '지급 완료', value: v.counts.paid, usd: v.paidUsd, note: `거절 ${declined} · 보류 ${paused}`, filter: 'paid' },
   ];
 }
 
@@ -200,10 +200,10 @@ export function timeAgo(iso: string | null, now: Date = new Date()): string {
   const then = Date.parse(iso);
   if (Number.isNaN(then)) return '';
   const mins = Math.max(0, Math.round((now.getTime() - then) / 60_000));
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 60) return `${mins}분 전`;
   const hrs = Math.round(mins / 60);
-  if (hrs < 48) return `${hrs}h ago`;
-  return `${Math.round(hrs / 24)}d ago`;
+  if (hrs < 48) return `${hrs}시간 전`;
+  return `${Math.round(hrs / 24)}일 전`;
 }
 
 export function fmtUsd(n: number): string {

@@ -44,15 +44,15 @@ describe('analyticsVolume', () => {
     expect(v.reach).toBe(10000);
     expect(v.headline).toBe('10,000');
     expect(v.chips).toEqual([
-      { tone: 'ok', text: '+2.5% 7d' },
-      { text: '2,000 email subs' },
+      { tone: 'ok', text: '+2.5% (7일)' },
+      { text: '이메일 구독자 2,000' },
     ]);
-    expect(v.caption).toBe('total reach across 3 channels');
-    expect(v.foot).toBe('reach = followers + email list · 6 of 8 metrics live');
+    expect(v.caption).toBe('채널 3개의 전체 도달');
+    expect(v.foot).toBe('도달 = 팔로워 + 이메일 리스트 · 지표 8개 중 6개 실시간');
   });
 
   test('one meter per channel, biggest first, each its real share of reach', () => {
-    expect(v.meters.map((m) => m.label)).toEqual(['Instagram', 'YouTube', 'Email list']);
+    expect(v.meters.map((m) => m.label)).toEqual(['Instagram', 'YouTube', '이메일 리스트']);
     expect(v.meters[0]).toMatchObject({ frac: 0.6, display: '6,000 · 60%' });
     expect(v.meters[2].frac).toBeCloseTo(0.2);
   });
@@ -63,7 +63,7 @@ describe('analyticsVolume', () => {
       subs: null,
       channels: [1, 2, 3, 4, 5].map((n) => ({ key: `c${n}`, label: `C${n}`, followers: n * 100 })),
     });
-    expect(many.meters.map((m) => m.label)).toEqual(['C5', 'C4', 'C3', 'Other channels (2)']);
+    expect(many.meters.map((m) => m.label)).toEqual(['C5', 'C4', 'C3', '기타 채널 (2)']);
     expect(many.meters[3].frac).toBeCloseTo(300 / 1500);
   });
 
@@ -74,7 +74,7 @@ describe('analyticsVolume', () => {
   });
 
   test('the rhythm counts runs by weekday over the trailing 30 days, Monday first', () => {
-    expect(v.rhythm.map((c) => c.label)).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    expect(v.rhythm.map((c) => c.label)).toEqual(['월', '화', '수', '목', '금', '토', '일']);
     expect(v.rhythm.map((c) => c.count)).toEqual([2, 1, 1, 2, 0, 0, 0]);
     expect(v.rhythmTotal).toBe(6);
   });
@@ -82,7 +82,7 @@ describe('analyticsVolume', () => {
   test('the insight asks for the missing credentials and lights the live share', () => {
     expect(v.insight).toMatchObject({
       value: 2,
-      headline: '2 metrics waiting on credentials',
+      headline: '인증 정보를 기다리는 지표 2개',
       body: 'Stripe MRR · Typeform leads',
     });
     expect(v.insight.frac).toBeCloseTo(6 / 8);
@@ -95,11 +95,11 @@ describe('analyticsVolume', () => {
     expect(e.meters).toEqual([]);
     expect(e.runs).toMatchObject({ total: 0, okPct: null, meters: [] });
     expect(e.rhythmTotal).toBe(0);
-    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: 'Every metric is live' });
+    expect(e.insight).toMatchObject({ value: 0, frac: 0, headline: '모든 지표가 실시간입니다' });
   });
 
   test('a shrinking audience wears the error dot', () => {
-    expect(analyticsVolume({ ...BASE, growth7d: -1.25 }).chips[0]).toEqual({ tone: 'err', text: '-1.3% 7d' });
+    expect(analyticsVolume({ ...BASE, growth7d: -1.25 }).chips[0]).toEqual({ tone: 'err', text: '-1.3% (7일)' });
   });
 });
 
